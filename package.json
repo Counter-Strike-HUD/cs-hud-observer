@@ -1,0 +1,28 @@
+{
+  "name": "cs-hud-observer",
+  "version": "0.0.1",
+  "description": "CS Hud Observer is stream overlay for CS 1.6 \r Basic idea behind this stream overlay is to show currently non existing game status to stream watcher.",
+  "main": "index.js",
+  "scripts": {
+    "web": "cd ./web && npm start",
+    "backend": "nodemon --watch backend/src --ext ts --exec ts-node backend/src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kallefrombosnia/cs-hud-observer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kallefrombosnia/cs-hud-observer/issues"
+  },
+  "homepage": "https://github.com/kallefrombosnia/cs-hud-observer#readme",
+  "dependencies": {
+    "hlds-log": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/dotenv-parse-variables": "^0.2.0",
+    "@types/node": "^14.0.22",
+    "typescript": "^3.9.6"
+  }
+}
