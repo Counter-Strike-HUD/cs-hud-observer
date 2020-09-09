@@ -5,6 +5,8 @@
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "typeRoots": [
       "../node_modules/@types"
     ],

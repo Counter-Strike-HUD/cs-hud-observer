@@ -1,0 +1,9 @@
+{
+    "backend": {
+        "UDP_LOCAL_PORT": 27050,
+        "TCP_LOCAL_PORT": 3001
+    },
+    "web": {
+        "SOCKET_PORT": 8000
+    }
+}

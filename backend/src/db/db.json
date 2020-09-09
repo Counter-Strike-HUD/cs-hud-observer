@@ -1,0 +1,16 @@
+{
+  "teams": [
+    {
+      "team_name": "Mysterious",
+      "team_short_name": "myst;",
+      "team_logo_name": "myst.png",
+      "team_description": "Small amateur team from Buzim, Bosnia and Herzegovina"
+    },
+    {
+      "team_name": "Infectors",
+      "team_short_name": "inf;",
+      "team_logo_name": "infectors.png",
+      "team_description": "Small amateur team from BiH, Serbia and Croatia"
+    }
+  ]
+}
