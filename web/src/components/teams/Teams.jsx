@@ -58,7 +58,7 @@ class Teams extends React.Component{
                                     </h2>
 
                                     {error && isLoaded && 
-                                        <h4>Error has been spotted:  </h4>
+                                        <h4>Error has been spotted: {error} </h4>
                                     }
 
                                     {
@@ -69,6 +69,7 @@ class Teams extends React.Component{
                                     }
 
                                     {
+                                       
                                         teams.map(team => (
                                             <Card className="push-top" key={team.team_name} style={{ width: '18rem' }}>
                                                 <Card.Img variant="top" src={'http://localhost:3001/assets/' + team.team_logo_name} />

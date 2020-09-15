@@ -15,15 +15,32 @@ class TeamAdd extends React.Component{
             clanShortName: null,
             clanCountryCode: null,
             clanLogo: null,
+            clanDescription: null,
+            error: null,
+            isLoaded: false,
         }
+    }
+
+    renderError = () =>{
+        return this.state.error ? <h4>Error has been spotted: {this.state.error} </h4> : null;
     }
 
     previewClanLogo = (event) =>{
 
+        const file = URL.createObjectURL(event.target.files[0]);
+        const blob = event.target.files[0];  
+
         this.setState({
-            file: URL.createObjectURL(event.target.files[0]),
+            file,
             name: event.target.files[0].name,
         })
+
+        this.getBase64(blob, base64 =>{
+            this.setState({
+                clanLogo: base64
+            })
+        })
+        
     }
 
     handleClanNameInput = (event) =>{
@@ -38,8 +55,20 @@ class TeamAdd extends React.Component{
         this.setState({clanCountryCode: event.target.value});
     }
 
-    handleClanLogoInput = (event) =>{
-        this.setState({clanLogo: URL.createObjectURL(event.target.files[0])});
+    handleClanDescriptionInput = (event) =>{
+        this.setState({clanDescription: event.target.value});
+    }
+
+
+    getBase64 = (file, cb) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            cb(reader.result)
+        };
+        reader.onerror = (error) =>{
+            console.log('Error: ', error);
+        };
     }
 
     submit = (event) =>{
@@ -47,30 +76,41 @@ class TeamAdd extends React.Component{
         event.preventDefault();
 
         const body = {
-            'clan_name': this.state.clanName,
-            'clan_short_name': this.state.clanShortName,
-            'clan_country_code': this.state.clanCountryCode,
-            'clan_logo': this.state.clanLogo,
+            'team_name': this.state.clanName,
+            'team_short_name': this.state.clanShortName,
+            'team_country_code': this.state.clanCountryCode,
+            'team_logo': this.state.clanLogo,
+            'team_description': this.state.clanDescription,
         }
-
-        console.log(body)
 
         fetch('http://localhost:3001/api/addclan', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(body),
-          mode: 'cors'
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body),
+            mode: 'cors'
         })
-        .then(res => res.json())
-        .then(
-        (result) => {
-            console.log(result)
-            
-        },
-        (error) => {
-            console.log(error) 
-        }
-        );
+            .then(res => res.json())
+                .then((result) => {
+
+                    console.log(result) 
+                    
+                    if(result.status_code === 200){
+                        return window.location = `/team/${result.id}`
+                    }
+
+                    if(result.status_code === 500){
+                       return this.setState({error: result.message, isLoaded: true})
+                    }
+                    
+                    
+                },
+                (error) => {
+                    return this.setState({error, isLoaded: true});
+                }
+                );
+
+      
+
     }
 
     render(){    
@@ -93,6 +133,8 @@ class TeamAdd extends React.Component{
                                         Add a new team
                                     </h2>
 
+                                    {this.renderError()}
+
                                     <Form className="push-top" onSubmit={event => this.submit(event)}>
                                         <Form.Row>
                                             <Form.Group as={Col}>
@@ -107,6 +149,14 @@ class TeamAdd extends React.Component{
                                         </Form.Row>
 
                                         <Form.Group>
+                                            <Form.Label>Team description</Form.Label>
+                                            <Form.Control placeholder="Say something" onChange={event => this.handleClanDescriptionInput(event)}/>
+                                            <Form.Text muted>
+                                                Write something specific about this team.
+                                            </Form.Text>                                        
+                                        </Form.Group>
+
+                                        <Form.Group>
                                             <Form.Label>Country code</Form.Label>
                                             <Form.Control placeholder="ex ba, rs, en, fr " onChange={event => this.handleClanCountryInput(event)}/>
                                             <Form.Text muted>
@@ -114,10 +164,11 @@ class TeamAdd extends React.Component{
                                                 <a href="https://www.iban.com/country-codes"> here</a>.
                                             </Form.Text>                                        
                                         </Form.Group>
+                                        
 
                                         <Form.Group>
                                             <Form.Label>Clan logo</Form.Label>
-                                            <Form.File onChange={event => this.previewClanLogo(event), event =>  this.handleClanLogoInput(event)}
+                                            <Form.File onChange={event => {this.previewClanLogo(event);}} 
                                                 id="clan-logo"
                                                 label="Upload logo"
                                                 custom

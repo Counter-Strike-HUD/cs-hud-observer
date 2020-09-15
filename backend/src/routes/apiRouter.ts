@@ -3,6 +3,8 @@ const router = express.Router();
 
 import db from '../db/database';
 
+import * as apiModel from '../models/apiModel';
+
 interface Team {
     team_name: string;
     team_short_name: string;
@@ -30,11 +32,16 @@ router.get('/teams', (req , res, next) =>{
 });
 
 // Add team
-router.post('/addclan', (req , res, next) =>{
+router.post('/addclan', (req , res) =>{
 
-    console.log(req.body)
+    const id: string = apiModel.generateUniqueID();
 
-    return res.json({'test':'test'})   
+    
+    if(apiModel.parseClanAdd(id, req.body)){
+        return res.status(200).json({'id': id, 'status_code': 200, 'message': 'Team is successfully added.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Team is not added.'})   
 });
 
 

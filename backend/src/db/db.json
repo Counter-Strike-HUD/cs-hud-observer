@@ -1,16 +1,29 @@
 {
   "teams": [
     {
+      "id": "bce46b6d7336f96e7c53a569d8bbe39d671598d4",
       "team_name": "Mysterious",
-      "team_short_name": "myst;",
+      "team_short_name": "wdwdw",
+      "team_country_code": "wdwdw",
       "team_logo_name": "myst.png",
-      "team_description": "Small amateur team from Buzim, Bosnia and Herzegovina"
+      "team_description": "wdwdw"
     },
     {
+      "id": "18a8a1940fa822ce638f5d442a3edba0b21cb7c9",
       "team_name": "Infectors",
-      "team_short_name": "inf;",
-      "team_logo_name": "infectors.png",
-      "team_description": "Small amateur team from BiH, Serbia and Croatia"
+      "team_short_name": "inF 2014`",
+      "team_country_code": "eu",
+      "team_logo_name": "18a8a1940fa822ce638f5d442a3edba0b21cb7c9.png",
+      "team_description": "Amateur team from balkan"
+    },
+    {
+      "id": "e630a42176a5367bed4d1fd065e4a15f8254f8b0",
+      "team_name": "wdwd",
+      "team_short_name": "wdwd",
+      "team_country_code": "wdwdw",
+      "team_logo_name": "e630a42176a5367bed4d1fd065e4a15f8254f8b0.png",
+      "team_description": "wdwdw"
     }
-  ]
+  ],
+  "error_list": []
 }

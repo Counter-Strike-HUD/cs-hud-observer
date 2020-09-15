@@ -11,18 +11,18 @@ class Welcome extends React.Component{
                         <Col>
                             <Card className="card bg-light p-3 push-top">
                                 <Card.Body>
-                                    <h2> React Omegle TV
+                                    <h2> Counter Strike HUD Observer
                                        
                                     </h2>
 
                                     <p style={{marginTop: '30px'}} >
-                                        So what is React omegle website? Basic idea behind this project is to test 'new' techonologies in modern web.
-                                        Name is copied from well known site with intents to connect random people from around the world with video, voice and text chat.
+                                        So what is Counter Strike HUD Observer? Its an idea to implement rich spectator view with full overview of game.
+                                        Its inspired by first well known HLTV overlay for CS 1.6 and now newer CSGO stream huds.
                                     </p>
 
                                     <p style={{marginTop: '20px'}} >
                                        Project is available on  
-                                       <a href="https://github.com/kallefrombosnia/react-omegle"> github/kallefrombosnia/react-omegle</a>.
+                                       <a href="https://github.com/kallefrombosnia/cs-hud-observer"> github/kallefrombosnia/cs-hud-observer</a>.
                                        
                                     </p>
 
