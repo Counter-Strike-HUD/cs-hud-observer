@@ -78,7 +78,11 @@ class Teams extends React.Component{
                                                     <Card.Text>
                                                         {team.team_description}
                                                     </Card.Text>
-                                                    <Button variant="primary">View team</Button>
+
+                                                    <a href={`/teams/view/${team.id}`}>
+                                                        <Button variant="primary">View team</Button>
+                                                    </a>
+
                                                 </Card.Body>
                                             </Card>
                                         ))

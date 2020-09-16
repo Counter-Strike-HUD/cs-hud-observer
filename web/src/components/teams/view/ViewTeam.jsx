@@ -1,25 +1,66 @@
 import React from 'react';
-import {Card, Container, Row, Col,Form,Button} from 'react-bootstrap';
+import {Card, Container, Row, Col,Form,Button, Image} from 'react-bootstrap';
 
 
-class TeamAdd extends React.Component{
+class ViewTeam extends React.Component{
     
 
     constructor(props) {
         super(props);
 
         this.state = {
+            id: null,
             file: null,
             name: '',
-            clanName: null,
-            clanShortName: null,
-            clanCountryCode: null,
-            clanLogo: null,
-            clanDescription: null,
+            clanName: '',
+            clanShortName: '',
+            clanCountryCode: '',
+            clanLogo: '',
+            clanDescription: '',
             error: null,
             isLoaded: false,
         }
     }
+
+    componentDidMount() {
+        fetch(`http://localhost:3001/api/view/team/${this.props.match.params.id}`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+                
+                if(result && result.status_code === 200){
+
+                    const {id, team_name, team_short_name, team_description, team_country_code} = result.team_info;
+
+                    this.setState({
+                        id,
+                        clanName: team_name,
+                        clanShortName: team_short_name,
+                        clanDescription: team_description,
+                        clanCountryCode: team_country_code,
+                    })
+
+                }
+
+                if(result && result.status_code === 404){
+                    this.setState({
+                        isLoaded: true,
+                        error: result.message
+                      });
+                }
+            
+            
+              
+            },
+            (error) => {
+            console.log(error)
+              this.setState({
+                isLoaded: true,
+                error
+              });
+            }
+          )
+      }
 
     renderError = () =>{
         return this.state.error ? <h4>Error has been spotted: {this.state.error} </h4> : null;
@@ -76,14 +117,15 @@ class TeamAdd extends React.Component{
         event.preventDefault();
 
         const body = {
+            'id': this.props.match.params.id,
             'team_name': this.state.clanName,
             'team_short_name': this.state.clanShortName,
             'team_country_code': this.state.clanCountryCode,
-            'team_logo': this.state.clanLogo,
+            'team_logo': this.state.clanLogo | null,
             'team_description': this.state.clanDescription,
         }
 
-        fetch('http://localhost:3001/api/addclan', {
+        fetch('http://localhost:3001/api/editclan', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),
@@ -130,7 +172,7 @@ class TeamAdd extends React.Component{
                             <Card className="card bg-light p-3 push-top">
                                 <Card.Body>
                                     <h2>
-                                        Add a new team
+                                        View team
                                     </h2>
 
                                     {this.renderError()}
@@ -139,18 +181,18 @@ class TeamAdd extends React.Component{
                                         <Form.Row>
                                             <Form.Group as={Col}>
                                                 <Form.Label>Team name:</Form.Label>
-                                                <Form.Control type="text" placeholder="Enter clan name" onChange={event => this.handleClanNameInput(event)} />
+                                                <Form.Control value={this.state.clanName} type="text" placeholder="Enter clan name" onChange={event => this.handleClanNameInput(event)} />
                                             </Form.Group>
 
                                             <Form.Group as={Col}>
                                                 <Form.Label>Short name:</Form.Label>
-                                                <Form.Control type="text" placeholder="Short clan name ex. myst;" onChange={event => this.handleClanShortNameInput(event)} />
+                                                <Form.Control value={this.state.clanShortName} type="text" placeholder="Short clan name ex. myst;" onChange={event => this.handleClanShortNameInput(event)} />
                                             </Form.Group>
                                         </Form.Row>
 
                                         <Form.Group>
                                             <Form.Label>Team description</Form.Label>
-                                            <Form.Control placeholder="Say something" onChange={event => this.handleClanDescriptionInput(event)}/>
+                                            <Form.Control value={this.state.clanDescription} placeholder="Say something" onChange={event => this.handleClanDescriptionInput(event)}/>
                                             <Form.Text muted>
                                                 Write something specific about this team.
                                             </Form.Text>                                        
@@ -158,7 +200,7 @@ class TeamAdd extends React.Component{
 
                                         <Form.Group>
                                             <Form.Label>Country code</Form.Label>
-                                            <Form.Control placeholder="ex ba, rs, en, fr " onChange={event => this.handleClanCountryInput(event)}/>
+                                            <Form.Control value={this.state.clanCountryCode} placeholder="ex ba, rs, en, fr " onChange={event => this.handleClanCountryInput(event)}/>
                                             <Form.Text muted>
                                                 System is using ISO 3166 international standard country codes. See supported 
                                                 <a href="https://www.iban.com/country-codes"> here</a>.
@@ -176,6 +218,8 @@ class TeamAdd extends React.Component{
                                             />
                                         </Form.Group>
 
+                                        <Image src={`/assets/${this.state.id}.png`} alt='Loading...' rounded />
+
                                         <Form.Group>
                                             {imageName}
                                             {imagePreview}
@@ -183,7 +227,7 @@ class TeamAdd extends React.Component{
 
 
                                         <Button variant="primary" type="submit">
-                                            Submit
+                                            Save
                                         </Button>
                                     </Form>
                                 </Card.Body>
@@ -197,4 +241,4 @@ class TeamAdd extends React.Component{
 }
 
 
-export default TeamAdd;
+export default ViewTeam;

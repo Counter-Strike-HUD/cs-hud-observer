@@ -19,7 +19,7 @@ import Matches from './components/matches/Matches';
 
 // Link routes 
 import TeamAdd from './components/teams/add/TeamAdd';
-
+import TeamView from './components/teams/view/ViewTeam';
 
 //const client = io.connect('localhost:8000');
 
@@ -30,21 +30,12 @@ function App() {
       <Router>
         <Routes />
         <Switch>
-          <Route path="/teams/add">   
-            <TeamAdd />
-          </Route> 
-          <Route path="/matches">
-            <Matches />
-          </Route>
-          <Route path="/players">
-            <Players />
-          </Route>
-          <Route path="/teams">
-            <Teams />
-          </Route>
-          <Route path="/">
-            <Welcome/>
-          </Route>
+          <Route path="/teams/view/:id" component={TeamView} />   
+          <Route path="/teams/add" component={TeamAdd} />   
+          <Route path="/matches" component={Matches} />
+          <Route path="/players" component={Players} /> 
+          <Route path="/teams" component={Teams} />
+          <Route path="/" component={Welcome} />
         </Switch>
       </Router>
   );

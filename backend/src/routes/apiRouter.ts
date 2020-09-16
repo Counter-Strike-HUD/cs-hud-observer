@@ -36,9 +36,31 @@ router.post('/addclan', (req , res) =>{
 
     const id: string = apiModel.generateUniqueID();
 
-    
     if(apiModel.parseClanAdd(id, req.body)){
         return res.status(200).json({'id': id, 'status_code': 200, 'message': 'Team is successfully added.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Team is not added.'})   
+});
+
+// Add team
+router.get('/view/team/:id', (req , res) =>{
+
+    const team = apiModel.parseClanView(req.params.id);
+
+    if(!team){
+        return res.status(404).json({'status_code': 404, 'message': 'Team not found.'})  
+    }
+
+    return res.status(200).json({'id': req.params.id, 'status_code': 200, 'message': 'Team is successfully found.', 'team_info': team}) 
+});
+
+// Add team
+router.post('/editclan', (req , res) =>{
+
+
+    if(apiModel.parseClanEdit(req.body.id, req.body)){
+        return res.status(200).json({'id': req.body.id, 'status_code': 200, 'message': 'Team is successfully added.'}) 
     }
 
     return res.status(500).json({'status_code': 500, 'message': 'Team is not added.'})   
