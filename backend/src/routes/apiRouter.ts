@@ -1,15 +1,8 @@
 import express from 'express';
+import config from '../../../config.json';
 const router = express.Router();
-
-import db from '../db/database';
-
 import * as apiModel from '../models/apiModel';
 
-interface Team {
-    team_name: string;
-    team_short_name: string;
-    team_logo_name: string
-}
 
 // Serve default api response 
 router.get('/', (req , res, next) =>{
@@ -22,7 +15,7 @@ router.get('/', (req , res, next) =>{
 // Get teams
 router.get('/teams', (req , res, next) =>{
 
-    const teams: ArrayLike<Team> = db.get('teams').value();
+    const teams = apiModel.getAllClans();
 
     res.json({
         "status_code": 200,
@@ -43,7 +36,7 @@ router.post('/addclan', (req , res) =>{
     return res.status(500).json({'status_code': 500, 'message': 'Team is not added.'})   
 });
 
-// Add team
+// View team
 router.get('/view/team/:id', (req , res) =>{
 
     const team = apiModel.parseClanView(req.params.id);
@@ -55,17 +48,67 @@ router.get('/view/team/:id', (req , res) =>{
     return res.status(200).json({'id': req.params.id, 'status_code': 200, 'message': 'Team is successfully found.', 'team_info': team}) 
 });
 
-// Add team
+// Edit team
 router.post('/editclan', (req , res) =>{
-
 
     if(apiModel.parseClanEdit(req.body.id, req.body)){
         return res.status(200).json({'id': req.body.id, 'status_code': 200, 'message': 'Team is successfully added.'}) 
     }
 
-    return res.status(500).json({'status_code': 500, 'message': 'Team is not added.'})   
+    return res.status(500).json({'status_code': 500, 'message': 'Team is not edited.'})   
 });
 
+
+// Get players
+router.get('/players', (req , res, next) =>{
+
+    const players = apiModel.getAllPlayers();
+
+    res.json({
+        "status_code": 200,
+        "message": "Players list.",
+        "players": players ? players : [],
+        "steam_key": config.auth.STEAM_API_KEY,
+    }); 
+
+});
+
+
+// Add player
+router.post('/addplayer', (req , res) =>{
+
+    const id: string = apiModel.generateUniqueID();
+
+    if(apiModel.parsePlayerAdd(id, req.body)){
+        return res.status(200).json({'id': id, 'status_code': 200, 'message': 'Player is successfully added.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Player is not added.'})   
+
+});
+
+
+// View team
+router.get('/view/player/:id', (req , res) =>{
+
+    const player = apiModel.parsePlayerView(req.params.id);
+
+    if(!player){
+        return res.status(404).json({'status_code': 404, 'message': 'Player not found.'})  
+    }
+
+    return res.status(200).json({'id': req.params.id, 'status_code': 200, 'message': 'Player is successfully found.', 'player_info': player}) 
+});
+
+// Edit player
+router.post('/editplayer', (req , res) =>{
+
+    if(apiModel.parsePlayerEdit(req.body.id, req.body)){
+        return res.status(200).json({'id': req.body.id, 'status_code': 200, 'message': 'Player is successfully edited.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Player is not edited.'})   
+});
 
 
 // 404 not found api route

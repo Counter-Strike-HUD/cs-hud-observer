@@ -16,7 +16,7 @@ class Teams extends React.Component{
     }
 
     componentDidMount() {
-        fetch("http://localhost:3001/api/teams")
+        fetch("/api/teams")
           .then(res => res.json())
           .then(
             (result) => {
@@ -72,7 +72,7 @@ class Teams extends React.Component{
                                        
                                         teams.map(team => (
                                             <Card className="push-top" key={team.team_name} style={{ width: '18rem' }}>
-                                                <Card.Img variant="top" src={'http://localhost:3001/assets/' + team.team_logo_name} />
+                                                <Card.Img variant="top" src={'/assets/teams/' + team.team_logo_name} />
                                                 <Card.Body>
                                                     <Card.Title>{team.team_name}</Card.Title>
                                                     <Card.Text>

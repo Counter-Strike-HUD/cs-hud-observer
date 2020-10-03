@@ -10,6 +10,18 @@ interface Teams {
     team_country_code: string;
 }
 
+interface Players {
+    id: string;
+    player_name: string;
+    player_nickname: string;
+    player_lastname: string;
+    player_countrycode: string;
+    player_steamid: string;
+    player_teamid: string;
+    player_age: string;
+    player_description: string;
+}
+
 interface Error {
     error_name: string;
     error_message: NodeJS.ErrnoException | null;
@@ -18,12 +30,14 @@ interface Error {
   
 interface DatabaseType {
     teams: Array<Teams>;
-    error_list: Array<Error>
+    players: Array<Players>;
+    error_list: Array<Error>;
 }
 
 const adapter = new FileAsync<DatabaseType>(__dirname + '/db.json', {
     defaultValue: {
         teams: [],
+        players: [],
         error_list: []
     }
 });

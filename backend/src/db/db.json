@@ -3,18 +3,80 @@
     {
       "id": "e81a1843f0696d280415732af3c63f8176c3793f",
       "team_name": "Mysterious team",
-      "team_short_name": "mysterious;",
+      "team_short_name": "mysterious;rgrg",
       "team_country_code": "ba",
       "team_logo_name": "e81a1843f0696d280415732af3c63f8176c3793f.png",
-      "team_description": "Small local team from Buzim, BIH",
-      "values": {
-        "id": "e81a1843f0696d280415732af3c63f8176c3793f",
-        "team_name": "Mysterious team",
-        "team_short_name": "mysteeee;",
-        "team_country_code": "ba",
-        "team_logo_name": "e81a1843f0696d280415732af3c63f8176c3793f.png",
-        "team_description": "Small local team from Buzim, BIH"
-      }
+      "team_description": "Small local team from Buzim, BIH"
+    },
+    {
+      "id": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
+      "team_name": "Infectors",
+      "team_short_name": "inf",
+      "team_country_code": "eu",
+      "team_logo_name": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a.png",
+      "team_description": "Mixed team from balkan"
+    }
+  ],
+  "players": [
+    {
+      "id": "e81a1843f0696d280415732af3c63f8176c3792f",
+      "player_name": "Mesud",
+      "player_nickname": "LEG1JADZEKO11",
+      "player_country_code": "ba",
+      "player_lastname": "Sijamhodzic",
+      "player_steamid": "76561198143208965"
+    },
+    {
+      "id": "54ad612023639bb17657a905c7763b1060a09b87",
+      "player_name": "Aid",
+      "player_nickname": "kauk",
+      "player_lastname": "Kaukovic",
+      "player_description": "Good player",
+      "player_age": "20",
+      "player_steamid": "76561197975970143",
+      "player_countrycode": "si",
+      "player_teamid": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a"
+    },
+    {
+      "id": "6c30b0bce41d1c1a62a6b76a8a1c2ae665f4e8a9",
+      "player_name": "Izet",
+      "player_nickname": "kalle",
+      "player_lastname": "Mulalic",
+      "player_description": "idiot",
+      "player_age": "20",
+      "player_steamid": "76561198190625269",
+      "player_countrycode": "ba"
+    },
+    {
+      "id": "7688237efd64e27d0a0f245e7dcd2f18937d706e",
+      "player_name": "Edin",
+      "player_nickname": "aed1on",
+      "player_lastname": "Icanovic",
+      "player_description": "legend",
+      "player_age": "21",
+      "player_steamid": "76561198141438928",
+      "player_countrycode": "ba"
+    },
+    {
+      "id": "5bc098a26287e9ec4972acfddbf455fd2ce0a39c",
+      "player_name": "Zinedin",
+      "player_nickname": "heartless",
+      "player_lastname": "Ljubijankic",
+      "player_description": "mrallee",
+      "player_age": "19",
+      "player_steamid": "76561198282014175",
+      "player_countrycode": "si"
+    },
+    {
+      "id": "43bf7743ebd930d65a411e83465a7a04e30d09f7",
+      "player_name": "Sifet",
+      "player_nickname": "AgresivaNNN",
+      "player_lastname": "Elkasovic",
+      "player_description": "aas",
+      "player_age": "24",
+      "player_steamid": "76561197964905252",
+      "player_countrycode": "si",
+      "player_teamid": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a"
     }
   ],
   "error_list": []

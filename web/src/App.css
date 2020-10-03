@@ -42,6 +42,14 @@
   width: 100%;
 }
 
+.truncate {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 .image-preview{
   height: 150px;
   width: 150px;

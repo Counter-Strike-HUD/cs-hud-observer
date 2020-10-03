@@ -21,6 +21,10 @@ import Matches from './components/matches/Matches';
 import TeamAdd from './components/teams/add/TeamAdd';
 import TeamView from './components/teams/view/ViewTeam';
 
+import PlayerAdd from './components/players/add/PlayerAdd';
+import PlayerView from './components/players/view/PlayerView';
+
+
 //const client = io.connect('localhost:8000');
 
 
@@ -30,6 +34,8 @@ function App() {
       <Router>
         <Routes />
         <Switch>
+          <Route path="/players/view/:id" component={PlayerView} /> 
+          <Route path="/players/add" component={PlayerAdd} /> 
           <Route path="/teams/view/:id" component={TeamView} />   
           <Route path="/teams/add" component={TeamAdd} />   
           <Route path="/matches" component={Matches} />

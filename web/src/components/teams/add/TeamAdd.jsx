@@ -83,7 +83,7 @@ class TeamAdd extends React.Component{
             'team_description': this.state.clanDescription,
         }
 
-        fetch('http://localhost:3001/api/addclan', {
+        fetch('/api/addclan', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),

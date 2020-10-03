@@ -23,7 +23,7 @@ class ViewTeam extends React.Component{
     }
 
     componentDidMount() {
-        fetch(`http://localhost:3001/api/view/team/${this.props.match.params.id}`)
+        fetch(`/api/view/team/${this.props.match.params.id}`)
           .then(res => res.json())
           .then(
             (result) => {
@@ -121,11 +121,11 @@ class ViewTeam extends React.Component{
             'team_name': this.state.clanName,
             'team_short_name': this.state.clanShortName,
             'team_country_code': this.state.clanCountryCode,
-            'team_logo': this.state.clanLogo | null,
+            'team_logo': this.state.clanLogo ? this.state.clanLogo : null,
             'team_description': this.state.clanDescription,
         }
 
-        fetch('http://localhost:3001/api/editclan', {
+        fetch('/api/editclan', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),
@@ -218,7 +218,7 @@ class ViewTeam extends React.Component{
                                             />
                                         </Form.Group>
 
-                                        <Image src={`/assets/${this.state.id}.png`} alt='Loading...' rounded />
+                                        <Image src={`/assets/teams/${this.state.id}.png`} alt='Loading...' rounded />
 
                                         <Form.Group>
                                             {imageName}
