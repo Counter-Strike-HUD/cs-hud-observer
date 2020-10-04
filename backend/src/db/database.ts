@@ -22,6 +22,13 @@ interface Players {
     player_description: string;
 }
 
+interface Matches {
+    id: string;
+    team_one: string;
+    team_two: string;
+    status: string;
+}
+
 interface Error {
     error_name: string;
     error_message: NodeJS.ErrnoException | null;
@@ -31,6 +38,7 @@ interface Error {
 interface DatabaseType {
     teams: Array<Teams>;
     players: Array<Players>;
+    matches: Array<Matches>;
     error_list: Array<Error>;
 }
 
@@ -38,6 +46,7 @@ const adapter = new FileAsync<DatabaseType>(__dirname + '/db.json', {
     defaultValue: {
         teams: [],
         players: [],
+        matches: [],
         error_list: []
     }
 });
