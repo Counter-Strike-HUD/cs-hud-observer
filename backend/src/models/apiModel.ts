@@ -47,6 +47,13 @@ interface PlayerAdd extends PlayerAddBody{
     id: string;
 }
 
+interface Matches {
+    id: string;
+    team_one: string;
+    team_two: string;
+    status: string;
+}
+
 
 export function generateUniqueID(): string{
  
@@ -216,4 +223,15 @@ export function parsePlayerEdit(id: string, body: PlayerAddBody){
     return true
 
 }
+
+
+export function getAllMatches(){
+
+    const matches: ArrayLike<Matches> = db.get('matches').value();
+
+    return matches
+}
+
+
+
 

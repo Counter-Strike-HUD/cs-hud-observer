@@ -88,7 +88,7 @@ router.post('/addplayer', (req , res) =>{
 });
 
 
-// View team
+// View player
 router.get('/view/player/:id', (req , res) =>{
 
     const player = apiModel.parsePlayerView(req.params.id);
@@ -109,6 +109,37 @@ router.post('/editplayer', (req , res) =>{
 
     return res.status(500).json({'status_code': 500, 'message': 'Player is not edited.'})   
 });
+
+
+
+// Get players
+router.get('/matches', (req , res, next) =>{
+
+    const matches = apiModel.getAllMatches();
+
+    res.json({
+        "status_code": 200,
+        "message": "Matches list.",
+        "matches": matches ? matches : [],
+    }); 
+
+});
+
+
+router.post('/matches/info', (req , res, next) =>{
+
+    const team_one = apiModel.parseClanView(req.body.team_one);
+    const team_two = apiModel.parseClanView(req.body.team_two);
+
+    res.json({
+        "status_code": 200,
+        "message": "Matches teams info.",
+        "team_one": team_one,
+        "team_two": team_two,
+    }); 
+
+});
+
 
 
 // 404 not found api route
