@@ -27,6 +27,7 @@ interface Matches {
     team_one: string;
     team_two: string;
     status: string;
+    match_type: string;
 }
 
 interface Error {

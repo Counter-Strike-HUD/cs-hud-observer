@@ -1,0 +1,222 @@
+#root{ 
+  background: url(https://imgur.com/Smj4nT6.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+.grid-container {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.6fr 1.2fr 0.6fr 1.1fr;
+  grid-template-rows: 0.3fr 1.2fr 1.3fr 1.4fr 0.7fr 0.3fr;
+  width: 100vw;
+  height: 100vh;
+  gap: 10px 20px;
+  grid-template-areas:
+    "box-left team-left score team-right box-right"
+    "box-left . . . box-right"
+    ". . . . ."
+    "team-box-left . . . team-box-right"
+    "team-box-left player-info player-info player-info team-box-right"
+    "team-box-left . . . team-box-right";
+}
+
+/*
+  SCORE AREA START
+*/
+
+.score { 
+  display: grid;
+  grid-area: score;
+  grid-template-areas:
+  "logo-left-area streak-left middle streak-right logo-right-area"
+  "logo-left-area left-score middle right-score logo-right-area"
+  "info-area info-area info-area info-area info-area"
+  ;
+  grid-template-columns: 1fr 0.8fr 1.4fr 0.8fr 1fr;
+  grid-template-rows: 0.3fr 0.4fr 0.2fr;
+  font-weight: 800;
+  height: 100%;
+  opacity: .90;
+  background-color: #303661;
+  color: white;
+  align-items: center;
+  justify-items: center;
+}
+
+.score .left-score{
+  grid-area: left-score;
+}
+
+.score .left-score p{
+  font-size: 30px;
+}
+
+.score .right-score{
+  grid-area: right-score;
+  text-align: right;
+}
+
+.score .right-score p{
+  font-size: 30px;
+}
+
+.score .middle{
+  grid-area: middle;
+  text-align: center;
+}
+
+.score .time p{
+  font-size: 30px;
+}
+
+.score .info{
+  grid-area: info-area;
+}
+
+.score .streak-left{
+  grid-area: streak-left;
+}
+
+.score .streak-right{
+  grid-area: streak-right;
+}
+
+.score .logo-left-area{
+  grid-area: logo-left-area;
+}
+
+.score .logo-left-area img{
+  opacity: 1;
+  width: 45px;
+  height: 45px;
+}
+
+.score .logo-right-area{
+  grid-area: logo-right-area;
+}
+
+.score .logo-right-area img{
+  opacity: 1;
+  width: 45px;
+  height: 45px;
+}
+
+/*
+  SCORE AREA END
+*/
+
+
+/*
+  TEAM NAME AREA START
+*/
+
+.team-left { 
+  grid-area: team-left; 
+}
+
+.team-left p {
+  color: white;
+  font-weight: 800;
+  font-size: 30px;
+  padding-top: 10%;
+  text-align: right;
+  width: 100%;
+  height: 100%;
+}
+
+.team-right { 
+  grid-area: team-right; 
+}
+
+.team-right p {
+  color: white;
+  font-weight: 800;
+  font-size: 30px;
+  padding-top: 10%;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+
+/*
+  TEAM NAME AREA STOP
+*/
+
+.box-left {
+  display: grid;
+  grid-area: box-left;
+  grid-template-rows: 10% 90%;
+  row-gap: 10px;
+  grid-template-areas:
+    "mode-and-maps"
+    "radar";
+
+}
+
+.box-left .mode-and-maps{
+  
+  grid-area: mode-and-maps;
+  opacity: .90;
+  background-color: #303661;
+  font-weight: 600;
+  color: white;
+  padding-left: 5px;
+}
+
+.box-left .mode-and-maps .maps-playing{
+  display: inline-block;
+  padding-left: 15px;
+  color: #777;
+  font-weight: 700;
+}
+
+.box-left .mode-and-maps .active{
+  color: white;
+}
+
+.box-left .radar{
+  grid-area: radar;
+  border: 1px solid blue;
+}
+
+.box-right {
+  border: 1px solid red;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". . ."
+    ". . .";
+  grid-area: box-right;
+}
+
+
+/*
+  TEAM PLAYERS AREA START
+*/
+
+.team-box-left {
+  grid-area: team-box-left;
+  border: 1px solid red;
+}
+
+.team-box-right { 
+  grid-area: team-box-right; 
+  border: 1px solid red;
+}
+
+/*
+  TEAM PLAYERS AREA STOP
+*/
+
+.player-info {
+  border: 1px solid red;
+  grid-area: player-info; 
+}
+

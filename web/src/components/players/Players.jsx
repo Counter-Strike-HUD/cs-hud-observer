@@ -20,7 +20,7 @@ class Players extends React.Component{
     }
 
     componentDidMount() {
-        fetch("http://localhost:3001/api/players")
+        fetch("/api/players")
           .then(res => res.json())
           .then(
             (result) => {

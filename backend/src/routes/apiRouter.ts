@@ -74,6 +74,7 @@ router.get('/players', (req , res, next) =>{
 });
 
 
+
 // Add player
 router.post('/addplayer', (req , res) =>{
 
@@ -86,7 +87,6 @@ router.post('/addplayer', (req , res) =>{
     return res.status(500).json({'status_code': 500, 'message': 'Player is not added.'})   
 
 });
-
 
 // View player
 router.get('/view/player/:id', (req , res) =>{
@@ -139,6 +139,44 @@ router.post('/matches/info', (req , res, next) =>{
     }); 
 
 });
+
+// View match
+router.get('/view/match/:id', (req , res) =>{
+
+    const match = apiModel.parseMatchView(req.params.id);
+
+    if(!match){
+        return res.status(404).json({'status_code': 404, 'message': 'Match not found.'})  
+    }
+
+    return res.status(200).json({'id': req.params.id, 'status_code': 200, 'message': 'Match is successfully found.', 'match_info': match}) 
+});
+
+
+// Add mathch
+router.post('/addmatch', (req , res) =>{
+
+    const id: string = apiModel.generateUniqueID();
+
+    if(apiModel.parseMatchAdd(id, req.body)){
+        return res.status(200).json({'id': id, 'status_code': 200, 'message': 'Match is successfully added.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Match is not added.'})   
+
+});
+
+
+// Edit match
+router.post('/editmatch', (req , res) =>{
+
+    if(apiModel.parseMatchEdit(req.body.id, req.body)){
+        return res.status(200).json({'id': req.body.id, 'status_code': 200, 'message': 'Match is successfully edited.'}) 
+    }
+
+    return res.status(500).json({'status_code': 500, 'message': 'Mathc is not edited.'})   
+});
+
 
 
 

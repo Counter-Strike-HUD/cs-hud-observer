@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 
 class Matches extends React.Component{
 
-
     constructor(props) {
         super(props);
         this.state = {
@@ -17,15 +16,18 @@ class Matches extends React.Component{
     }
 
     componentDidMount() {
-        fetch("http://localhost:3001/api/matches")
+        fetch("/api/matches")
           .then(res => res.json())
           .then(
             (result) => {
+
+                console.log(result)
              
                 // Set state about players
                 if(result.status_code === 200){
+                    // eslint-disable-next-line
                     result.matches.map(match =>{
-                        this.fetchTeams(match.id, [match.team_one, match.team_two])
+                        this.fetchTeams(match.id, match.match_type, [match.team_one, match.team_two])
                     })    
                 }
 
@@ -40,7 +42,7 @@ class Matches extends React.Component{
         )
     }
 
-    fetchTeams(match_id, ids){
+    fetchTeams(match_id, match_type, ids){
 
         const body = {
             "team_one": ids[0],
@@ -66,7 +68,8 @@ class Matches extends React.Component{
                                 {
                                     match_id,
                                     team_one: result.team_one,
-                                    team_two: result.team_two
+                                    team_two: result.team_two,
+                                    match_type
                                 }
                             ]
                         }))
@@ -125,6 +128,8 @@ class Matches extends React.Component{
                                                 <ListGroup.Item key={match.match_id}>
 
                                                     <b>{match.team_one.team_name}</b> vs <b>{match.team_two.team_name}</b>
+
+                                                    <span style={{paddingLeft: '10px'}}>Match type: <b>{match.match_type}</b></span>
 
                                                     <Link to={`/matches/view/${match.match_id}`}>
                                                         <Button size="sm" variant="primary" className="float-right"> <BsFillInfoCircleFill /> View match </Button>

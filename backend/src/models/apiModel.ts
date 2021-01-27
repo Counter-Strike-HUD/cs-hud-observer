@@ -47,11 +47,16 @@ interface PlayerAdd extends PlayerAddBody{
     id: string;
 }
 
-interface Matches {
-    id: string;
+interface MatchesBody {
     team_one: string;
     team_two: string;
     status: string;
+    match_type: string;
+}
+
+
+interface Matches extends MatchesBody{
+    id: string;
 }
 
 
@@ -199,7 +204,6 @@ export function parsePlayerView(id: string): PlayerAdd{
 
 export function parsePlayerEdit(id: string, body: PlayerAddBody){
 
-
     const values: PlayerAdd = {
         'id': id,
         'player_name': body.player_name,
@@ -232,6 +236,53 @@ export function getAllMatches(){
     return matches
 }
 
+export function parseMatchAdd(id: string, body: MatchesBody){
 
+    const values: Matches = {
+        'id': id,
+        'team_one': body.team_one,
+        'team_two': body.team_two,
+        'status': body.status, 
+        'match_type': body.match_type   
+    }
+
+    try {
+        db.get('matches').push(values).write();
+    } catch (err) {
+        db.get('error_list').push({error_name: 'save_match_db', error_message: err, error_custom: 'Error while saving match into database.'}).write();
+        return false
+    }
+    
+    return true
+
+}
+
+
+export function parseMatchView(id: string): Matches{
+    return db.get('matches').find({id}).value();
+}
+
+
+
+export function parseMatchEdit(id: string, body: MatchesBody){
+    
+    const values: Matches = {
+        'id': id,
+        'team_one': body.team_one,
+        'team_two': body.team_two,
+        'status': body.status, 
+        'match_type': body.match_type   
+    }
+
+    try {
+        db.get('matches').find({id}).assign({team_one: values.team_one, team_two: values.team_two, status: values.status, match_type: values.match_type}).write();
+    } catch (err) {
+        db.get('error_list').push({error_name: 'save_match_db', error_message: err, error_custom: 'Error while saving match into database.'}).write();
+        return false
+    }
+    
+    return true
+
+}
 
 
