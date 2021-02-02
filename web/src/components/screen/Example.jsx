@@ -3,10 +3,29 @@ import React from 'react';
 import './Screen.css'
 
 class Example extends React.Component{
+
+    constructor(){
+
+        super();
+
+        this.state = {
+            num: 0
+        }
+
+        setInterval(()=>{
+            this.setState({num: this.state.num+1});
+        },1000)
+    }
+
+    
+
+    
+
     render(){        
         return(
             <div>
                <div className="grid-container">
+                   <div className="crosshair">+</div>
                     <div className="score">
                         <div className="streak-left">
                             --
@@ -21,11 +40,14 @@ class Example extends React.Component{
 
 
                         <div className="left-score">
-                            <p>12</p>
+                            <p>13</p>
                         </div>
 
                         <div className="middle">
-                            <p>1:35</p>     
+                            <p>1:35
+
+
+                            </p>     
                         </div>
 
                         <div className="right-score">
@@ -77,7 +99,9 @@ class Example extends React.Component{
                     <div className="box-right"></div>
                     <div className="team-box-left"></div>
                     <div className="team-box-right">
-                        test
+                                {
+                                   this.state.num
+                                }
                     </div>
                     <div className="player-info"></div>
                 </div>

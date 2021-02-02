@@ -1,10 +1,19 @@
+
+
 #root{ 
+
   background: url(https://imgur.com/Smj4nT6.png) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
+
+
+#root{
+  background-color: none;
+}
+
 
 
 .grid-container {
@@ -18,11 +27,24 @@
   grid-template-areas:
     "box-left team-left score team-right box-right"
     "box-left . . . box-right"
-    ". . . . ."
+    ". . crosshair . ."
     "team-box-left . . . team-box-right"
     "team-box-left player-info player-info player-info team-box-right"
     "team-box-left . . . team-box-right";
 }
+
+
+.crosshair{
+  grid-area: crosshair;
+  margin: auto;
+  font-size: 70px;
+  color: blue;
+  font-weight: 00;
+  opacity: 0.2;
+  z-index: 9;
+  align-items: center;
+}
+
 
 /*
   SCORE AREA START
