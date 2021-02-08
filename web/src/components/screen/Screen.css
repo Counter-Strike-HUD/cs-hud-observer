@@ -23,7 +23,7 @@
   padding: 12px;
   display: grid;
   grid-template-columns: 1.1fr 0.6fr 1.2fr 0.6fr 1.1fr;
-  grid-template-rows: 0.3fr 1.2fr 1.3fr 1.8fr 0.7fr 0.3fr;
+  grid-template-rows: 0.3fr 1.2fr 1.3fr 1.8fr 0.4fr 0.3fr;
   width: 100vw;
   height: 100vh;
   gap: 10px 20px;
@@ -282,6 +282,9 @@
 
 .armor-left-1{
   grid-area:armor-left-1;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-left-1 img{
@@ -330,9 +333,12 @@
 .avatar-left-1{
   grid-area: avatar-left-1;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-left-1 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-left-1{
@@ -393,6 +399,9 @@
 
 .armor-left-2{
   grid-area:armor-left-2;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-left-2 img{
@@ -441,14 +450,17 @@
   "avatar-left-2 equipment-left-2 utility-left-2 weapon-left-2";
 }
 
-
 .avatar-left-2{
   grid-area: avatar-left-2;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
 }
+
+.avatar-left-2 img{
+  width: 32px;
+  margin: auto;
+}
+
 
 .equipment-left-2{
   grid-area: equipment-left-2;
@@ -507,6 +519,9 @@
 
 .armor-left-3{
   grid-area:armor-left-3;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-left-3 img{
@@ -558,9 +573,12 @@
 .avatar-left-3{
   grid-area: avatar-left-3;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-left-3 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-left-3{
@@ -627,6 +645,9 @@
 
 .armor-left-4{
   grid-area:armor-left-4;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-left-4 img{
@@ -670,9 +691,12 @@
 .avatar-left-4{
   grid-area: avatar-left-4;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-left-4 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-left-4{
@@ -740,6 +764,9 @@
 
 .armor-left-5{
   grid-area:armor-left-5;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-left-5 img{
@@ -781,9 +808,12 @@
 .avatar-left-5{
   grid-area: avatar-left-5;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-left-5 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-left-5{
@@ -863,12 +893,15 @@
   display: grid;
   grid-template-columns: 15% 15% 50% 20%;
   grid-template-areas:
-  "health-number-right-1 armor-right-1 nick-right-1 avatar-right-1";
+  "health-number-right-1 armor-right-1 nick-right-1 .";
   background-color: hsl(239, 98%, 63%);
 }
 
 .armor-right-1{
   grid-area:armor-right-1;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-right-1 img{
@@ -918,16 +951,12 @@
 .avatar-right-1{
   grid-area: avatar-right-1;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
-  align-items: center;
-  justify-content: center
+  height: 100%;
 }
 
 .avatar-right-1 img{
   width: 32px;
-  height: 64px;
+  margin: auto;
 }
 
 .equipment-right-1{
@@ -990,6 +1019,9 @@
 
 .armor-right-2{
   grid-area:armor-right-2;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-right-2 img{
@@ -1040,13 +1072,18 @@
 }
 
 
+
 .avatar-right-2{
   grid-area: avatar-right-2;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
 }
+
+.avatar-right-2 img{
+  width: 32px;
+  margin: auto;
+}
+
 
 .equipment-right-2{
   grid-area: equipment-right-2;
@@ -1107,6 +1144,9 @@
 
 .armor-right-3{
   grid-area:armor-right-3;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-right-3 img{
@@ -1156,13 +1196,18 @@
 }
 
 
+
 .avatar-right-3{
   grid-area: avatar-right-3;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
 }
+
+.avatar-right-3 img{
+  width: 32px;
+  margin: auto;
+}
+
 
 .equipment-right-3{
   grid-area: equipment-right-3;
@@ -1230,6 +1275,9 @@
 
 .armor-right-4{
   grid-area:armor-right-4;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-right-4 img{
@@ -1271,12 +1319,16 @@
 }
 
 
+
 .avatar-right-4{
   grid-area: avatar-right-4;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-right-4 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-right-4{
@@ -1346,6 +1398,9 @@
 
 .armor-right-5{
   grid-area:armor-right-5;
+  display: flex;
+  align-items: center;
+  justify-items: center;
 }
 
 .armor-right-5 img{
@@ -1385,12 +1440,16 @@
 }
 
 
+
 .avatar-right-5{
   grid-area: avatar-right-5;
   display: grid;
-  align-items: start;
-  height: 16px;
-  width: 16px;
+  height: 100%;
+}
+
+.avatar-right-5 img{
+  width: 32px;
+  margin: auto;
 }
 
 .equipment-right-5{
@@ -1441,7 +1500,61 @@
 */
 
 .player-info {
-  border: 1px solid red;
-  grid-area: player-info; 
+  grid-area: player-info;
+  display: grid;
+  margin-left: 20%; 
+  margin-right: 20%;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+  "player-spectaded-upper-layer"
+  "player-spectaded-down-layer";
 }
 
+
+.player-spectaded-upper-layer{
+  grid-area: player-spectaded-upper-layer;
+  background-color: #303661;
+  opacity: 0.9;
+  display: grid;
+  grid-template-columns: 15% 15% 40% 15% 15%;
+  grid-template-areas:
+  "player-spectaded-name player-spectaded-name . player-spectaded-health player-spectaded-gear"
+}
+
+.player-spectaded-down-layer{
+  grid-area: player-spectaded-down-layer;
+  display: grid;
+  background-color: hsl(239, 98%, 63%);
+  grid-template-columns: 15% 15% 40% 15% 15%;
+  grid-template-areas: 
+  "player-spectaded-utility player-spectaded-utility player-spectaded-avatar player-spectaded-amunition .";
+}
+
+.player-spectaded-name{
+  grid-area: player-spectaded-name;
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+  text-align: right;
+}
+
+.player-spectaded-health{
+  grid-area: player-spectaded-health;
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+}
+
+.player-spectaded-gear{
+  grid-area: player-spectaded-gear;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.player-spectaded-gear img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}

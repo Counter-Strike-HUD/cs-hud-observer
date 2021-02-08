@@ -126,7 +126,7 @@ class Example extends React.Component{
 
                             <div className="player-info-left-1">
                                 <div className="avatar-left-1">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-left-1">
                                     <img src={C4} alt="full"></img>
@@ -162,7 +162,7 @@ class Example extends React.Component{
 
                             <div className="player-info-left-2">
                                 <div className="avatar-left-2">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-left-2">
                                     <img src={C4} alt="full"></img>
@@ -195,7 +195,7 @@ class Example extends React.Component{
 
                             <div className="player-info-left-3">
                                 <div className="avatar-left-3">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-left-3">
                                     <img src={C4} alt="full"></img>
@@ -228,7 +228,7 @@ class Example extends React.Component{
 
                             <div className="player-info-left-4">
                                 <div className="avatar-left-4">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-left-4">
                                     <img src={C4} alt="full"></img>
@@ -260,7 +260,7 @@ class Example extends React.Component{
 
                             <div className="player-info-left-5">
                                 <div className="avatar-left-5">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-left-5">
                                     <img src={C4} alt="full"></img>
@@ -297,7 +297,6 @@ class Example extends React.Component{
                             <div className="player-info-right-1">
                                 <div className="avatar-right-1">
                                     <img src={User} alt="user" />
-
                                 </div>
                                 <div className="equipment-right-1">
                                     <img src={Defuser} alt="full"></img>
@@ -333,7 +332,7 @@ class Example extends React.Component{
 
                             <div className="player-info-right-2">
                                 <div className="avatar-right-2">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-right-2">
                                     <img src={Defuser} alt="full"></img>
@@ -366,7 +365,7 @@ class Example extends React.Component{
 
                             <div className="player-info-right-3">
                                 <div className="avatar-right-3">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-right-3">
                                     <img src={Defuser} alt="full"></img>
@@ -399,7 +398,7 @@ class Example extends React.Component{
 
                             <div className="player-info-right-4">
                                 <div className="avatar-right-4">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-right-4">
                                     <img src={Defuser} alt="full"></img>
@@ -431,7 +430,7 @@ class Example extends React.Component{
 
                             <div className="player-info-right-5">
                                 <div className="avatar-right-5">
-
+                                    <img src={User} alt="user" />
                                 </div>
                                 <div className="equipment-right-5">
                                     <img src={Defuser} alt="full"></img>
@@ -447,7 +446,31 @@ class Example extends React.Component{
                             </div>
                         </div>
                     </div>
-                    <div className="player-info"></div>
+                    <div className="player-info">
+
+                        <div className="player-spectaded-upper-layer">
+
+                            <div className="player-spectaded-name">
+                                kalle
+                            </div>
+
+                            <div className="player-spectaded-health">
+                                + 100
+                            </div>
+
+                            <div className="player-spectaded-gear">
+                                <img src={ArmorFull} alt="full"></img>
+                                <img src={LightArmor} alt="full"></img>
+                            </div>
+
+
+                        </div>
+
+                        <div className="player-spectaded-down-layer">
+                           
+                        </div>
+                      
+                    </div>
                 </div>
             </div>       
         );
