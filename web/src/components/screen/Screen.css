@@ -1,4 +1,6 @@
-
+:root {
+  --main-bg-color: brown;
+}
 
 #root{ 
   background: url(https://imgur.com/Smj4nT6.png) no-repeat center center fixed; 
@@ -10,8 +12,10 @@
 
 
 #root{
-  background-color: none;
+  background-color: transparent;
 }
+
+
 
 
 
@@ -19,7 +23,7 @@
   padding: 12px;
   display: grid;
   grid-template-columns: 1.1fr 0.6fr 1.2fr 0.6fr 1.1fr;
-  grid-template-rows: 0.3fr 1.2fr 1.3fr 1.4fr 0.7fr 0.3fr;
+  grid-template-rows: 0.3fr 1.2fr 1.3fr 1.8fr 0.7fr 0.3fr;
   width: 100vw;
   height: 100vh;
   gap: 10px 20px;
@@ -33,16 +37,31 @@
 }
 
 
+
+
+
+
+/*
+  CROSSHAIR AREA START
+*/
+
 .crosshair{
   grid-area: crosshair;
   margin: auto;
   font-size: 70px;
   color: blue;
-  font-weight: 00;
+  font-weight: 300;
   opacity: 0.2;
   z-index: 9;
   align-items: center;
+  justify-self: center
 }
+
+/*
+  CROSSHAIR AREA END
+*/
+
+
 
 
 /*
@@ -224,13 +243,1198 @@
 
 .team-box-left {
   grid-area: team-box-left;
-  border: 1px solid red;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+  "left-player-1"
+  "left-player-2"
+  "left-player-3"
+  "left-player-4"
+  "left-player-5";
+  border-radius: 5px;
+  perspective: 1px;
+  overflow: hidden;
 }
 
-.team-box-right { 
-  grid-area: team-box-right; 
-  border: 1px solid red;
+
+
+/*
+  PLAYER LEFT 1 START
+*/
+
+.left-player-1{
+  grid-area: left-player-1;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-left-1"
+  "player-info-left-1";
 }
+
+.health-player-left-1{
+  grid-area: health-player-left-1;
+  display: grid;
+  grid-template-columns: 20% 50% 15% 15%;
+  grid-template-areas:
+  ". nick-left-1 armor-left-1 health-number-left-1";
+  background-color: hsl(0, 82%, 57%);
+}
+
+.armor-left-1{
+  grid-area:armor-left-1;
+}
+
+.armor-left-1 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-left-1{
+  grid-area: health-number-left-1;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.player-info-left-1{
+  grid-area: player-info-left-1;
+  display: grid;
+
+}
+
+.nick-left-1{
+  grid-area: nick-left-1;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+}
+
+
+.player-info-left-1{
+  grid-area: player-info-left-1;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 20% 15% 40% 25%;
+  grid-template-areas:
+  "avatar-left-1 equipment-left-1 utility-left-1 weapon-left-1";
+}
+
+
+.avatar-left-1{
+  grid-area: avatar-left-1;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-left-1{
+  grid-area: equipment-left-1;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-left-1 img {
+  height: 16px;
+}
+
+.utility-left-1{
+  grid-area: utility-left-1;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-left-1 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-left-1{
+  grid-area: weapon-left-1;
+  display: grid;
+}
+
+.weapon-left-1 img{
+  height: 16px;
+  margin: auto;
+}
+
+
+/*
+  PLAYER LEFT 1 END
+*/
+
+
+
+
+/*
+  PLAYER LEFT 2 START
+*/
+
+.left-player-2{
+  grid-area: left-player-2;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-left-2"
+  "player-info-left-2";
+}
+
+
+.armor-left-2{
+  grid-area:armor-left-2;
+}
+
+.armor-left-2 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-left-2{
+  grid-area: health-number-left-2;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-left-2{
+  grid-area: nick-left-2;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+}
+
+
+.health-player-left-2{
+  grid-area: health-player-left-2;
+  display: grid;
+  grid-template-columns: 20% 50% 15% 15%;
+  grid-template-areas:
+  ". nick-left-2 armor-left-2 health-number-left-2";
+  background-color: hsl(0, 82%, 57%);
+}
+
+
+.player-info-left-2{
+  grid-area: player-info-left-2;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 20% 15% 40% 25%;
+  grid-template-areas:
+  "avatar-left-2 equipment-left-2 utility-left-2 weapon-left-2";
+}
+
+
+.avatar-left-2{
+  grid-area: avatar-left-2;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-left-2{
+  grid-area: equipment-left-2;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-left-2 img {
+  height: 16px;
+}
+
+.utility-left-2{
+  grid-area: utility-left-2;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-left-2 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-left-2{
+  grid-area: weapon-left-2;
+  display: grid;
+}
+
+.weapon-left-2 img{
+  height: 16px;
+  margin: auto;
+}
+
+
+/*
+  PLAYER LEFT 2 END
+*/
+
+
+
+/*
+  PLAYER LEFT 3 START
+*/
+
+.left-player-3{
+  grid-area: left-player-3;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-left-3"
+  "player-info-left-3";
+}
+
+
+.armor-left-3{
+  grid-area:armor-left-3;
+}
+
+.armor-left-3 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-left-3{
+  grid-area: health-number-left-3;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-left-3{
+  grid-area: nick-left-3;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+}
+
+
+.health-player-left-3{
+  grid-area: health-player-left-3;
+  display: grid;
+  grid-template-columns: 20% 50% 15% 15%;
+  grid-template-areas:
+  ". nick-left-3 armor-left-3 health-number-left-3";
+  background-color: hsl(0, 82%, 57%);
+}
+
+.player-info-left-3{
+  grid-area: player-info-left-3;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 20% 15% 40% 25%;
+  grid-template-areas:
+  "avatar-left-3 equipment-left-3 utility-left-3 weapon-left-3";
+}
+
+
+.avatar-left-3{
+  grid-area: avatar-left-3;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-left-3{
+  grid-area: equipment-left-3;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-left-3 img {
+  height: 16px;
+}
+
+.utility-left-3{
+  grid-area: utility-left-3;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-left-3 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-left-3{
+  grid-area: weapon-left-3;
+  display: grid;
+}
+
+.weapon-left-3 img{
+  height: 16px;
+  margin: auto;
+}
+
+
+/*
+  PLAYER LEFT 3 END
+*/
+
+
+/*
+  PLAYER LEFT 4 START
+*/
+
+.left-player-4{
+  grid-area: left-player-4;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-left-4"
+  "player-info-left-4";
+}
+
+.health-player-left-4{
+  grid-area: health-player-left-4;
+  display: grid;
+  grid-template-columns: 20% 50% 15% 15%;
+  grid-template-areas:
+  ". nick-left-4 armor-left-4 health-number-left-4";
+  background-color: hsl(0, 82%, 57%);
+}
+
+.armor-left-4{
+  grid-area:armor-left-4;
+}
+
+.armor-left-4 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-left-4{
+  grid-area: health-number-left-4;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-left-4{
+  grid-area: nick-left-4;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+}
+
+
+
+.player-info-left-4{
+  grid-area: player-info-left-4;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 20% 15% 40% 25%;
+  grid-template-areas:
+  "avatar-left-4 equipment-left-4 utility-left-4 weapon-left-4";
+}
+
+
+.avatar-left-4{
+  grid-area: avatar-left-4;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-left-4{
+  grid-area: equipment-left-4;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-left-4 img {
+  height: 16px;
+}
+
+.utility-left-4{
+  grid-area: utility-left-4;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-left-4 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-left-4{
+  grid-area: weapon-left-4;
+  display: grid;
+}
+
+.weapon-left-4 img{
+  height: 16px;
+  margin: auto;
+}
+
+
+
+/*
+  PLAYER LEFT 4 END
+*/
+
+/*
+  PLAYER LEFT 5 START
+*/
+
+.left-player-5{
+  grid-area: left-player-5;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-left-5"
+  "player-info-left-5";
+}
+
+
+.health-player-left-5{
+  grid-area: health-player-left-5;
+  display: grid;
+  grid-template-columns: 20% 50% 15% 15%;
+  grid-template-areas:
+  ". nick-left-5 armor-left-5 health-number-left-5";
+  background-color: hsl(0, 82%, 57%);
+}
+
+.armor-left-5{
+  grid-area:armor-left-5;
+}
+
+.armor-left-5 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-left-5{
+  grid-area: health-number-left-5;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-left-5{
+  grid-area: nick-left-5;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+}
+
+.player-info-left-5{
+  grid-area: player-info-left-5;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 20% 15% 40% 25%;
+  grid-template-areas:
+  "avatar-left-5 equipment-left-5 utility-left-5 weapon-left-5";
+}
+
+
+.avatar-left-5{
+  grid-area: avatar-left-5;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-left-5{
+  grid-area: equipment-left-5;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-left-5 img {
+  height: 16px;
+}
+
+.utility-left-5{
+  grid-area: utility-left-5;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-left-5 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-left-5 {
+  grid-area: weapon-left-5;
+  display: grid;
+}
+
+.weapon-left-5 img{
+  height: 16px;
+  margin: auto;
+}
+
+
+
+/*
+  PLAYER LEFT 5 END
+*/
+
+
+
+.team-box-right { 
+  grid-area: team-box-right;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+  "right-player-1"
+  "right-player-2"
+  "right-player-3"
+  "right-player-4"
+  "right-player-5";
+  border-radius: 5px;
+  perspective: 1px;
+  overflow: hidden;
+}
+
+
+
+/*
+  PLAYER LEFT 1 START
+*/
+
+.right-player-1{
+  grid-area: right-player-1;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-right-1"
+  "player-info-right-1";
+}
+
+.health-player-right-1{
+  grid-area: health-player-right-1;
+  display: grid;
+  grid-template-columns: 15% 15% 50% 20%;
+  grid-template-areas:
+  "health-number-right-1 armor-right-1 nick-right-1 avatar-right-1";
+  background-color: hsl(239, 98%, 63%);
+}
+
+.armor-right-1{
+  grid-area:armor-right-1;
+}
+
+.armor-right-1 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-right-1{
+  grid-area: health-number-right-1;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.player-info-right-1{
+  grid-area: player-info-right-1;
+  display: grid;
+
+}
+
+.nick-right-1{
+  grid-area: nick-right-1;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+  text-align: right;
+}
+
+
+.player-info-right-1{
+  grid-area: player-info-right-1;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 25% 40% 15% 20%;
+  grid-template-areas:
+  "weapon-right-1 utility-right-1 equipment-right-1 avatar-right-1";
+}
+
+
+.avatar-right-1{
+  grid-area: avatar-right-1;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+  align-items: center;
+  justify-content: center
+}
+
+.avatar-right-1 img{
+  width: 32px;
+  height: 64px;
+}
+
+.equipment-right-1{
+  grid-area: equipment-right-1;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-right-1 img {
+  height: 16px;
+}
+
+.utility-right-1{
+  grid-area: utility-right-1;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-right-1 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-right-1{
+  grid-area: weapon-right-1;
+  display: grid;
+}
+
+.weapon-right-1 img{
+  height: 16px;
+  margin: auto;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+
+/*
+  PLAYER right 1 END
+*/
+
+
+
+
+/*
+  PLAYER right 2 START
+*/
+
+.right-player-2{
+  grid-area: right-player-2;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-right-2"
+  "player-info-right-2";
+}
+
+
+.armor-right-2{
+  grid-area:armor-right-2;
+}
+
+.armor-right-2 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-right-2{
+  grid-area: health-number-right-2;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-right-2{
+  grid-area: nick-right-2;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+  text-align: right;
+}
+
+
+.health-player-right-2{
+  grid-area: health-player-right-2;
+  display: grid;
+  grid-template-columns: 15% 15% 50% 20%;
+  grid-template-areas:
+  "health-number-right-2 armor-right-2 nick-right-2 .";
+  background-color: hsl(239, 98%, 63%);
+}
+
+
+.player-info-right-2{
+  grid-area: player-info-right-2;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 25% 40% 15% 20%;
+  grid-template-areas:
+  "weapon-right-2 utility-right-2 equipment-right-2 avatar-right-2";
+}
+
+
+.avatar-right-2{
+  grid-area: avatar-right-2;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-right-2{
+  grid-area: equipment-right-2;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-right-2 img {
+  height: 16px;
+}
+
+.utility-right-2{
+  grid-area: utility-right-2;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-right-2 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-right-2{
+  grid-area: weapon-right-2;
+  display: grid;
+}
+
+.weapon-right-2 img{
+  height: 16px;
+  margin: auto;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+
+/*
+  PLAYER right 2 END
+*/
+
+
+
+/*
+  PLAYER right 3 START
+*/
+
+.right-player-3{
+  grid-area: right-player-3;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-right-3"
+  "player-info-right-3";
+}
+
+
+.armor-right-3{
+  grid-area:armor-right-3;
+}
+
+.armor-right-3 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-right-3{
+  grid-area: health-number-right-3;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-right-3{
+  grid-area: nick-right-3;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+  text-align: right;
+}
+
+
+.health-player-right-3{
+  grid-area: health-player-right-3;
+  display: grid;
+  grid-template-columns: 15% 15% 50% 20%;
+  grid-template-areas:
+  "health-number-right-3 armor-right-3 nick-right-3 .";
+  background-color: hsl(239, 98%, 63%);
+}
+
+.player-info-right-3{
+  grid-area: player-info-right-3;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 25% 40% 15% 20%;
+  grid-template-areas:
+  "weapon-right-3 utility-right-3 equipment-right-3 avatar-right-3";
+}
+
+
+.avatar-right-3{
+  grid-area: avatar-right-3;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-right-3{
+  grid-area: equipment-right-3;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-right-3 img {
+  height: 16px;
+}
+
+.utility-right-3{
+  grid-area: utility-right-3;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-right-3 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-right-3{
+  grid-area: weapon-right-3;
+  display: grid;
+}
+
+.weapon-right-3 img{
+  height: 16px;
+  margin: auto;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+
+/*
+  PLAYER right 3 END
+*/
+
+
+/*
+  PLAYER right 4 START
+*/
+
+.right-player-4{
+  grid-area: right-player-4;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-right-4"
+  "player-info-right-4";
+}
+
+.health-player-right-4{
+  grid-area: health-player-right-4;
+  display: grid;
+  grid-template-columns: 15% 15% 50% 20%;
+  grid-template-areas:
+  "health-number-right-4 armor-right-4 nick-right-4 .";
+  background-color: hsl(239, 98%, 63%);
+}
+
+.armor-right-4{
+  grid-area:armor-right-4;
+}
+
+.armor-right-4 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-right-4{
+  grid-area: health-number-right-4;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-right-4{
+  grid-area: nick-right-4;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+  text-align: right;
+}
+
+
+
+.player-info-right-4{
+  grid-area: player-info-right-4;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 25% 40% 15% 20%;
+  grid-template-areas:
+  "weapon-right-4 utility-right-4 equipment-right-4 avatar-right-4";
+}
+
+
+.avatar-right-4{
+  grid-area: avatar-right-4;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-right-4{
+  grid-area: equipment-right-4;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-right-4 img {
+  height: 16px;
+}
+
+.utility-right-4{
+  grid-area: utility-right-4;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-right-4 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-right-4{
+  grid-area: weapon-right-4;
+  display: grid;
+}
+
+.weapon-right-4 img{
+  height: 16px;
+  margin: auto;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+
+
+/*
+  PLAYER right 4 END
+*/
+
+/*
+  PLAYER right 5 START
+*/
+
+.right-player-5{
+  grid-area: right-player-5;
+  display: grid;
+  grid-template-rows: 0.7fr 1.3fr;
+  grid-template-areas:
+  "health-player-right-5"
+  "player-info-right-5";
+}
+
+
+.health-player-right-5{
+  grid-area: health-player-right-5;
+  display: grid;
+  grid-template-columns: 15% 15% 50% 20%;
+  grid-template-areas:
+  "health-number-right-5 armor-right-5 nick-right-5 .";
+  background-color: hsl(239, 98%, 63%);
+}
+
+.armor-right-5{
+  grid-area:armor-right-5;
+}
+
+.armor-right-5 img{
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+.health-number-right-5{
+  grid-area: health-number-right-5;
+  display: grid;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+  justify-items: center;
+}
+
+
+.nick-right-5{
+  grid-area: nick-right-5;
+  display: grid;
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  align-items: center;
+  text-align: right;
+}
+
+.player-info-right-5{
+  grid-area: player-info-right-5;
+  display: grid;
+  background-color: #303661;
+  opacity: .90;
+  grid-template-columns: 25% 40% 15% 20%;
+  grid-template-areas:
+  "weapon-right-5 utility-right-5 equipment-right-5 avatar-right-5";
+}
+
+
+.avatar-right-5{
+  grid-area: avatar-right-5;
+  display: grid;
+  align-items: start;
+  height: 16px;
+  width: 16px;
+}
+
+.equipment-right-5{
+  grid-area: equipment-right-5;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.equipment-right-5 img {
+  height: 16px;
+}
+
+.utility-right-5{
+  grid-area: utility-right-5;
+  display: flex;   
+  align-items: center;
+  justify-content: center;
+
+}
+
+.utility-right-5 img {
+  height: 16px;
+  margin-right: 3px
+}
+
+.weapon-right-5 {
+  grid-area: weapon-right-5;
+  display: grid;
+}
+
+.weapon-right-5 img{
+  height: 16px;
+  margin: auto;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+
+
+/*
+  PLAYER right 5 END
+*/
+
 
 /*
   TEAM PLAYERS AREA STOP
