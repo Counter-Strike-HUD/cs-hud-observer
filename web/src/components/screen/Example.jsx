@@ -108,7 +108,30 @@ class Example extends React.Component{
                         </div>
 
                     </div>
-                    <div className="box-right"></div>
+                    <div className="box-right">
+                        <div className="wrapper">
+                            <div className="kill">
+                                <span className="tt-style">kalle</span>
+                                <img src={Ak47} alt="full"></img>
+                                <span className="ct-style">kauk</span>
+                            </div>
+                            <div className="kill">
+                                <span className="tt-style">kalle</span>
+                                <img src={Ak47} alt="full"></img>
+                                <span className="ct-style">LEG1IJADZEKO11</span>
+                            </div>
+                            <div className="kill">
+                                <span className="tt-style">kalle</span>
+                                <img src={Ak47} alt="full"></img>
+                                <span className="ct-style">aed1oN</span>
+                            </div>
+                            <div className="kill">
+                                <span className="tt-style">kalle</span>
+                                <img src={Ak47} alt="full"></img>
+                                <span className="ct-style">AgresivaNNN</span>
+                            </div>
+                        </div>   
+                    </div>
                     <div className="team-box-left">
                         <div className="left-player-1">
                             <div className="health-player-left-1">
@@ -247,7 +270,7 @@ class Example extends React.Component{
                         <div className="left-player-5">
                             <div className="health-player-left-5">
                                 <div className="nick-left-5">
-                                    heartless
+                                    AgresivaNNN
                                 </div>
                                 <div className="armor-left-5">
                                     <img src={ArmorFull} alt="full"></img>
@@ -417,7 +440,7 @@ class Example extends React.Component{
                         <div className="right-player-5">
                             <div className="health-player-right-5">
                                 <div className="nick-right-5">
-                                    heartless
+                                    AgresivaNNN
                                 </div>
                                 <div className="armor-right-5">
                                     <img src={ArmorFull} alt="full"></img>
@@ -467,7 +490,14 @@ class Example extends React.Component{
                         </div>
 
                         <div className="player-spectaded-down-layer">
-                           
+                            <div className="player-spectaded-utility">
+                                <img src={FlashGrenade} alt="full"></img>
+                                <img src={SmokeGrenade} alt="full"></img>
+                                <img src={HeGrenade} alt="full"></img>
+                            </div>
+                            <div className="player-spectaded-avatar">
+                                <img src={User} alt="user" />
+                            </div>
                         </div>
                       
                     </div>

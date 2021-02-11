@@ -224,17 +224,47 @@
   border: 1px solid blue;
 }
 
+
 .box-right {
-  border: 1px solid red;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0px 0px;
-  grid-template-areas:
-    ". . ."
-    ". . .";
-  grid-area: box-right;
+    grid-area: box-right;
 }
+
+.box-right .wrapper{
+  display: block;
+  margin-top: 40px;
+}
+
+
+.box-right .kill{
+  display: inline;
+  background-color: #303661;
+  float: right;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+.box-right span{
+  padding: 10px;
+}
+
+.box-right .tt-style{
+  color: hsl(0, 82%, 57%);
+  font-weight: 800;
+  font-size: 16px;
+  opacity: 1;
+}
+
+.box-right .ct-style{
+  color: hsl(239, 98%, 63%);
+  font-weight: 800;
+  font-size: 16px;
+  opacity: 1;
+}
+
+.box-right img{
+  height: 16px;
+}
+
 
 
 /*
@@ -1527,7 +1557,7 @@
   background-color: hsl(239, 98%, 63%);
   grid-template-columns: 15% 15% 40% 15% 15%;
   grid-template-areas: 
-  "player-spectaded-utility player-spectaded-utility player-spectaded-avatar player-spectaded-amunition .";
+  ". player-spectaded-utility player-spectaded-avatar player-spectaded-amunition .";
 }
 
 .player-spectaded-name{
@@ -1558,3 +1588,30 @@
   width: 16px;
   margin-right: 5px;
 }
+
+.player-spectaded-utility {
+  grid-area: player-spectaded-utility;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  justify-content: flex-end;
+}
+
+.player-spectaded-utility img{
+  height: 16px;
+  margin-right: 3px
+}
+
+.player-spectaded-avatar {
+  grid-area: player-spectaded-avatar;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.player-spectaded-avatar img{
+  height: 128px;
+  position: absolute;
+  z-index: 9;
+}
+
