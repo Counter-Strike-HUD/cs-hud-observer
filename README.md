@@ -12,6 +12,10 @@ Using game server stream events over socket (TCP/ UDP) to local streamer who wil
 
 CS 1.6 game server doesnt have native event stream like CSGO, so everything needs to be recreated in AmxModX.
 
+## Work (CSS idea)
+
+![screen](https://i.imgur.com/OSqQjtq.png)
+
 
 
 ## Contributing
