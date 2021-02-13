@@ -1,5 +1,6 @@
 import React from 'react';
 
+import TeamNames from '../core/TeamName/TeamNames';
 
 import ArmorFull from './resources/images/assaultsuit.png';
 import LightArmor from './resources/images/kevlar.png';
@@ -76,16 +77,8 @@ class Example extends React.Component{
                         </div>
                     </div>
 
-                    <div className="team-left">
-                        <p>
-                            MYSTERIOUS
-                        </p> 
-                    </div>
-                    <div className="team-right">
-                        <p>
-                            INFECTORS
-                        </p>
-                    </div>
+                    <TeamNames />
+
                     <div className="box-left">
                        
                         <div className="mode-and-maps">
