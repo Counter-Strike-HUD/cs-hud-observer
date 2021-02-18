@@ -64,7 +64,6 @@ public CS_OnBuy( iPlayer, iItem ) {
 	SendToSocket( Object );
 }
 
-
 public fw_Say( iPlayer ) {
 	if( !is_user_connected( iPlayer ) ) return PLUGIN_CONTINUE;
 	
