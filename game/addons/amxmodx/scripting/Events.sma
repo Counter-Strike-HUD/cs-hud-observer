@@ -55,6 +55,7 @@ public CS_OnBuy( iPlayer, iItem ) {
 	
 	new JSON:Object = json_init_object( );
 	
+	json_object_set_string( Object, "event_name", "buy_equipment" );
 	json_object_set_number( Object, "weapon_id", iItem );
 	json_object_set_string( Object, "weapon_buyer", szSteam[ iPlayer ] );
 	json_object_set_number( Object, "weapon_price", iPrice );
@@ -72,6 +73,7 @@ public fw_Say( iPlayer ) {
 	read_args( szSaid, charsmax( szSaid ) );
 	remove_quotes( szSaid );
 	
+	json_object_set_string( Object, "event_name", "user_say" );
 	json_object_set_string( Object, "message_invoker", szSteam[ iPlayer ] );
 	json_object_set_string( Object, "message", szSaid );
 	
