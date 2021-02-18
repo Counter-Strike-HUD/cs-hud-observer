@@ -3,6 +3,8 @@
 #include < json >
 #include < cstrike >
 #include < fakemeta >
+#include < hamsandwich >
+#include < csx >
 
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
@@ -38,8 +40,8 @@ public plugin_init( ) {
 		return;
 	}
 	
-	// Register events
-	register_event( "DeathMsg", "fw_PlayerDeath", "ade" );
+	// Register Ham Module Forwards
+	RegisterHam( Ham_Killed, "player", "fw_HamKilled" );
 	
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
@@ -73,20 +75,44 @@ public CS_OnBuy( iPlayer, iItem ) {
 	SendToSocket( Object );
 }
 
-// Death event
-public fw_PlayerDeath( ) {
-	new iAttacker = read_data( 1 );
-	new iVictim = read_data( 2 );
-	new iHs = read_data( 3 );
+// Killed ham
+public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
+	if( get_pdata_int( iVictim, 76 ) & DMG_FALL ) {
+		new JSON:Object = json_init_object( );
+		
+		json_object_set_string( Object, "event_name", "kill" );
+		json_object_set_number( Object, "weapon_id", 0 );
+		json_object_set_bool( Object, "headshot", false );
+		json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
+		json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
+		json_object_set_bool( Object, "suicide", true );
+		json_object_set_string( Object, "suicide_reason", "fall" );
+		
+		SendToSocket( Object );
+	}
+}
+
+// Death forward
+public client_death( iVictim, iAttacker, iWeapon, iHitPlace ) {
+	new szSuicideReason[ 18 ];
+	
+	if( iAttacker == iVictim ) {
+		switch( iWeapon ) {
+			case CSW_C4: formatex( szSuicideReason, charsmax( szSuicideReason ), "weapon_c4" );
+			case CSW_HEGRENADE: formatex( szSuicideReason, charsmax( szSuicideReason ), "weapon_hegrenade" );
+			default: formatex( szSuicideReason, charsmax( szSuicideReason ), "kill" );
+		}
+	}
 	
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "kill" );
-	json_object_set_number( Object, "weapon_id", get_user_weapon( iAttacker ) );
-	json_object_set_bool( Object, "headshot", iHs ? true : false );
+	json_object_set_number( Object, "weapon_id", iWeapon );
+	json_object_set_bool( Object, "headshot", ( iHitPlace == HIT_HEAD ) ? true : false );
 	json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
 	json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
 	json_object_set_bool( Object, "suicide", ( iAttacker == iVictim ) ? true : false );
+	json_object_set_string( Object, "suicide_reason", szSuicideReason );
 	
 	SendToSocket( Object );
 }
