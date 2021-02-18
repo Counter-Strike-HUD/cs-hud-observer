@@ -24,6 +24,7 @@ new const g_iMaxAmmo[ 31 ] = {
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.1b", "Damper" );
 	
+	// Open socket
 	new iError;
 	g_iSocket = socket_open( HOST, PORT, SOCKET_UDP, iError, SOCK_NON_BLOCKING );
 	
@@ -37,13 +38,20 @@ public plugin_init( ) {
 		return;
 	}
 	
+	// Register events
+	register_event( "DeathMsg", "fw_PlayerDeath", "ade" );
+	
+	// Register client commands
 	register_clcmd( "say", "fw_Say" );
+	
 }
 
+// Client authorized, get user steam id
 public client_authorized( iPlayer ) {
 	get_user_authid( iPlayer, szSteam[ iPlayer ], charsmax( szSteam[ ] ) );
 }
 
+// Buy forward
 public CS_OnBuy( iPlayer, iItem ) {
 	static iPrice;
 	iPrice = GetItemPrice( iPlayer, iItem );
@@ -65,6 +73,25 @@ public CS_OnBuy( iPlayer, iItem ) {
 	SendToSocket( Object );
 }
 
+// Death event
+public fw_PlayerDeath( ) {
+	new iAttacker = read_data( 1 );
+	new iVictim = read_data( 2 );
+	new iHs = read_data( 3 );
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "kill" );
+	json_object_set_number( Object, "weapon_id", get_user_weapon( iAttacker ) );
+	json_object_set_bool( Object, "headshot", iHs ? true : false );
+	json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
+	json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
+	json_object_set_bool( Object, "suicide", ( iAttacker == iVictim ) ? true : false );
+	
+	SendToSocket( Object );
+}
+
+// Say command
 public fw_Say( iPlayer ) {
 	if( !is_user_connected( iPlayer ) ) return PLUGIN_CONTINUE;
 	
