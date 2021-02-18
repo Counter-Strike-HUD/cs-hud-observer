@@ -7,8 +7,8 @@ import TeamRight from './team-right/TeamRight';
 const TeamNames = (props) =>{
     return(
         <React.Fragment>
-            <TeamLeft />
-            <TeamRight />
+            <TeamLeft teamleft={props.teamleft} />
+            <TeamRight teamright={props.teamright} />
         </React.Fragment>
     );
 }
