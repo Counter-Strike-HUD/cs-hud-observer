@@ -1,6 +1,7 @@
 import React from 'react';
 
 import TeamNames from '../core/TeamName/TeamNames';
+import Crosshair from '../core/Crosshair/Crosshair';
 
 import ArmorFull from './resources/images/assaultsuit.png';
 import LightArmor from './resources/images/kevlar.png';
@@ -38,8 +39,11 @@ class Example extends React.Component{
         return(
             <div>
                <div className="grid-container">
-                   <div className="crosshair">+</div>
+                
+                    <Crosshair />
+
                     <div className="score">
+                        
                         <div className="streak-left">
                             --
                         </div>
@@ -77,7 +81,7 @@ class Example extends React.Component{
                         </div>
                     </div>
 
-                    <TeamNames />
+                    <TeamNames teamleft='MYSTERIOUS' teamright='INFECTORS' />
 
                     <div className="box-left">
                        
