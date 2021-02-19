@@ -6,6 +6,12 @@
 #include < hamsandwich >
 #include < csx >
 
+const m_bIsC4             = 385
+const m_bStartDefuse      = 384
+const m_pBombDefuser      = 388
+const m_fNextDefuse       = 107
+const m_flDefuseCountDown = 99
+
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
 
@@ -22,6 +28,8 @@ new const g_iMaxAmmo[ 31 ] = {
 	100, 120, 30, 120, 200, 32, 90,
 	120, 90, 2, 35, 90, 90, 0, 100
 };
+
+new bool:g_bPlanting;
 
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.1b", "Damper" );
@@ -42,10 +50,13 @@ public plugin_init( ) {
 	
 	// Register Ham Module Forwards
 	RegisterHam( Ham_Killed, "player", "fw_HamKilled" );
+	RegisterHam( Ham_Think, "grenade", "CGrenade_Think", false );
 	
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
 	
+	// Register events
+	register_event( "CurWeapon", "fw_BombPlantingStoped", "be", "2!6" );
 }
 
 // Client authorized, get user steam id
@@ -134,11 +145,15 @@ public fw_Say( iPlayer ) {
 	
 	json_free( Object );
 	
+	cs_set_user_team( iPlayer, CS_TEAM_CT );
+	
 	return PLUGIN_CONTINUE;
 }
 
 // Bomb planting forward
 public bomb_planting( iPlayer ) {
+	g_bPlanting = true;
+	
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "c4_planting" );
@@ -153,6 +168,8 @@ public bomb_planting( iPlayer ) {
 
 // Bomb planted forward
 public bomb_planted( iPlayer ) {
+	g_bPlanting = false;
+	
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "c4_planted" );
@@ -167,6 +184,8 @@ public bomb_planted( iPlayer ) {
 
 // Bomb defusing forward
 public bomb_defusing( iPlayer ) {
+	g_bPlanting = false;
+	
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "c4_defusing" );
@@ -181,6 +200,8 @@ public bomb_defusing( iPlayer ) {
 
 // Bomb defused forward
 public bomb_defused( iPlayer ) {
+	g_bPlanting = false;
+	
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "c4_defused" );
@@ -191,6 +212,49 @@ public bomb_defused( iPlayer ) {
 	json_free( Object );
 	
 	return PLUGIN_CONTINUE;
+}
+
+// Bomb defusing stop forward
+public CGrenade_Think( const GrenadeEntity ) {
+	if( pev_valid( GrenadeEntity ) && get_pdata_bool( GrenadeEntity, m_bIsC4 ) ) {
+		if( get_pdata_bool( GrenadeEntity, m_bStartDefuse ) ) {
+			new DefuserIndex = get_pdata_ent( GrenadeEntity, m_pBombDefuser );
+			if( is_user_connected( DefuserIndex ) ) {
+				new Float:GameTime = get_gametime( );
+				if( GameTime < get_pdata_float( GrenadeEntity, m_flDefuseCountDown ) ) {
+					new OnGround = pev( DefuserIndex, pev_flags ) & FL_ONGROUND;
+					if( GameTime >  get_pdata_float( GrenadeEntity, m_fNextDefuse ) || !OnGround ) {
+						g_bPlanting = false;
+						
+						new JSON:Object = json_init_object( );
+						
+						json_object_set_string( Object, "event_name", "c4_defusing_stopped" );
+						json_object_set_string( Object, "defuse_invoker_id", szSteam[ DefuserIndex ] );
+						
+						SendToSocket( Object );
+						
+						json_free( Object );
+					}
+				}
+			}
+		}
+	}
+}
+
+// Bomb planting stop forward
+public fw_BombPlantingStoped( iPlayer ) {
+	if( !is_user_alive( iPlayer ) )
+		return;
+	
+	if( g_bPlanting ) {
+		client_print( iPlayer, print_chat, "Plenting prestao" );
+		g_bPlanting = true;
+	}
+	
+	/*static iWeapon;
+	iWeapon = get_user_weapon( iPlayer );
+
+	client_print( iPlayer, print_chat, "ID %d | iWeapon %d", iPlayer, iWeapon );*/
 }
 
 stock SendToSocket( JSON:Object ) {
