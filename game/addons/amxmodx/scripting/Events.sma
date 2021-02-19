@@ -56,7 +56,7 @@ public plugin_init( ) {
 	register_clcmd( "say", "fw_Say" );
 	
 	// Register events
-	register_event( "CurWeapon", "fw_BombPlantingStoped", "be", "2!6" );
+	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
 }
 
 // Client authorized, get user steam id
@@ -247,14 +247,17 @@ public fw_BombPlantingStoped( iPlayer ) {
 		return;
 	
 	if( g_bPlanting ) {
-		client_print( iPlayer, print_chat, "Plenting prestao" );
 		g_bPlanting = true;
+		
+		new JSON:Object = json_init_object( );
+		
+		json_object_set_string( Object, "event_name", "c4_planting_stoped" );
+		json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+		
+		SendToSocket( Object );
+		
+		json_free( Object );
 	}
-	
-	/*static iWeapon;
-	iWeapon = get_user_weapon( iPlayer );
-
-	client_print( iPlayer, print_chat, "ID %d | iWeapon %d", iPlayer, iWeapon );*/
 }
 
 stock SendToSocket( JSON:Object ) {
