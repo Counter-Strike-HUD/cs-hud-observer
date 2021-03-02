@@ -273,17 +273,6 @@
 
 .team-box-left {
   grid-area: team-box-left;
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas:
-  "left-player-1"
-  "left-player-2"
-  "left-player-3"
-  "left-player-4"
-  "left-player-5";
-  border-radius: 5px;
-  perspective: 1px;
-  overflow: hidden;
 }
 
 
@@ -301,20 +290,16 @@
   "player-info-left-1";
 }
 
-.health-player-left-1{
-  grid-area: health-player-left-1;
-  display: grid;
-  grid-template-columns: 20% 50% 15% 15%;
-  grid-template-areas:
-  ". nick-left-1 armor-left-1 health-number-left-1";
-  background-color: hsl(0, 82%, 57%);
+.player-card-head{
+  position: relative;
+  height: 25px;
 }
 
 .armor-left-1{
-  grid-area:armor-left-1;
-  display: flex;
-  align-items: center;
-  justify-items: center;
+  display: inline;
+  position: absolute;
+  right: 35px;
+  top: -2px;
 }
 
 .armor-left-1 img{
@@ -324,12 +309,12 @@
 }
 
 .health-number-left-1{
-  grid-area: health-number-left-1;
-  display: grid;
   font-size: 15px;
   color: white;
   font-weight: 800;
-  justify-items: center;
+  display: inline;
+  position: absolute;
+  right: 5px;
 }
 
 
@@ -340,12 +325,10 @@
 }
 
 .nick-left-1{
-  grid-area: nick-left-1;
-  display: grid;
+  z-index: 10;
   font-size: 13px;
   color: white;
   font-weight: 800;
-  align-items: center;
 }
 
 
@@ -773,6 +756,10 @@
   PLAYER LEFT 5 START
 */
 
+
+.player-card {
+  height: 80px;
+}
 .left-player-5{
   grid-area: left-player-5;
   display: grid;
