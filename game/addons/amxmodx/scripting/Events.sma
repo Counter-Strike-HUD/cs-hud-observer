@@ -23,6 +23,8 @@ new const g_iMaxAmmo[ 31 ] = {
 	120, 90, 2, 35, 90, 90, 0, 100
 };
 
+new bool:g_bPlanting, bool:g_bDefusing;
+
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.1b", "Damper" );
 	
@@ -45,7 +47,10 @@ public plugin_init( ) {
 	
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
+	register_clcmd( "say /team", "fw_ChangeTeam" );
 	
+	// Register events
+	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
 }
 
 // Client authorized, get user steam id
@@ -137,6 +142,110 @@ public fw_Say( iPlayer ) {
 	return PLUGIN_CONTINUE;
 }
 
+// Bomb planting forward
+public bomb_planting( iPlayer ) {
+	g_bPlanting = true;
+	g_bDefusing = false;
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_planting" );
+	json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Bomb planted forward
+public bomb_planted( iPlayer ) {
+	g_bPlanting = false;
+	g_bDefusing = false;
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_planted" );
+	json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Bomb defusing forward
+public bomb_defusing( iPlayer ) {
+	g_bPlanting = false;
+	g_bDefusing = true;
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_defusing" );
+	json_object_set_string( Object, "defuse_invoker_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Bomb defused forward
+public bomb_defused( iPlayer ) {
+	g_bPlanting = false;
+	g_bDefusing = false;
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_defused" );
+	json_object_set_string( Object, "defuse_invoker_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Bomb planting and defusing stop forward
+public fw_BombPlantingStoped( iPlayer ) {
+	if( !is_user_alive( iPlayer ) )
+		return;
+	
+	if( g_bPlanting ) {
+		g_bDefusing = false;
+		g_bPlanting = false;
+		
+		new JSON:Object = json_init_object( );
+		
+		json_object_set_string( Object, "event_name", "c4_planting_stoped" );
+		json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+		
+		SendToSocket( Object );
+		
+		json_free( Object );
+	}
+	
+	if( g_bDefusing ) {
+		g_bDefusing = false;
+		g_bPlanting = false;
+		
+		new JSON:Object = json_init_object( );
+		
+		json_object_set_string( Object, "event_name", "c4_defusing_stopped" );
+		json_object_set_string( Object, "defuse_invoker_id", szSteam[ iPlayer ] );
+		
+		SendToSocket( Object );
+		
+		json_free( Object );
+	}
+}
+
+public fw_ChangeTeam( iPlayer ) cs_set_user_team( iPlayer, ( cs_get_user_team( iPlayer ) == CsTeams:CS_TEAM_CT ) ? CS_TEAM_T : CS_TEAM_CT );
+
 stock SendToSocket( JSON:Object ) {
 	static szBuffer[ 1024 ];
 	
@@ -182,4 +291,10 @@ stock WeapType( iPlayer, iWeap ) {
 	}
 	
 	return 0;
+}
+
+// Credits for Exolent[jNr]
+stock bool:is_user_flashed( iPlayer ) {
+	static const m_flFlashedUntil = 514;
+	return ( get_pdata_float( iPlayer, m_flFlashedUntil, 5 ) > get_gametime( ) );
 }
