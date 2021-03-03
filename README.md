@@ -19,7 +19,11 @@ CS 1.6 game server doesnt have native event stream like CSGO, so everything need
 
 
 ## Contributing
-Ideas and code additions are welcome in any time.
+Special thanks to: 
+
+* [Damper](https://github.com/Bog1sh4) for creating amxx plugins
+* [guxi](https://github.com/4nte) for React help
+* [Fastcup](https://cs.fastcup.net) for informations
 
 
 ## License
