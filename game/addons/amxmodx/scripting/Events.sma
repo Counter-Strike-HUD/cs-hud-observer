@@ -3,8 +3,17 @@
 #include < json >
 #include < cstrike >
 #include < fakemeta >
+#include < engine >
 #include < hamsandwich >
 #include < csx >
+
+const m_flFlashedUntil = 514;
+const m_flFlashedAt = 515;
+const m_flFlashHoldTime = 516;
+const m_flFlashDuration = 517;
+const m_iFlashAlpha = 518; 
+
+#define IsUserFlashed(%0)    ( get_pdata_float(%0, m_flFlashedUntil) > get_gametime() ) 
 
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
@@ -25,6 +34,13 @@ new const g_iMaxAmmo[ 31 ] = {
 
 new bool:g_bPlanting, bool:g_bDefusing;
 
+enum BombSites {
+	BOMBSITE_A,
+	BOMBSITE_B
+}
+
+new g_iBombSiteEntity[ BombSites ];
+
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.1b", "Damper" );
 	
@@ -42,6 +58,21 @@ public plugin_init( ) {
 		return;
 	}
 	
+	// Bomb Site
+	new szMap[ 11 ] , BombSites:bsBombSiteA , BombSites:bsBombSiteB;
+	get_mapname( szMap , charsmax( szMap ) );
+	
+	if ( equal( szMap , "de_chateau" ) || equal( szMap , "de_dust2" ) || equal( szMap , "de_train" ) ) {
+		bsBombSiteA = BOMBSITE_B;
+		bsBombSiteB = BOMBSITE_A;
+	} else {
+		bsBombSiteA = BOMBSITE_A;
+		bsBombSiteB = BOMBSITE_B;	
+	}
+	
+	g_iBombSiteEntity[ bsBombSiteA ] = find_ent_by_class( -1 , "func_bomb_target" );
+	g_iBombSiteEntity[ bsBombSiteB ] = find_ent_by_class( g_iBombSiteEntity[ bsBombSiteA ] , "func_bomb_target" );
+	
 	// Register Ham Module Forwards
 	RegisterHam( Ham_Killed, "player", "fw_HamKilled" );
 	
@@ -51,6 +82,13 @@ public plugin_init( ) {
 	
 	// Register events
 	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
+	
+	// Bomb dropped
+	register_logevent( "fw_BombDropped", 3, "2=Dropped_The_Bomb" );
+	
+	// Bomb pick up
+	register_logevent( "fw_BombPickUp", 3, "2=Spawned_With_The_Bomb" );
+	register_logevent( "fw_BombPickUp", 3, "2=Got_The_Bomb" );
 }
 
 // Client authorized, get user steam id
@@ -89,7 +127,9 @@ public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
 		json_object_set_number( Object, "weapon_id", 0 );
 		json_object_set_bool( Object, "headshot", false );
 		json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
+		json_object_set_bool( Object, "killer_flashed", IsUserFlashed( iAttacker ) ? true : false );
 		json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
+		json_object_set_bool( Object, "victim_flashed", IsUserFlashed( iVictim ) ? true : false );
 		json_object_set_bool( Object, "suicide", true );
 		json_object_set_string( Object, "suicide_reason", "fall" );
 		
@@ -98,10 +138,8 @@ public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
 }
 
 // Death forward
-public client_death( iVictim, iAttacker, iWeapon, iHitPlace ) {
+public client_death( iAttacker, iVictim, iWeapon, iHitPlace ) {
 	new szSuicideReason[ 18 ];
-	
-	client_print( 0, print_chat, "iVictim %s | iAttacker %s", is_user_flashed( iVictim ) ? "true" : "false", is_user_flashed( iAttacker ) ? "true" : "false" );
 	
 	if( iAttacker == iVictim ) {
 		switch( iWeapon ) {
@@ -117,7 +155,9 @@ public client_death( iVictim, iAttacker, iWeapon, iHitPlace ) {
 	json_object_set_number( Object, "weapon_id", iWeapon );
 	json_object_set_bool( Object, "headshot", ( iHitPlace == HIT_HEAD ) ? true : false );
 	json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
+	json_object_set_bool( Object, "killer_flashed", IsUserFlashed( iAttacker ) ? true : false );
 	json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
+	json_object_set_bool( Object, "victim_flashed", IsUserFlashed( iVictim ) ? true : false );
 	json_object_set_bool( Object, "suicide", ( iAttacker == iVictim ) ? true : false );
 	json_object_set_string( Object, "suicide_reason", szSuicideReason );
 	
@@ -153,6 +193,7 @@ public bomb_planting( iPlayer ) {
 	
 	json_object_set_string( Object, "event_name", "c4_planting" );
 	json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+	json_object_set_string( Object, "bombsite", CheckPlayerSite( iPlayer ) == 1 ? "A" : "B" );
 	
 	SendToSocket( Object );
 	
@@ -170,6 +211,7 @@ public bomb_planted( iPlayer ) {
 	
 	json_object_set_string( Object, "event_name", "c4_planted" );
 	json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
+	json_object_set_string( Object, "bombsite", CheckPlayerSite( iPlayer ) == 1 ? "A" : "B" );
 	
 	SendToSocket( Object );
 	
@@ -246,6 +288,34 @@ public fw_BombPlantingStoped( iPlayer ) {
 	}
 }
 
+// Bomb dropped forward
+public fw_BombDropped( iPlayer ) {
+	new iPlayer = get_loguser_index( );
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_drop" );
+	json_object_set_string( Object, "user_drop_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+}
+
+// Bomb pick up forward
+public fw_BombPickUp( iPlayer ) {
+	new iPlayer = get_loguser_index( );
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "c4_pick" );
+	json_object_set_string( Object, "user_pick_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	json_free( Object );
+}
+
 public fw_ChangeTeam( iPlayer ) cs_set_user_team( iPlayer, ( cs_get_user_team( iPlayer ) == CsTeams:CS_TEAM_CT ) ? CS_TEAM_T : CS_TEAM_CT );
 
 stock SendToSocket( JSON:Object ) {
@@ -300,4 +370,28 @@ stock WeapType( iPlayer, iWeap ) {
 stock bool:is_user_flashed( iPlayer ) {
 	static const m_flFlashedUntil = 514;
 	return ( get_pdata_float( iPlayer, m_flFlashedUntil, 5 ) > get_gametime( ) );
+}
+
+stock CheckPlayerSite( const iPlayer ) {
+	new Float:fOrigin[ 3 ];
+	pev( iPlayer, pev_origin, fOrigin );
+	
+	new iEnt = -1;
+	
+	while( ( iEnt = find_ent_in_sphere( iEnt, fOrigin, 300.0 ) ) != 0 ) {
+		if( iEnt == g_iBombSiteEntity[ BOMBSITE_A ] ) return 1;
+		else if( iEnt == g_iBombSiteEntity[ BOMBSITE_B ] ) return 2;
+	}
+	
+	return 0;
+}
+
+// Credits for The Specialist
+stock get_loguser_index( ) {
+	new szLogUser[ 80 ], szName[ 32 ];
+	
+	read_logargv( 0, szLogUser, charsmax( szLogUser ) );
+	parse_loguser( szLogUser, szName, charsmax( szName ) );
+	
+	return get_user_index( szName );
 }
