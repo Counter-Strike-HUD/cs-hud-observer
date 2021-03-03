@@ -1,34 +1,9 @@
 /*
-  Player equipment buyed on server
-*/
-
-interface BuyEquip{
-    event_name: string;
-    weapon_id: string | number;
-    weapon_buyer: string;
-    weapon_price: number;
-    weapon_name: string;
-    weapon_altname: string;
-}
-
-// User kalle buys deagle for 650$
-const equipresponse : BuyEquip = {
-  event_name: 'buy_equipment',
-  weapon_id: 26,
-  weapon_buyer: 'STEAM_0:1:115179770',
-  weapon_price: 650,
-  weapon_name: "deagle",
-  weapon_altname: "nighthawk"
-}
-
-
-
-/*
   Say event
 */
 
 interface SayEvent{
-  event_name: string;
+  event_name: 'user_say';
   message_invoker: string;
   message: string;
 }
@@ -47,11 +22,13 @@ const sayresponse : SayEvent = {
 */
 
 interface KillEvent{
-  event_name: string;
+  event_name: 'kill',
   weapon_id: number;
   headshot: boolean;
   killer_id: string;
-  victim_id: string | '';
+  killer_flashed: boolean;
+  victim_id: string;
+  victim_flashed: boolean;
   suicide: boolean;
   suicide_reason: 'weapon_hegrenade' | 'fall' | 'weapon_c4' | '';
 }
@@ -62,7 +39,9 @@ const killresponse : KillEvent = {
   weapon_id: 26,
   headshot: true,
   killer_id: 'STEAM_0:1:115179770',
+  killer_flashed: true,
   victim_id: 'STEAM_0:1:115179770',
+  victim_flashed: false,
   suicide: false,
   suicide_reason: ''
 }
@@ -74,14 +53,16 @@ const killresponse : KillEvent = {
 */
 
 interface C4_Planting{
-  event_name: string;
+  event_name: 'c4_planting';
   plant_invoker_id: string; 
+  bombsite: 'A' | 'B';
 }
 
-// User kalle started planting
+// User kalle started planting on A site
 const c4plantingresponse : C4_Planting = {
   event_name: 'c4_planting',
   plant_invoker_id: 'STEAM_0:1:115179770',
+  bombsite: 'A',
 }
 
 
@@ -91,7 +72,7 @@ const c4plantingresponse : C4_Planting = {
 */
 
 interface C4_Planting_Stop{
-  event_name: string;
+  event_name: 'c4_planting_stoped';
   plant_invoker_id: string; 
 }
 
@@ -108,14 +89,16 @@ const c4stoppedplantingresponse : C4_Planting_Stop = {
 */
 
 interface C4_Planted{
-  event_name: string;
+  event_name: 'c4_planted';
   plant_invoker_id: string; 
+  bombsite: 'A' | 'B';
 }
 
-// User kalle planted C4
+// User kalle planted C4 on A site
 const c4plantedresponse : C4_Planted = {
   event_name: 'c4_planted',
   plant_invoker_id: 'STEAM_0:1:115179770',
+  bombsite: 'A',
 }
 
 
@@ -125,7 +108,7 @@ const c4plantedresponse : C4_Planted = {
 */
 
 interface C4_Defusing{
-  event_name: string;
+  event_name: 'c4_defusing';
   defuse_invoker_id: string; 
 }
 
@@ -142,7 +125,7 @@ const c4defusingresponse : C4_Defusing = {
 */
 
 interface C4_Defusing_Stop{
-  event_name: string;
+  event_name: 'c4_defusing_stopped';
   defuse_invoker_id: string; 
 }
 
@@ -159,20 +142,66 @@ const c4stoppeddefusingresponse : C4_Defusing_Stop = {
 */
 
 interface C4_Defused{
-  event_name: string;
+  event_name: 'c4_defused';
   defuse_invoker_id: string; 
 }
 
 // User kalle defused C4
-const c4defusedgresponse : C4_Defused = {
+const c4defusedresponse : C4_Defused = {
   event_name: 'c4_defused',
   defuse_invoker_id: 'STEAM_0:1:115179770',
 }
 
-  
-  
-  
-  
-  
-  
-  
+
+/*
+  C4 drop
+*/
+
+interface C4_Drop{
+  event_name: 'c4_drop';
+  user_drop_id: string; 
+}
+
+// User kalle drop C4
+const c4dropresponse : C4_Drop = {
+  event_name: 'c4_drop',
+  user_drop_id: 'STEAM_0:1:115179770',
+}
+
+
+/*
+  C4 pickup
+*/
+
+interface C4_Pickup{
+  event_name: 'c4_pick';
+  user_pick_id: string; 
+}
+
+// User kalle picked up C4
+const c4pickupresponse : C4_Pickup= {
+  event_name: 'c4_pick',
+  user_pick_id: 'STEAM_0:1:115179770',
+}
+
+
+/*
+  Caster observe event
+*/
+
+interface CasterObserveEvent{
+  event_name: 'caster_observed_player';
+  user_pick_id: string; 
+}
+
+// User kalle picked up C4
+const casterobserveresponse : CasterObserveEvent = {
+  event_name: 'caster_observed_player',
+  user_pick_id: 'STEAM_0:1:115179770',
+}
+
+
+
+
+
+
