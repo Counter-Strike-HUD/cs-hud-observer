@@ -101,6 +101,8 @@ public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
 public client_death( iVictim, iAttacker, iWeapon, iHitPlace ) {
 	new szSuicideReason[ 18 ];
 	
+	client_print( 0, print_chat, "iVictim %s | iAttacker %s", is_user_flashed( iVictim ) ? "true" : "false", is_user_flashed( iAttacker ) ? "true" : "false" );
+	
 	if( iAttacker == iVictim ) {
 		switch( iWeapon ) {
 			case CSW_C4: formatex( szSuicideReason, charsmax( szSuicideReason ), "weapon_c4" );
@@ -282,6 +284,7 @@ stock GetItemPrice( iPlayer, iItem ) {
 	return 9999999999;
 }
 
+// Credits for SayWhat?!
 stock WeapType( iPlayer, iWeap ) {
 	new iWeapons = pev( iPlayer, pev_weapons );
 	
