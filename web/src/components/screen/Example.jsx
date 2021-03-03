@@ -16,26 +16,33 @@ import User from './resources/images/unknown-user.png';
 
 import './Screen.css'
 
-class Example extends React.Component{
+g
 
-    constructor(){
+function Example() { 
 
-        super();
+        // subscribe to data
 
-        this.state = {
-            num: 0
-        }
+    const [num, setNum] = React.useState(0);
+    const [users, setSUsers] = React.useState([])
 
-        setInterval(()=>{
-            this.setState({num: this.state.num+1});
+    // componentDidMount
+    // componentUnmount
+
+    React.useEffect(() => {
+        const handler = setInterval(()=>{
+            setNum(num+1);
         },1000)
-    }
+
+
+
+        return () => {
+            clearInterval(handler)
+        }
+    }, [])
 
     
 
-    
 
-    render(){        
         return(
             <div>
                <div className="grid-container">
@@ -500,7 +507,7 @@ class Example extends React.Component{
                 </div>
             </div>       
         );
-    }
+    
 }
 
 export default Example;
