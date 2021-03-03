@@ -18,7 +18,7 @@ AMX Mod X Game Events
 Called when player buy equipment
 
 ## Kill
-Called when player died
+Called when player die
 
 ## Say
 Called when player send message
