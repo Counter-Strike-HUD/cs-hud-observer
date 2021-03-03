@@ -1,7 +1,7 @@
 import React from 'react';
 
-import TeamNames from '../core/TeamName/TeamNames';
-import Crosshair from '../core/Crosshair/Crosshair';
+import TeamNames from './core/TeamName/TeamNames';
+import Crosshair from './core/Crosshair/Crosshair';
 
 import ArmorFull from './resources/images/assaultsuit.png';
 import LightArmor from './resources/images/kevlar.png';
@@ -61,9 +61,8 @@ class Example extends React.Component{
                         </div>
 
                         <div className="middle">
-                            <p>1:35
-
-
+                            <p>
+                                1:35
                             </p>     
                         </div>
 
