@@ -3,3 +3,4 @@ config.json
 backend/src/db/db.json
 game/addons/amxmodx/scripting/Events.amxx
 game/addons/amxmodx/scripting/Events.sma.bak
+current.code-workspace
