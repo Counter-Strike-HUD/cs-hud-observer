@@ -174,7 +174,7 @@ router.post('/editmatch', (req , res) =>{
         return res.status(200).json({'id': req.body.id, 'status_code': 200, 'message': 'Match is successfully edited.'}) 
     }
 
-    return res.status(500).json({'status_code': 500, 'message': 'Mathc is not edited.'})   
+    return res.status(500).json({'status_code': 500, 'message': 'Match is not edited.'})   
 });
 
 
