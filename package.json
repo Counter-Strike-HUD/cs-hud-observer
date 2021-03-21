@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "web": "cd ./web && npm start",
-    "backend": "nodemon --watch backend/src --ext ts --exec ts-node --script-mode backend/src/app.ts"
+    "backend": "nodemon --watch backend/src --ext ts --exec ts-node --script-mode backend/src/app.ts",
+    "mocker": "nodemon backend/src/mocker/mocker.ts"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,8 @@
     "react-bootstrap": "^1.3.0",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
-    "socket.io": "^2.4.0",
-    "socket.io-client": "^2.3.0",
+    "socket.io": "^4.0.0",
+    "socket.io-client": "^4.0.0",
     "steamapi": "^2.1.1"
   },
   "devDependencies": {

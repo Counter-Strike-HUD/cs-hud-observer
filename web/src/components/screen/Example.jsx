@@ -10,15 +10,15 @@ import PlayersLeft from '../core/PlayersLeft/PlayersLeft';
 import PlayersRight from '../core/PlayersRight/PlayersRight';
 import PlayerObserved from '../core/PlayerObserved/PlayerObserved';
 
-import User from './resources/images/unknown-user.png';
+import {SocketContext, socket} from '../core/Socket/Socket';
 
 import './Screen.css'
-
 
 function Example() { 
 
         return(
-            <div>
+            <SocketContext.Provider value={socket}> 
+
                <div className="grid-container">
                 
                     <Crosshair />
@@ -54,7 +54,8 @@ function Example() {
                       
                     </div>
                 </div>
-            </div>       
+
+            </SocketContext.Provider>       
         );
     
 }
