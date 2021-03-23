@@ -23,9 +23,14 @@ io.on("connection", (socket: Socket) => {
 
 
 
+
+
+
 setInterval(() => {
     console.log('Sending emit message');
     io.emit('kill', 'testing')
 }, 1000);
+
+
 
 httpServer.listen(8000);
