@@ -1,5 +1,7 @@
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
+import MockerClass from "./MockerClass";
+import Mocker from './MockerClass'
 
 const httpServer = createServer();
 
@@ -18,18 +20,14 @@ io.on("connection", (socket: Socket) => {
     socket.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
     });
+
 });
 
+const mocker = new MockerClass();
 
-
-
-
-
-
-setInterval(() => {
-    console.log('Sending emit message');
-    io.emit('kill', 'testing')
-}, 1000);
+mocker.on('action', info =>{ console.log(info)
+    io.emit(info[0], info[1])
+})
 
 
 

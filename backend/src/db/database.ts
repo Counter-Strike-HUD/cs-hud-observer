@@ -26,7 +26,7 @@ interface Matches {
     id: string;
     team_one: string;
     team_two: string;
-    status: string;
+    status: 'ongoing' | 'finished' | 'live';
     match_type: string;
 }
 

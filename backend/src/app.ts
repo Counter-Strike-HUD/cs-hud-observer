@@ -1,5 +1,4 @@
 import {HLDS_Log} from 'hlds-log';
-import Socket from 'socket.io';
 import config from '../../config.json';
 import express from 'express';
 import path from 'path';
@@ -10,21 +9,6 @@ import apiRouter from './routes/apiRouter';
 const logger = new HLDS_Log(config.backend.UDP_LOCAL_PORT, true);
 
 logger.start();
-
-const io = Socket();
-
-logger.on('raw', (info: Object) =>{
-    console.log(info);
-})
-
-io.on('connection', socket =>{
-    console.log('New stream connected: ', socket.id)
-    socket.on('hello', msg =>{
-        console.log('client says hello')
-    })
-})
-
-io.listen(config.web.SOCKET_PORT);
 
 // Init app
 const app = express();

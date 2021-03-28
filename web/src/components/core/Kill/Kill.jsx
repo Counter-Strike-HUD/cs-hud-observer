@@ -18,14 +18,14 @@ const Kill = (props) =>{
             setKills(kills => [...kills, event])
         })
 
-    }, 0)
+    }, [])
 
     return (
         <React.Fragment>
                 <div className="wrapper">
 
                     {kills.map((kill) =>
-                        <KillItem victim={{side: 'ct', name: 'kalle 1'}} killer={{side: 'tt', name: 'kauk 1'}}  delay="5000" />
+                        <KillItem key={kill.victim.name} victim={{side: kill.victim.side, name: kill.victim.name}} killer={{side: kill.killer.side, name: kill.killer.name}}  delay="5000" />
                     )}
                        
                 </div>   
