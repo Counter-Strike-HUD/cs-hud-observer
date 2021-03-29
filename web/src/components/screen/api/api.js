@@ -25,6 +25,9 @@ const apiFetch = async (url) =>{
 module.exports = {
     matches:{
         getMatch: async (id) => {return apiFetch(`/api/view/match/${id}`)}
+    },
+    teams:{
+        getTeam: async (id) => {return apiFetch(`/api/view/team/${id}`)}
     }
 }
 
