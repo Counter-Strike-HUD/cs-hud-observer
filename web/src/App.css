@@ -58,3 +58,12 @@ body > #root {
   height: 150px;
   width: 150px;
 }
+
+.matches-players{
+  margin-bottom: 20px;
+}
+
+.player-add-item{
+  display: flex;
+  justify-content: center;
+}

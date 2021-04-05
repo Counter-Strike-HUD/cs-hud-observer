@@ -82,10 +82,10 @@
   "matches": [
     {
       "id": "43bf7743ebd930d65a411e83465a7a04e30d09f7",
-      "team_one": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
-      "team_two": "e81a1843f0696d280415732af3c63f8176c3793f",
+      "team_one": "e81a1843f0696d280415732af3c63f8176c3793f",
+      "team_two": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
       "status": "ongoing",
-      "match_type": "bo1"
+      "match_type": "bo3"
     },
     {
       "id": "43bf7743ebd930d65a411e83465a7a04e30d09f6",
@@ -99,7 +99,12 @@
       "team_one": "e81a1843f0696d280415732af3c63f8176c3793f",
       "team_two": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
       "status": "ongoing",
-      "match_type": "bo3"
+      "match_type": "bo3",
+      "team_one_players": [],
+      "team_two_players": [
+        "5bc098a26287e9ec4972acfddbf455fd2ce0a39c",
+        "e81a1843f0696d280415732af3c63f8176c3792f"
+      ]
     },
     {
       "id": "0e183f77a5129509a9e46a3154d04bd5d91a0fe5",

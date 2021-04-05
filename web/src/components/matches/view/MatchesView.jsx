@@ -1,59 +1,89 @@
-import React from 'react';
-import {Card, Container, Row, Col,Form,Button} from 'react-bootstrap';
+import React, {useState, useEffect} from 'react';
+import {Card, Container, Row, Col,Form,Button, ListGroup, Modal} from 'react-bootstrap';
+import {BsFillPlusCircleFill} from 'react-icons/bs';
+import {HiUserRemove} from 'react-icons/hi'
 
 
-class ViewPlayer extends React.Component{
-    
+export default function MatchView(props) {
 
-    constructor(props) {
-        super(props);
+    const [loaded, setLoaded] = useState(false);
+    const [error, setError] = useState(null);
+    const [teamOne, setTeamOne] = useState('');
+    const [teamTwo, setTeamTwo] = useState('');
+    const [type, setType] = useState('');
+    const [status, setStatus] = useState('');
+    const [teams, setTeams] = useState([]);
+    const [showLeft, setShowLeft] = useState(false);
+    const [showRight, setShowRight] = useState(false);
+    const [players, setPlayers] = useState([])
+    const [teamOnePlayers, setTeamOnePlayers] = useState([]);
+    const [teamTwoPlayers, setTeamTwoPlayers] = useState([]);
 
-        this.state = {
-            isLoaded: false,
-            error: null,
-            team_one: '',
-            team_two: '',
-            match_type: '',
-            status: '',
-            teams: []
-        }
+
+    const showModalLeft = () =>{
+        setShowLeft(true);
     }
 
-    componentDidMount() {
+    const showModalRight = () => {
+        setShowRight(true);
+    }
 
-        fetch(`/api/view/match/${this.props.match.params.id}`)
+    const hideModalLeft = () =>{
+        setShowLeft(false);
+    }
+
+    const hideModalRight = () =>{
+        setShowRight(false);
+    }
+
+    const updateTeamOnePlayers = (event) =>{
+        return teamOnePlayers.length <= 4 ? setTeamOnePlayers((players) => [...players, event]) : setShowLeft(false);
+    }
+
+    const updateTeamTwoPlayers = (event) =>{
+        return teamTwoPlayers.length <= 4 ? setTeamTwoPlayers((players) => [...players, event]) : setShowRight(false);
+    }
+
+    const removeTeamOnePlayer = (id) =>{
+        return setTeamOnePlayers(teamOnePlayers.filter(playerid => playerid !== id));
+    }
+
+    const removeTeamTwoPlayer = (id) =>{
+        return setTeamOnePlayers(teamTwoPlayers.filter(playerid => playerid !== id));
+    }
+
+
+ 
+    useEffect( () => {
+
+        fetch(`/api/view/match/${props.match.params.id}`)
         .then(res => res.json())
-        .then(
-          (result) => {
-              
-              if(result && result.status_code === 200){
-                    console.log(result.match_info.match_type)
-                  this.setState({
-                    isLoaded: true,
-                    team_one: result.match_info.team_one,
-                    team_two: result.match_info.team_two,
-                    match_type: result.match_info.match_type,
-                    status: result.match_info.status
-                  })
+            .then(
+                (result) => {
+                
+                    if(result && result.status_code === 200){
+                    
+                        setLoaded(true);
+                        setTeamOne(result.match_info.team_one);
+                        setTeamTwo(result.match_info.team_two);
+                        setType(result.match_info.match_type);
+                        setStatus(result.match_info.status);
+                        setTeamOnePlayers(result.match_info.team_one_players);
+                        setTeamTwoPlayers(result.match_info.team_two_players);
 
-              }
+                    }
 
-              if(result && result.status_code === 404){
-                  this.setState({
-                      isLoaded: true,
-                      error: result.message
-                  });
-              }
-          
-          },
-          (error) => {
-          console.log(error)
-            this.setState({
-              isLoaded: true,
-              error: error.toString()
-            });
-          }
-        )
+                    if(result && result.status_code === 404){
+                        setLoaded(true);
+                        setError(result.message);
+                    }
+                
+                },
+                (error) => {
+                    setLoaded(true);
+                    setError(error.toString());
+                }
+            )
         
         fetch(`/api/teams`)
           .then(res => res.json())
@@ -61,62 +91,61 @@ class ViewPlayer extends React.Component{
             (result) => {
                 
                 if(result && result.status_code === 200){
-
-                    this.setState({
-                        teams: result.teams
-                    })
-
-                    console.log(result)
-
+                    setTeams(result.teams);
+                    
                 }
 
                 if(result && result.status_code === 404){
-                    this.setState({
-                        isLoaded: true,
-                        error: result.message
-                    });
+                    setLoaded(true);
+                    setError(result.message);
                 }
             
-            
-              
             },
             (error) => {
-            console.log(error)
-              this.setState({
-                isLoaded: true,
-                error: error.toString()
-              });
+        
+                setLoaded(true);
+                setError(error.toString());
             }
-          )
-      }
+        );
 
-    renderError = () =>{
-        return this.state.error ? <h4>Error has been spotted: {this.state.error} </h4> : null;
+        fetch("/api/players")
+          .then(res => res.json())
+          .then(
+            (result) => {
+               
+                setPlayers(result.players)
+ 
+            },
+            (error) => {
+    
+                setLoaded(true);
+                setError(error.toString());
+            }
+        );
+
+    }, [0]);
+
+    function renderError(){
+        return error ? <h4>Error has been spotted: {error} </h4> : null;
     }
 
-    handleMatchTypeInput = (event) =>{
-        this.setState({match_type: event.target.value});
-    }
-
-    handleTeamOneInput = (event) =>{
-        this.setState({team_one: event.target.value});
-    }
-
-    handleTeamTwoInput = (event) =>{
-        this.setState({team_two: event.target.value});
+    function handleMatchTypeInput(event){
+        setType(event.target.value);
     }
 
 
-    submit = (event) =>{
+    function submit(event){
 
         event.preventDefault();
 
         const body = {
-            'id': this.props.match.params.id,
-            'team_one': this.state.team_one,
-            'team_two': this.state.team_two, 
+            'id': props.match.params.id,
+            'team_one': teamOne,
+            'team_two': teamTwo, 
             'status': 'ongoing',
-            'match_type': this.state.match_type
+            'match_type': type,
+            'team_one_players': teamOnePlayers,
+            'team_two_players': teamTwoPlayers
         }
 
         fetch('/api/editmatch', {
@@ -135,139 +164,251 @@ class ViewPlayer extends React.Component{
                     }
 
                     if(result.status_code === 500){
-                       return this.setState({error: result.message, isLoaded: true})
+                        setLoaded(true);
+                        setError(result.message);
                     }
                     
                     
                 },
                 (error) => {
-                    return this.setState({error, isLoaded: true});
+                    setLoaded(true);
+                    setError(error.toString());
                 }
-                );
+            );
 
-      
 
     }
 
-    render(){    
-        return(
-            <div>
-                <Container>
-                    <Row>
-                        <Col>
-                            <Card className="card bg-light p-3 push-top">
-                                <Card.Body>
-                                    <h2>
-                                        View match
-                                    </h2>
+    
+    return(
+        <div>
+            <Container>
 
-                                    {this.renderError()}
+            <Modal
+                show={showLeft}
+                onHide={hideModalLeft}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Add players to team {teams.find((team) => team.id === teamOne)?.team_name} </Modal.Title>
+                </Modal.Header>
 
-                                    <Form className="push-top" onSubmit={event => this.submit(event)}>
-                                    <Form.Row>
-                                            <Form.Group as={Col}>
-                                                <Form.Label>Choose match type </Form.Label>
-                                                <Form.Control
-                                                    as="select"
-                                                    className="my-1 mr-sm-2"
-                                                    id="inlineFormCustomSelectPref"
-                                                    custom
-                                                    onChange={event => this.handleMatchTypeInput(event)}
-                                                >
-                         
-                                                <option value={this.state.match_type}>{this.state.match_type.toUpperCase()}</option>
-                                                
+                <Modal.Body>
+                
+                    <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2"
+                        custom
+                        onChange={(event) => updateTeamOnePlayers(event.target.value)}
+                        defaultValue="Choose..."
+                    >
+                    
+                    <option>Choose...</option>
+
+                    {
+                        players && players.map(player =>{
+                            if(!teamTwoPlayers.includes(player.id) && !teamOnePlayers.includes(player.id)){
+                                return <option key={player.id} value={player.id}>{player.player_nickname}</option>
+                            }
+                        })
+                    }
+
+                    </Form.Control>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideModalLeft}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+
+            </Modal>
+
+
+            <Modal
+                show={showRight}
+                onHide={hideModalRight}
+                backdrop="static"
+                keyboard={false}
+                
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Add players to team {teams.find((team) => team.id === teamTwo)?.team_name} </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                
+                    <Form.Control
+                        as="select"
+                        className="my-1 mr-sm-2"
+                        id="inlineFormCustomSelectPref"
+                        custom    
+                        onChange={(event) => updateTeamTwoPlayers(event.target.value)}
+                        defaultValue="Choose..."
+                    >
+
+                    <option>Choose...</option>
+
+                    {players && players.map(player =>{
+                        if(!teamTwoPlayers.includes(player.id) && !teamOnePlayers.includes(player.id)){
+                            return <option key={player.id} value={player.id}>{player.player_nickname}</option>
+                        }
+                    })}
+
+
+                    </Form.Control>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideModalRight}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+
+            </Modal>
+
+                <Row>
+                    <Col>
+                        <Card className="card bg-light p-3 push-top">
+                            <Card.Body>
+                                <h2>
+                                    View match
+                                </h2>
+
+                                {renderError()}
+
+                                <Form className="push-top" onSubmit={event => submit(event)}>
+                                <Form.Row>
+                                        <Form.Group as={Col}>
+                                            <Form.Label>Choose match type </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                className="my-1 mr-sm-2"
+                                                custom
+                                                onChange={event => handleMatchTypeInput(event)}
+                                            >
+                        
+                                            <option value={type}>{type.toUpperCase()}</option>
+                                            
+                                            {
+                                                // eslint-disable-next-line
+                                                ['bo1', 'bo3', 'bo5'].map(typeMatch =>{
+                                                    if(type !== typeMatch){
+                                                        return <option key={typeMatch} value={typeMatch}>{typeMatch.toUpperCase()}</option>
+                                                    }
+                                                })
+                                            } 
+
+                                            </Form.Control>
+                                        </Form.Group>
+
+                                        <Form.Group as={Col}>
+                                            <Form.Label>Choose first team </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                className="my-1 mr-sm-2"
+                                                custom
+                                                disabled
+                                            >
+
                                                 {
                                                     // eslint-disable-next-line
-                                                    ['bo1', 'bo3', 'bo5'].map(type =>{
-                                                        if(this.state.match_type !== type){
-                                                            return <option key={type} value={type}>{type.toUpperCase()}</option>
-                                                        }
+                                                    teams && teams.map(team =>{
+                                                        if(team.id === teamOne){
+                                                            return <option key={team.id} value={team.id} className="selected disabled">{team.team_name}</option>
+                                                        } 
                                                     })
-                                                } 
+                                                }
 
-                                                </Form.Control>
-                                            </Form.Group>
 
-                                            <Form.Group as={Col}>
-                                                <Form.Label>Choose first team </Form.Label>
-                                                <Form.Control
-                                                    as="select"
-                                                    className="my-1 mr-sm-2"
-                                                    id="inlineFormCustomSelectPref"
-                                                    custom
-                                                    onChange={event => this.handleTeamOneInput(event)}
-                                                >
+                                            </Form.Control>
+                                        </Form.Group>
 
-                                                    {
-                                                        // eslint-disable-next-line
-                                                        this.state.teams && this.state.teams.map(team =>{
-                                                            if(team.id === this.state.team_one){
-                                                                return <option key={team.id} value={team.id}>{team.team_name}</option>
-                                                            } 
-                                                        })
-                                                    }
+                                        <Form.Group as={Col}>
+                                            <Form.Label>Choose second team</Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                className="my-1 mr-sm-2"
+                                                custom
+                                                disabled
+                                            >
+                                            
 
-                                                    {
-                                                        // eslint-disable-next-line
-                                                        this.state.teams && this.state.teams.map(team =>{
-                                                            if(team.id !== this.state.team_one){
-                                                                return <option key={team.id} value={team.id}>{team.team_name}</option>
-                                                            } 
-                                                        })
-                                                    }
+                                            {
+                                                // eslint-disable-next-line
+                                                teams && teams.map(team =>{
+                                                    if(team.id === teamTwo){
+                                                        return <option key={team.id} value={team.id} className="selected disabled">{team.team_name} </option>
+                                                    } 
+                                                })
+                                            }
 
-                                                </Form.Control>
-                                            </Form.Group>
+                            
 
-                                            <Form.Group as={Col}>
-                                                <Form.Label>Choose second team</Form.Label>
-                                                <Form.Control
-                                                    as="select"
-                                                    className="my-1 mr-sm-2"
-                                                    id="inlineFormCustomSelectPref"
-                                                    custom
-                                                    onChange={event => this.handleTeamTwoInput(event)}
-                                                >
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    
+                                    <Row className="matches-players">
+                                        <Col md="12"><h3>Players</h3></Col>
+                                        <Col md="6">
+                                            <ListGroup>
                                                 
-                                               
+                                                {
+                                                    teamOnePlayers && teamOnePlayers.map((t1player)=>{
+                                                       return <ListGroup.Item key={t1player}>{players.find((player) => player.id === t1player)?.player_nickname} <span className="float-right" onClick={() => removeTeamOnePlayer(t1player)} ><HiUserRemove color="red" size={25} /></span></ListGroup.Item>
+                                                    })
+                                                }
 
                                                 {
-                                                        // eslint-disable-next-line
-                                                        this.state.teams && this.state.teams.map(team =>{
-                                                            if(team.id === this.state.team_two){
-                                                                return <option key={team.id} value={team.id}>{team.team_name}</option>
-                                                            } 
-                                                        })
-                                                    }
+                                                    teamOnePlayers && teamOnePlayers.length <= 4 &&
+                                                    <ListGroup.Item className="player-add-item" onClick={showModalLeft}>
+                                                        <BsFillPlusCircleFill color="green" /> 
+                                                    </ListGroup.Item>  
+                                                }
+                                                
+                                            </ListGroup>
+                                        </Col>
 
-                                                    {
-                                                        // eslint-disable-next-line
-                                                        this.state.teams && this.state.teams.map(team =>{
-                                                            if(team.id !== this.state.team_two){
-                                                                return <option key={team.id} value={team.id}>{team.team_name}</option>
-                                                            } 
-                                                        })
-                                                    }
+                                        <Col md="6">
 
-                                                </Form.Control>
-                                            </Form.Group>
-                                        </Form.Row>
+                                            <ListGroup> 
 
+                                                {
+                                                    teamTwoPlayers && teamTwoPlayers.map((t2player)=>{
+                                                       return <ListGroup.Item key={t2player}>{players.find((player) => player.id === t2player)?.player_nickname} <span className="float-right" onClick={() => removeTeamTwoPlayer(t2player)} ><HiUserRemove  color="red" size={25} /></span> </ListGroup.Item>
+                                                    })
+                                                }
 
-                                        <Button variant="primary" type="submit">
-                                            Save
-                                        </Button>
-                                    </Form>
-                                </Card.Body>
-                            </Card>                        
-                        </Col>
-                    </Row>     
-                </Container>    
-            </div>       
-        );
-    }
+                                                {
+                                                    teamTwoPlayers && teamTwoPlayers.length <= 4 &&
+                                                    <ListGroup.Item className="player-add-item" onClick={showModalRight}>
+                                                            <BsFillPlusCircleFill color="green"/> 
+                                                    </ListGroup.Item>
+                                                }
+                                                    
+
+                                            </ListGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Button variant="primary" type="submit">
+                                        Save
+                                    </Button>
+
+                                    <Button variant="success" type="submit" style={{marginLeft: 10}}>
+                                        Start match
+                                    </Button>
+                                </Form>
+                            </Card.Body>
+                        </Card>                        
+                    </Col>
+                </Row>     
+            </Container>    
+        </div>       
+    );
+    
 }
 
 
-export default ViewPlayer;

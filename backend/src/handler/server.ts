@@ -1,49 +1,20 @@
-import * as dgram from "dgram";
-const server = dgram.createSocket("udp4");
-import {EventEmitter} from 'events';
 
 
-class GameEvent extends EventEmitter {
+import * as net from 'net';
 
-    port: number
+const client = new net.Socket();
 
-    constructor(port: number) {
-        super();
-        this.port = port;
-    }
+client.connect(27017, '51.77.83.159', () => {
+	console.log('Connected');
+	client.write('Hello, server! Love, Client.');
+});
 
-    start() {
-        this.onError();
-        this.messageParser();
-        this.listenSocket();
-        this.bindPort(this.port);
-    }
+client.on('data', (data) => {
+	console.log('Received: ' + data);
+	//cclient.destroy(); // kill client after server's response
+});
 
-    onError() {
-        server.on("error", (err: Event) => {
-            this.emit('error', err);
-            server.close();
-        });
-    }
+client.on('close', () => {
+	console.log('Connection closed');
+});
 
-    messageParser() {
-        server.on("message", (msg: Buffer, info: Object) => {
-            const message = (msg as Buffer).toString("ascii").replace(/[\n\t\r]/g, "");
-
-        });      
-    }
-
-    listenSocket() {
-        server.on("listening", () => {
-            const address = server.address();
-            console.log(`server listening ${address.address}:${address.port}`);
-        });
-    }
-
-
-    bindPort(port: number) {
-        server.bind(port);
-    }
-}
-
-export default GameEvent;
