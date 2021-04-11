@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, {useState, useEffect, useRef} from 'react';
+import * as api from '../../screen/api/api';
 
 import Ak47 from '../../screen/resources/images/ak47.png';
 import ArmorFull from '../../screen/resources/images/assaultsuit.png';
@@ -11,177 +11,83 @@ import C4 from '../../screen//resources/images/c4.png';
 import Defuser from '../../screen//resources/images/defuser.png';
 import User from '../../screen/resources/images/unknown-user.png';
 
-const PlayersRight = (props) =>{
+const PlayersRight = ({playersList}) =>{
+
+    const [playersID, setPlayersID] = useState([]);
+    const [players, setPlayers] = useState([]);
+    const previousProps = usePrevious(playersID);
+
+
+    useEffect(() => {
+
+        setPlayersID(playersList);
+    
+        playersID !== previousProps && playersID.map( player =>{
+            api.players.getPlayer(player).then(player =>{
+                console.log(player)
+                setPlayers(players => [...players, player.player_info])
+            })
+        })
+   
+    })
+
+    // Using ref to remember old state value
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+          ref.current = value;
+        });
+        return ref.current;
+    }
+
+
     return(
         <React.Fragment>
-            <div className="right-player-1">
-                <div className="health-player-right-1">
-                        <div className="nick-right-1">
-                        kalle
-                    </div>
-                    <div className="armor-right-1">
-                        <img src={ArmorFull} alt="full"></img>
-                        <img src={LightArmor} alt="full"></img>
-                    </div>
-                    <div className="health-number-right-1">
-                        100
-                    </div>
-                </div>
+            {
+                players && players.map((player, index)=>{
 
-                <div className="player-info-right-1">
-                    <div className="avatar-right-1">
-                        <img src={User} alt="user" />
-                    </div>
-                    <div className="equipment-right-1">
-                        <img src={Defuser} alt="full"></img>
-                    </div>
-                    <div className="utility-right-1">
-                        <img src={FlashGrenade} alt="full"></img>
-                        <img src={SmokeGrenade} alt="full"></img>
-                        <img src={HeGrenade} alt="full"></img>
-                    </div>
-                    <div className="weapon-right-1">
-                        <img src={Ak47} alt="full"></img>
-                    </div>
-                </div>
+                    const i = index + 1;
+                    
+                  return  (
+                    <div key={i} className={`right-player-${i}`}>
+                        <div className={`health-player-right-${i}`}>
+                            <div className={`nick-right-${i}`}>
+                                {player.player_nickname}
+                            </div>
+                            <div className={`armor-right-${i}`}>
+                                <img src={ArmorFull} alt="full"></img>
+                                <img src={LightArmor} alt="full"></img>
+                            </div>
+                            <div className={`health-number-right-${i}`}>
+                                100
+                            </div>
+                        </div>
 
-            </div>
+                        <div className={`player-info-right-${i}`}>
+                            <div className={`avatar-right-${i}`}>
+                                <img src={User} alt="user" />
+                            </div>
+                            <div className={`equipment-right-${i}`}>
+                                <img src={C4} alt="full"></img>
+                            </div>
+                            <div className={`utility-right-${i}`}>
+                                <img src={FlashGrenade} alt="full"></img>
+                                <img src={SmokeGrenade} alt="full"></img>
+                                <img src={HeGrenade} alt="full"></img>
+                            </div>
+                            <div className={`weapon-right-${i}`}>
+                                <img src={Ak47} alt="full"></img>
+                            </div>
+                        </div>
 
-            <div className="right-player-2">
-                <div className="health-player-right-2">
-
-                    <div className="nick-right-2">
-                        LEG1JADZEKO11
                     </div>
-
-                    <div className="armor-right-2">
-                        <img src={ArmorFull} alt="full"></img>
-                        <img src={LightArmor} alt="full"></img>
-                    </div>
-                    <div className="health-number-right-2">
-                        100
-                    </div>
-
-                </div>
-
-                <div className="player-info-right-2">
-                    <div className="avatar-right-2">
-                        <img src={User} alt="user" />
-                    </div>
-                    <div className="equipment-right-2">
-                        <img src={Defuser} alt="full"></img>
-                    </div>
-                    <div className="utility-right-2">
-                        <img src={FlashGrenade} alt="full"></img>
-                        <img src={SmokeGrenade} alt="full"></img>
-                        <img src={HeGrenade} alt="full"></img>
-                    </div>
-                    <div className="weapon-right-2">
-                        <img src={Ak47} alt="full"></img>
-                    </div>
-                </div>
-            </div>
-
-            <div className="right-player-3">
-                <div className="health-player-right-3">
-                    <div className="nick-right-3">
-                        kauk
-                    </div>
-                    <div className="armor-right-3">
-                        <img src={ArmorFull} alt="full"></img>
-                        <img src={LightArmor} alt="full"></img>
-                    </div>
-                    <div className="health-number-right-3">
-                        100
-                    </div>
-
-                </div>
-
-                <div className="player-info-right-3">
-                    <div className="avatar-right-3">
-                        <img src={User} alt="user" />
-                    </div>
-                    <div className="equipment-right-3">
-                        <img src={Defuser} alt="full"></img>
-                    </div>
-                    <div className="utility-right-3">
-                        <img src={FlashGrenade} alt="full"></img>
-                        <img src={SmokeGrenade} alt="full"></img>
-                        <img src={HeGrenade} alt="full"></img>
-                    </div>
-                    <div className="weapon-right-3">
-                        <img src={Ak47} alt="full"></img>
-                    </div>
-                </div>
-            </div>
-
-            <div className="right-player-4">
-                <div className="health-player-right-4">
-                    <div className="nick-right-4">
-                        aed1oN
-                    </div>
-                    <div className="armor-right-4">
-                        <img src={ArmorFull} alt="full"></img>
-                        <img src={LightArmor} alt="full"></img>
-                    </div>
-                    <div className="health-number-right-4">
-                        100
-                    </div>
-
-                </div>
-
-                <div className="player-info-right-4">
-                    <div className="avatar-right-4">
-                        <img src={User} alt="user" />
-                    </div>
-                    <div className="equipment-right-4">
-                        <img src={Defuser} alt="full"></img>
-                    </div>
-                    <div className="utility-right-4">
-                        <img src={FlashGrenade} alt="full"></img>
-                        <img src={SmokeGrenade} alt="full"></img>
-                        <img src={HeGrenade} alt="full"></img>
-                    </div>
-                    <div className="weapon-right-4">
-                        <img src={Ak47} alt="full"></img>
-                    </div>
-                </div>
-            </div>
-
-            <div className="right-player-5">
-                <div className="health-player-right-5">
-                    <div className="nick-right-5">
-                        AgresivaNNN
-                    </div>
-                    <div className="armor-right-5">
-                        <img src={ArmorFull} alt="full"></img>
-                        <img src={LightArmor} alt="full"></img>
-                    </div>
-                    <div className="health-number-right-5">
-                        100
-                    </div>
-                </div>
-
-                <div className="player-info-right-5">
-                    <div className="avatar-right-5">
-                        <img src={User} alt="user" />
-                    </div>
-                    <div className="equipment-right-5">
-                        <img src={Defuser} alt="full"></img>
-                    </div>
-                    <div className="utility-right-5">
-                        <img src={FlashGrenade} alt="full"></img>
-                        <img src={SmokeGrenade} alt="full"></img>
-                        <img src={HeGrenade} alt="full"></img>
-                    </div>
-                    <div className="weapon-right-5">
-                        <img src={Ak47} alt="full"></img>
-                    </div>
-                </div>
-            </div>
+                   )
+                })
+            }
+            
+           
         </React.Fragment>
     );
 }
-
 
 export default PlayersRight;

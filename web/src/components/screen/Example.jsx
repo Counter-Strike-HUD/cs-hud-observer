@@ -22,6 +22,8 @@ function Example() {
     const [matchID, setMatchID] = useState(null);
     const [team1Name, setTeam1Name] = useState('TEAM 1');
     const [team2Name, setTeam2Name] = useState('TEAM 2');
+    const [team1Players, setTeam1Players] = useState([]);
+    const [team2Players, setTeam2Players] = useState([]);
     const [logoLeft, setLogoLeft] = useState('default.png')
     const [logoRight, setLogoRight] = useState('default.png')
     const [update, setUpdate] = useState(false);
@@ -30,9 +32,10 @@ function Example() {
 
         console.log('Calin match info')
 
-        api.matches.getMatch('43bf7743ebd930d65a411e83465a7a04e30d09f6').then(res =>{
+        api.matches.getMatch('027a4b5795541d659cdd9c481c0550379ba43b72').then(res =>{
             setMatchID(res.id)
-
+            setTeam1Players(res.match_info.team_one_players);
+            setTeam2Players(res.match_info.team_two_players);
             console.log(res)
             return res
         })
@@ -53,11 +56,6 @@ function Example() {
             )
 
         })  
-        .then(() => {
-
-            
-
-        })
         .catch(err => console.log(err));
 
    
@@ -88,13 +86,13 @@ function Example() {
                     </div>
                     
                     <div className="team-box-left">
-                        <PlayersLeft />
+                        <PlayersLeft playersList={team1Players} />
                     </div>
                     
                     
                     <div className="team-box-right">
-                        <PlayersRight />
-                    </div>
+                        <PlayersRight playersList={team2Players} />
+                    </div> 
 
                     <div className="player-info">
 

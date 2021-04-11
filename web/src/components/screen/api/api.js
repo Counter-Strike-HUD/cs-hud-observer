@@ -28,6 +28,9 @@ module.exports = {
     },
     teams:{
         getTeam: async (id) => {return apiFetch(`/api/view/team/${id}`)}
+    },
+    players:{
+        getPlayer: async (id) => {return apiFetch(`/api/view/player/${id}`)}
     }
 }
 

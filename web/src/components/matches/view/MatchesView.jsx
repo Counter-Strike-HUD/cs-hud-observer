@@ -49,7 +49,7 @@ export default function MatchView(props) {
     }
 
     const removeTeamTwoPlayer = (id) =>{
-        return setTeamOnePlayers(teamTwoPlayers.filter(playerid => playerid !== id));
+        return setTeamTwoPlayers(teamTwoPlayers.filter(playerid => playerid !== id));
     }
 
 
@@ -362,7 +362,7 @@ export default function MatchView(props) {
                                                 }
 
                                                 {
-                                                    teamOnePlayers && teamOnePlayers.length <= 4 &&
+                                                    teamOnePlayers && teamOnePlayers.length < 5 &&
                                                     <ListGroup.Item className="player-add-item" onClick={showModalLeft}>
                                                         <BsFillPlusCircleFill color="green" /> 
                                                     </ListGroup.Item>  
@@ -382,7 +382,7 @@ export default function MatchView(props) {
                                                 }
 
                                                 {
-                                                    teamTwoPlayers && teamTwoPlayers.length <= 4 &&
+                                                    teamTwoPlayers && teamTwoPlayers.length < 5 &&
                                                     <ListGroup.Item className="player-add-item" onClick={showModalRight}>
                                                             <BsFillPlusCircleFill color="green"/> 
                                                     </ListGroup.Item>

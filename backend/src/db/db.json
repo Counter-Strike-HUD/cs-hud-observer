@@ -81,44 +81,21 @@
   ],
   "matches": [
     {
-      "id": "43bf7743ebd930d65a411e83465a7a04e30d09f7",
-      "team_one": "e81a1843f0696d280415732af3c63f8176c3793f",
-      "team_two": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
-      "status": "ongoing",
-      "match_type": "bo3"
-    },
-    {
-      "id": "43bf7743ebd930d65a411e83465a7a04e30d09f6",
-      "team_one": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
-      "team_two": "e81a1843f0696d280415732af3c63f8176c3793f",
-      "status": "ongoing",
-      "match_type": "bo5"
-    },
-    {
       "id": "027a4b5795541d659cdd9c481c0550379ba43b72",
       "team_one": "e81a1843f0696d280415732af3c63f8176c3793f",
       "team_two": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
       "status": "ongoing",
       "match_type": "bo3",
-      "team_one_players": [],
-      "team_two_players": [
-        "5bc098a26287e9ec4972acfddbf455fd2ce0a39c",
+      "team_one_players": [
+        "43bf7743ebd930d65a411e83465a7a04e30d09f7",
+        "54ad612023639bb17657a905c7763b1060a09b87",
+        "6c30b0bce41d1c1a62a6b76a8a1c2ae665f4e8a9",
         "e81a1843f0696d280415732af3c63f8176c3792f"
+      ],
+      "team_two_players": [
+        "7688237efd64e27d0a0f245e7dcd2f18937d706e",
+        "5bc098a26287e9ec4972acfddbf455fd2ce0a39c"
       ]
-    },
-    {
-      "id": "0e183f77a5129509a9e46a3154d04bd5d91a0fe5",
-      "team_one": "e81a1843f0696d280415732af3c63f8176c3793f",
-      "team_two": "e81a1843f0696d280415732af3c63f8176c3793f",
-      "status": "ongoing",
-      "match_type": "bo5"
-    },
-    {
-      "id": "9ec7ce8daa52a0d0300cb7ed64c1f6543f8234b5",
-      "team_one": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
-      "team_two": "e81a1843f0696d280415732af3c63f8176c3793f",
-      "status": "ongoing",
-      "match_type": "bo1"
     }
   ],
   "error_list": []
