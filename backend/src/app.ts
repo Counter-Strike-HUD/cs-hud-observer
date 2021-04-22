@@ -6,10 +6,6 @@ import cors from 'cors';
 
 import apiRouter from './routes/apiRouter';
 
-const logger = new HLDS_Log(config.backend.UDP_LOCAL_PORT, true);
-
-logger.start();
-
 // Init app
 const app = express();
 

@@ -28,6 +28,7 @@ interface Matches {
     team_two: string;
     status: 'ongoing' | 'finished' | 'live';
     match_type: string;
+    maps_selected: string[];
     team_one_players: string[];
     team_two_players: string[];
 }

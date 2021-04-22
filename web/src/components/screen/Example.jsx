@@ -24,6 +24,8 @@ function Example() {
     const [team2Name, setTeam2Name] = useState('TEAM 2');
     const [team1Players, setTeam1Players] = useState([]);
     const [team2Players, setTeam2Players] = useState([]);
+    const [type, setType] = useState(null);
+    const [mapsPool, setMapsPool] = useState([]);
     const [logoLeft, setLogoLeft] = useState('default.png')
     const [logoRight, setLogoRight] = useState('default.png')
     const [update, setUpdate] = useState(false);
@@ -32,11 +34,19 @@ function Example() {
 
         console.log('Calin match info')
 
-        api.matches.getMatch('027a4b5795541d659cdd9c481c0550379ba43b72').then(res =>{
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('match');
+        
+        if(!id){console.error('match id not found')}
+
+        api.matches.getMatch(id).then(res =>{
+
             setMatchID(res.id)
             setTeam1Players(res.match_info.team_one_players);
             setTeam2Players(res.match_info.team_two_players);
-            console.log(res)
+            setType(res.match_info.match_type)
+            setMapsPool(res.match_info.maps_selected)
+            
             return res
         })
         .then((res) =>{
@@ -75,7 +85,7 @@ function Example() {
 
                     <div className="box-left">
                        
-                        <MapsPool />
+                        <MapsPool type={type} pool={mapsPool} />
 
                         <Radar />
 

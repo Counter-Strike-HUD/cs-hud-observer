@@ -8,7 +8,7 @@ import FlashGrenade from '../../screen/resources/images/flash_grenade.png';
 import HeGrenade from '../../screen/resources/images/explosive_grenade.png';
 import SmokeGrenade from '../../screen/resources/images/smoke_grenade.png';
 import C4 from '../../screen//resources/images/c4.png';
-import Defuser from '../../screen//resources/images/defuser.png';
+//import Defuser from '../../screen//resources/images/defuser.png';
 import User from '../../screen/resources/images/unknown-user.png';
 
 const PlayersLeft = ({playersList}) =>{

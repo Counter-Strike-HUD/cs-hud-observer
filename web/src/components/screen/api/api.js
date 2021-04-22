@@ -4,6 +4,8 @@ const portBackend = urlParams.get('port');
 const matchId = urlParams.get('match');
 const isLocal = urlParams.get('local');
 
+if(!matchId){console.error('match id not found')}
+
 const address = isLocal ? `http://localhost:${portBackend}` : 'http://localhost:3001'
 
 const apiFetch = async (url) =>{

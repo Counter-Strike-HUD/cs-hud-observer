@@ -1,22 +1,23 @@
 import React from 'react';
 
 
-const MapsPool = (props) =>{
+const MapsPool = ({type, pool}) =>{
     return(
         <React.Fragment>
             <div className="mode-and-maps">
                 <span className="mode">
-                    Best of 3
+                    {type && type === 'bo1' && 'Best of 1'}
+                    {type && type === 'bo3' && 'Best of 3'}
+                    {type && type === 'bo5' && 'Best of 5'}
                 </span> 
-                <span className="maps-playing">
-                    MIRAGE
-                </span>
-                <span className="maps-playing active">
-                    DUST2
-                </span>
-                <span className="maps-playing">
-                    NUKE
-                </span>
+                {
+                    pool && pool.map(map =>{
+                        return <span key={map} className="maps-playing">
+                            {map}
+                        </span>
+                    })
+                }
+                
             </div>
         </React.Fragment>
     );

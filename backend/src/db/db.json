@@ -86,6 +86,11 @@
       "team_two": "f7e381f4f9bad5c05035ffb08a4aa001aa639e0a",
       "status": "ongoing",
       "match_type": "bo3",
+      "maps_selected": [
+        "de_nuke",
+        "de_forge",
+        "de_mirage"
+      ],
       "team_one_players": [
         "43bf7743ebd930d65a411e83465a7a04e30d09f7",
         "54ad612023639bb17657a905c7763b1060a09b87",

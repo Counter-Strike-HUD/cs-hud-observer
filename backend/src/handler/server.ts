@@ -4,9 +4,9 @@ import * as net from 'net';
 
 const client = new net.Socket();
 
-client.connect(27017, '51.77.83.159', () => {
+client.connect(27051, '127.0.0.1', () => {
 	console.log('Connected');
-	client.write('Hello, server! Love, Client.');
+	client.write('Bearer efeee4b0b4c93d42fe061e14107a20f82ece1f5d');
 });
 
 client.on('data', (data) => {
