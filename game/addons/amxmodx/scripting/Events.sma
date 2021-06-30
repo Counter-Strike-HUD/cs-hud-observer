@@ -20,8 +20,8 @@ const m_iFlashAlpha = 518;
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
 
-new const stock PORT		= 28800;
-new const stock HOST[ ]		= "51.77.83.159";
+//new const stock PORT		= 28800;
+//new const stock HOST[ ]		= "51.77.83.159";
 
 new stock g_iSocket;
 
@@ -46,7 +46,7 @@ new g_iBombSiteEntity[ BombSites ];
 new szHost[ 16 ], iPort;
 
 public plugin_init( ) {
-	register_plugin( "Events Test", "1.0.3b", "Damper" );
+	register_plugin( "Events Test", "1.0.4b", "Damper" );
 	
 	// Open socket
 	new iError;
@@ -59,8 +59,6 @@ public plugin_init( ) {
 			case 3: server_print( "Error while connecting" );
 			default: server_print( "Couldn't create a socket" );
 		}
-		
-		return;
 	}
 	
 	// Bomb Site
@@ -88,6 +86,7 @@ public plugin_init( ) {
 	
 	// Register events
 	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
+	register_event( "CurWeapon", "fw_CurWeapon", "be", "1=1" );
 	
 	// Bomb dropped
 	register_logevent( "fw_BombDropped", 3, "2=Dropped_The_Bomb" );
@@ -368,6 +367,21 @@ public fw_BombPickUp( iPlayer ) {
 	SendToSocket( Object );
 	
 	json_free( Object );
+}
+
+// Switch current weapon
+public fw_CurWeapon( iPlayer ) {
+	if( !is_user_alive( iPlayer ) ) return PLUGIN_CONTINUE
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "weapon_switched" );
+	json_object_set_number( Object, "weapon_id", get_user_weapon( iPlayer ) );
+	json_object_set_string( Object, "user_pick_id", szSteam[ iPlayer ] );
+	
+	SendToSocket( Object );
+	
+	return PLUGIN_CONTINUE;
 }
 
 public fw_ChangeTeam( iPlayer ) cs_set_user_team( iPlayer, ( cs_get_user_team( iPlayer ) == CsTeams:CS_TEAM_CT ) ? CS_TEAM_T : CS_TEAM_CT );
