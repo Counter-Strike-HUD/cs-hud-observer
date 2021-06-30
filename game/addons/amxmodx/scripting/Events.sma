@@ -7,6 +7,8 @@
 #include < hamsandwich >
 #include < csx >
 
+#define CONFIG_FILE	"addons/amxmodx/configs/HudObserverConfig.ini"
+
 const m_flFlashedUntil = 514;
 const m_flFlashedAt = 515;
 const m_flFlashHoldTime = 516;
@@ -18,7 +20,7 @@ const m_iFlashAlpha = 518;
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
 
-new const stock PORT		= 28000;
+new const stock PORT		= 28800;
 new const stock HOST[ ]		= "51.77.83.159";
 
 new stock g_iSocket;
@@ -41,20 +43,23 @@ enum BombSites {
 
 new g_iBombSiteEntity[ BombSites ];
 
+new szHost[ 16 ], iPort;
+
 public plugin_init( ) {
-	register_plugin( "Events Test", "1.0.1b", "Damper" );
+	register_plugin( "Events Test", "1.0.3b", "Damper" );
 	
 	// Open socket
 	new iError;
-	g_iSocket = socket_open( HOST, PORT, SOCKET_UDP, iError, SOCK_NON_BLOCKING );
+	g_iSocket = socket_open( szHost, iPort, SOCKET_TCP, iError, SOCK_NON_BLOCKING );
 	
-	if( iError > 0 || g_iSocket < 1 ) {
+	if( iError > 0 && iError <= 3 || g_iSocket < 1 ) {
 		switch( iError ) {
-			case SOCK_ERROR_CREATE_SOCKET: server_print( "Couldn't create a socket" );
-			case SOCK_ERROR_SERVER_UNKNOWN: server_print( "Server unknown" );
-			case SOCK_ERROR_WHILE_CONNECTING: server_print( "Error while connecting" );
+			case 1: server_print( "Couldn't create a socket" );
+			case 2: server_print( "Server unknown" );
+			case 3: server_print( "Error while connecting" );
 			default: server_print( "Couldn't create a socket" );
 		}
+		
 		return;
 	}
 	
@@ -79,6 +84,7 @@ public plugin_init( ) {
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
 	register_clcmd( "say /team", "fw_ChangeTeam" );
+	register_clcmd( "say /myip", "MyIP" );
 	
 	// Register events
 	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
@@ -90,6 +96,54 @@ public plugin_init( ) {
 	register_logevent( "fw_BombPickUp", 3, "2=Spawned_With_The_Bomb" );
 	register_logevent( "fw_BombPickUp", 3, "2=Got_The_Bomb" );
 }
+
+public MyIP( iPlayer ) {
+	new szIp[ 32 ];
+	get_user_ip( iPlayer, szIp, charsmax( szIp ) );
+	
+	client_print( iPlayer, print_chat, szIp );
+}
+
+// Check configuration
+public plugin_precache( ) {
+	if( !file_exists( CONFIG_FILE ) ) {
+		write_file( CONFIG_FILE, "; Here you can configure Hud Observer" );
+		write_file( CONFIG_FILE, ";" );
+		write_file( CONFIG_FILE, "SOCKET_IP = 127.0.0.1" );
+		write_file( CONFIG_FILE, "SOCKET_PORT = 31520" );
+	}
+	
+	new iFile = fopen( CONFIG_FILE, "rt" );
+	new szData[ 128 ], szLeft[ 16 ], szRight[ 16 ];
+	
+	while( iFile && !feof( iFile ) ) {
+		fgets( iFile, szData, charsmax( szData ) );
+		replace( szData, charsmax( szData ), "^n", "" );
+		
+		if( szData[ 0 ] == EOS || ( szData[ 0 ] == ';' ) || ( szData[ 0 ] == '/' && szData[ 1 ] == '/' ) )
+			continue;
+		
+		trim( szData );
+		
+		strtok( szData, szLeft, charsmax( szLeft ), szRight, charsmax( szRight ), '=' );
+		
+		trim( szLeft );
+		trim( szRight );
+		
+		if( equal( szLeft, "SOCKET_IP" ) ) {
+			copy( szHost, charsmax( szHost ), szRight );
+			continue;
+		} else if( equal( szLeft, "SOCKET_PORT" ) ) {
+			iPort = str_to_num( szRight );
+			continue;
+		}
+	}
+	
+	fclose( iFile );
+}
+
+// Close socket on plugin end
+public plugin_end( ) if( g_iSocket ) socket_close( g_iSocket );
 
 // Client authorized, get user steam id
 public client_authorized( iPlayer ) {
@@ -319,6 +373,11 @@ public fw_BombPickUp( iPlayer ) {
 public fw_ChangeTeam( iPlayer ) cs_set_user_team( iPlayer, ( cs_get_user_team( iPlayer ) == CsTeams:CS_TEAM_CT ) ? CS_TEAM_T : CS_TEAM_CT );
 
 stock SendToSocket( JSON:Object ) {
+	if( !g_iSocket /*|| !socket_is_writable( g_iSocket, 0 )*/ ) {
+		server_print( "HELP" );
+		return;
+	}
+	
 	static szBuffer[ 1024 ];
 	
 	json_serial_to_string( Object, szBuffer, charsmax( szBuffer ), true );
