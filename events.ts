@@ -357,11 +357,30 @@ const round : RoundEndEvent = {
 
 /**
   Nade throw event
-  Called when players money changes
+  Called when user throws an nade
 */
 
 interface NadeThrowEvent{
   event_name: 'nade_throw';
+  invoker_id: string;
+  nade_type: string;
+}
+
+// User kalle has thrown an smoke
+const nadethrow : NadeThrowEvent = {
+  event_name: 'nade_throw',
+  invoker_id: 'STEAM_0:1:115179770',
+  nade_type: 'smokegrenade',
+}
+
+
+/**
+  Nade land event
+  Called when players money changes
+*/
+
+interface NadeLandEvent{
+  event_name: 'nade_land';
   invoker_id: string;
   nade_type: string;
   landing_x: number;
@@ -369,9 +388,9 @@ interface NadeThrowEvent{
   landing_z: number;
 }
 
-// User kalle have now has 3700$
-const nadethrow : NadeThrowEvent = {
-  event_name: 'nade_throw',
+// Smoke grenade from user kalle has landed on specific cordinates
+const nadeland : NadeLandEvent = {
+  event_name: 'nade_land',
   invoker_id: 'STEAM_0:1:115179770',
   nade_type: 'smokegrenade',
   landing_x: 1,
