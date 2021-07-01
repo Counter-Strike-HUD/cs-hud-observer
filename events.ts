@@ -327,7 +327,7 @@ interface MoneyEvent{
 }
 
 // User kalle have now has 3700$
-const money : MoneyEvent = {
+const moeny : MoneyEvent = {
   event_name: 'money_change',
   user_id: 'STEAM_0:1:115179770',
   current_money: 3700
@@ -347,11 +347,38 @@ interface RoundEndEvent{
 }
 
 // User kalle have now has 3700$
-const moeny : MoneyEvent = {
-  event_name: 'money_change',
-  user_id: 'STEAM_0:1:115179770',
-  current_money: 3700
+const round : RoundEndEvent = {
+  event_name: 'round_end',
+  side_win: 'ct',
+  tt_rounds: 11,
+  ct_rounds: 14
 }
+
+
+/**
+  Nade throw event
+  Called when players money changes
+*/
+
+interface NadeThrowEvent{
+  event_name: 'nade_throw';
+  invoker_id: string;
+  nade_type: string;
+  landing_x: number;
+  landing_y: number;
+  landing_z: number;
+}
+
+// User kalle have now has 3700$
+const nadethrow : NadeThrowEvent = {
+  event_name: 'nade_throw',
+  invoker_id: 'STEAM_0:1:115179770',
+  nade_type: 'smokegrenade',
+  landing_x: 1,
+  landing_y: 1,
+  landing_z: 1
+}
+
 
 
 
