@@ -6,6 +6,7 @@
 #include < engine >
 #include < hamsandwich >
 #include < csx >
+#include < fakemeta_util >
 
 #define CONFIG_FILE	"addons/amxmodx/configs/HudObserverConfig.ini"
 
@@ -20,10 +21,16 @@ const m_iFlashAlpha = 518;
 const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
 const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
 
-//new const stock PORT		= 28800;
-//new const stock HOST[ ]		= "51.77.83.159";
-
 new stock g_iSocket;
+new szHost[ 16 ], iPort;
+
+new const WEAPONENTNAMES[ ][ ] = {
+	"weapon_p228", "weapon_scout", "weapon_xm1014", "weapon_mac10",
+	"weapon_aug", "weapon_elite", "weapon_fiveseven", "weapon_ump45", "weapon_sg550",
+	"weapon_galil", "weapon_famas", "weapon_usp", "weapon_glock18", "weapon_awp", "weapon_mp5navy", "weapon_m249",
+	"weapon_m3", "weapon_m4a1", "weapon_tmp", "weapon_g3sg1", "weapon_deagle", "weapon_sg552",
+	"weapon_ak47", "weapon_p90", "weapon_shield"
+};
 
 new szSteam[ 33 ][ 32 ];
 
@@ -43,7 +50,21 @@ enum BombSites {
 
 new g_iBombSiteEntity[ BombSites ];
 
-new szHost[ 16 ], iPort;
+new g_iTeamScore[ 2 ] = 0;
+
+new const szNadeSounds[ ][ ] = {
+	"weapons/flashbang-1.wav", "weapons/flashbang-2.wav",
+	"weapons/debris1.wav", "weapons/debris2.wav", "weapons/debris3.wav",
+	"weapons/sg_explode.wav"
+};
+
+new const szNadeTypes[ ][ ] = {
+	"weapon_flashbang", "weapon_flashbang",
+	"weapon_hegrenade", "weapon_hegrenade", "weapon_hegrenade",
+	"weapon_smokegrenade"
+};
+
+new iNadeInfo[ 256 ];
 
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.4b", "Damper" );
@@ -79,14 +100,30 @@ public plugin_init( ) {
 	// Register Ham Module Forwards
 	RegisterHam( Ham_Killed, "player", "fw_HamKilled" );
 	
+	for( new i = 1; i < sizeof WEAPONENTNAMES; i++ ) {
+		if( WEAPONENTNAMES[ i ][ 0 ] ) {
+			RegisterHam( Ham_CS_Item_CanDrop, WEAPONENTNAMES[ i ], "fw_OnItemDropPre", 0 );
+		}
+	}
+	
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
 	register_clcmd( "say /team", "fw_ChangeTeam" );
 	register_clcmd( "say /myip", "MyIP" );
 	
+	// Register forwards
+	register_forward( FM_EmitSound, "fw_EmitSound" );
+	
 	// Register events
 	register_event( "BarTime", "fw_BombPlantingStoped", "b", "1=0" );
 	register_event( "CurWeapon", "fw_CurWeapon", "be", "1=1" );
+	register_event( "Damage", "fw_Damage", "b", "2!0", "3=0", "4!0" );
+	register_event( "WeapPickup", "fw_WeaponPickedUp", "be" );
+	register_event( "Money", "fw_Money", "b" );
+	
+	// Register messages
+	register_message( get_user_msgid( "TeamScore" ), "fw_ScoreUpdate" );
+	register_message( get_user_msgid( "TextMsg" ), "fw_RoundEnd" );
 	
 	// Bomb dropped
 	register_logevent( "fw_BombDropped", 3, "2=Dropped_The_Bomb" );
@@ -180,10 +217,11 @@ public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
 		json_object_set_number( Object, "weapon_id", 0 );
 		json_object_set_bool( Object, "headshot", false );
 		json_object_set_string( Object, "killer_id", szSteam[ iAttacker ] );
-		json_object_set_bool( Object, "killer_flashed", IsUserFlashed( iAttacker ) ? true : false );
+		json_object_set_bool( Object, "killer_flashed", false );
 		json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
-		json_object_set_bool( Object, "victim_flashed", IsUserFlashed( iVictim ) ? true : false );
+		json_object_set_bool( Object, "victim_flashed", false );
 		json_object_set_bool( Object, "suicide", true );
+		json_object_set_bool( Object, "wallbang", false );
 		json_object_set_string( Object, "suicide_reason", "fall" );
 		
 		SendToSocket( Object );
@@ -212,6 +250,7 @@ public client_death( iAttacker, iVictim, iWeapon, iHitPlace ) {
 	json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
 	json_object_set_bool( Object, "victim_flashed", IsUserFlashed( iVictim ) ? true : false );
 	json_object_set_bool( Object, "suicide", ( iAttacker == iVictim ) ? true : false );
+	json_object_set_bool( Object, "wallbang", !fm_is_ent_visible( iAttacker, iVictim ) );
 	json_object_set_string( Object, "suicide_reason", szSuicideReason );
 	
 	SendToSocket( Object );
@@ -332,7 +371,7 @@ public fw_BombPlantingStoped( iPlayer ) {
 		
 		new JSON:Object = json_init_object( );
 		
-		json_object_set_string( Object, "event_name", "c4_defusing_stopped" );
+		json_object_set_string( Object, "event_name", "c4_defusing_stoped" );
 		json_object_set_string( Object, "defuse_invoker_id", szSteam[ iPlayer ] );
 		
 		SendToSocket( Object );
@@ -380,6 +419,133 @@ public fw_CurWeapon( iPlayer ) {
 	json_object_set_string( Object, "user_pick_id", szSteam[ iPlayer ] );
 	
 	SendToSocket( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Switch current weapon
+public fw_Damage( iVictim ) {
+	if( !is_user_alive( iVictim ) ) return PLUGIN_CONTINUE;
+	
+	new iAttacker = get_user_attacker( iVictim );
+	new iDamage = read_data( 2 );
+	
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "damage" );
+	json_object_set_number( Object, "weapon_id", get_user_weapon( iAttacker ) );
+	json_object_set_string( Object, "attacker_id", szSteam[ iAttacker ] );
+	json_object_set_number( Object, "health_reduced", iDamage );
+	json_object_set_number( Object, "health", get_user_health( iVictim ) );
+	json_object_set_string( Object, "victim_id", szSteam[ iVictim ] );
+	
+	SendToSocket( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Pickup weapon
+public fw_WeaponPickedUp( iPlayer ) {
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "pickup_item" );
+	json_object_set_string( Object, "user_id", szSteam[ iPlayer ] );
+	json_object_set_number( Object, "item_id", read_data( 1 ) );
+	
+	SendToSocket( Object );
+	
+	return PLUGIN_CONTINUE;
+}
+
+// Drop weapon
+public fw_OnItemDropPre( iEnt ) {
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "drop_item" );
+	json_object_set_string( Object, "user_id", szSteam[ fm_cs_get_weapon_ent_owner( iEnt ) ] );
+	json_object_set_number( Object, "item_id", cs_get_weapon_id( iEnt ) );
+	
+	SendToSocket( Object );
+}
+
+// Money update
+public fw_Money( iPlayer ) {
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "money_change" );
+	json_object_set_string( Object, "user_id", szSteam[ iPlayer ] );
+	json_object_set_number( Object, "current_money", cs_get_user_money( iPlayer ) );
+	
+	SendToSocket( Object );
+}
+
+// Score update
+public fw_ScoreUpdate( ) {
+	new szTeam[ 2 ];
+	get_msg_arg_string( 1, szTeam, charsmax( szTeam ) );
+	g_iTeamScore[ ( szTeam[ 0 ] == 'C' ) ? 0 : 1 ] = get_msg_arg_int( 2 );
+}
+
+public fw_RoundEnd( iMessageId, iMessageDestination, iMessageEntity ) {
+	new szMessage[ 36 ];
+	get_msg_arg_string( 2, szMessage, charsmax( szMessage ) );
+	
+	if( equal( szMessage, "#Terrorists_Win" ) ) {
+		RoundWon( 1 );
+	} else if( equal( szMessage, "#CTs_Win" ) || equal( szMessage, "#Target_Saved" ) ) {
+		RoundWon( 2 );
+	}
+	
+	return PLUGIN_CONTINUE;
+}
+
+public RoundWon( iTeam ) {
+	new JSON:Object = json_init_object( );
+	
+	json_object_set_string( Object, "event_name", "round_end" );
+	json_object_set_string( Object, "side_win", iTeam == 1 ? "TT" : "CT" );
+	json_object_set_number( Object, "tt_rounds", g_iTeamScore[ 1 ] );
+	json_object_set_number( Object, "ct_rounds", g_iTeamScore[ 0 ] );
+	
+	SendToSocket( Object );
+}
+
+// Grenade throw
+public grenade_throw( iPlayer, gid, wid ) {
+	new szName[ 64 ];
+	get_weaponname( wid, szName, charsmax( szName ) );
+	
+	new JSON:Object = json_init_object( );
+	
+	iNadeInfo[ gid ] = iPlayer;
+	
+	json_object_set_string( Object, "event_name", "nade_throw" );
+	json_object_set_string( Object, "invoker_id", szSteam[ iPlayer ] );
+	json_object_set_string( Object, "nade_type", szName );
+	
+	SendToSocket( Object );
+}
+
+public fw_EmitSound( iEnt, iChannel, const szSample[], Float:fVol, Float:fAttn, iFlags, iPitch ) {
+	for( new i = 0; i < sizeof szNadeSounds; i++ ) {
+		if( equal( szSample, szNadeSounds[ i ] ) ) {
+			new Float:vOrigin[ 3 ];
+			entity_get_vector( iEnt, EV_VEC_origin, vOrigin );
+			
+			new JSON:Object = json_init_object( );
+			
+			json_object_set_string( Object, "event_name", "nade_land" );
+			json_object_set_string( Object, "invoker_id", szSteam[ iNadeInfo[ iEnt ] ] );
+			json_object_set_string( Object, "nade_type", szNadeTypes[ i ] );
+			json_object_set_real( Object, "landing_x", vOrigin[ 0 ] );
+			json_object_set_real( Object, "landing_y", vOrigin[ 1 ] );
+			json_object_set_real( Object, "landing_z", vOrigin[ 2 ] );
+			
+			SendToSocket( Object );
+			
+			return PLUGIN_CONTINUE;
+		}
+	}
 	
 	return PLUGIN_CONTINUE;
 }
@@ -467,4 +633,8 @@ stock get_loguser_index( ) {
 	parse_loguser( szLogUser, szName, charsmax( szName ) );
 	
 	return get_user_index( szName );
+}
+
+stock fm_cs_get_weapon_ent_owner( iEnt ) {
+	return ( pev_valid( iEnt ) != 2 ) ? 0 : get_pdata_cbase( iEnt, 41, 4 );
 }
