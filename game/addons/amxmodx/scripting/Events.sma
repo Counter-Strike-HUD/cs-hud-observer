@@ -2,7 +2,6 @@
 #include < sockets >
 #include < json >
 #include < cstrike >
-#include < fakemeta >
 #include < engine >
 #include < hamsandwich >
 #include < csx >
@@ -16,10 +15,10 @@ const m_flFlashHoldTime = 516;
 const m_flFlashDuration = 517;
 const m_iFlashAlpha = 518; 
 
-#define IsUserFlashed(%0)    ( get_pdata_float(%0, m_flFlashedUntil) > get_gametime() ) 
+#define IsUserFlashed(%0)    ( get_pdata_float( %0, m_flFlashedUntil ) > get_gametime( ) )
 
-const PRIMARY_WEAPONS_BIT_SUM = (1 << CSW_SCOUT) | (1 << CSW_XM1014) | (1 << CSW_MAC10) | (1 << CSW_AUG) | (1 << CSW_UMP45) | (1 << CSW_SG550) | (1 << CSW_GALIL) | (1 << CSW_FAMAS) | (1 << CSW_AWP) | (1 << CSW_MP5NAVY) | (1 << CSW_M249) | (1 << CSW_M3) | (1 << CSW_M4A1) | (1 << CSW_TMP) | (1 << CSW_G3SG1) | (1 << CSW_SG552) | (1 << CSW_AK47) | (1 << CSW_P90)
-const SECONDARY_WEAPONS_BIT_SUM = (1 << CSW_P228) | (1 << CSW_ELITE) | (1 << CSW_FIVESEVEN) | (1 << CSW_USP) | (1 << CSW_GLOCK18) | (1 << CSW_DEAGLE)
+const PRIMARY_WEAPONS_BIT_SUM = ( 1 << CSW_SCOUT ) | ( 1 << CSW_XM1014 ) | ( 1 << CSW_MAC10 ) | ( 1 << CSW_AUG ) | ( 1 << CSW_UMP45 ) | (  1 << CSW_SG550 ) | ( 1 << CSW_GALIL ) | ( 1 << CSW_FAMAS ) | ( 1 << CSW_AWP ) | ( 1 << CSW_MP5NAVY ) | ( 1 << CSW_M249 ) | ( 1 << CSW_M3 ) | ( 1 << CSW_M4A1 ) | ( 1 << CSW_TMP ) | ( 1 << CSW_G3SG1 ) | ( 1 << CSW_SG552 ) | ( 1 << CSW_AK47 ) | ( 1 << CSW_P90 )
+const SECONDARY_WEAPONS_BIT_SUM = ( 1 << CSW_P228 ) | ( 1 << CSW_ELITE ) | ( 1 << CSW_FIVESEVEN ) | ( 1 << CSW_USP ) | ( 1 << CSW_GLOCK18 ) | ( 1 << CSW_DEAGLE )
 
 new stock g_iSocket;
 new szHost[ 16 ], iPort;
@@ -83,19 +82,19 @@ public plugin_init( ) {
 	}
 	
 	// Bomb Site
-	new szMap[ 11 ] , BombSites:bsBombSiteA , BombSites:bsBombSiteB;
+	new szMap[ 11 ], BombSites:bsBombSiteA, BombSites:bsBombSiteB;
 	get_mapname( szMap , charsmax( szMap ) );
 	
-	if ( equal( szMap , "de_chateau" ) || equal( szMap , "de_dust2" ) || equal( szMap , "de_train" ) ) {
+	if ( equal( szMap, "de_chateau" ) || equal( szMap, "de_dust2" ) || equal( szMap, "de_train" ) ) {
 		bsBombSiteA = BOMBSITE_B;
 		bsBombSiteB = BOMBSITE_A;
 	} else {
 		bsBombSiteA = BOMBSITE_A;
-		bsBombSiteB = BOMBSITE_B;	
+		bsBombSiteB = BOMBSITE_B;
 	}
 	
-	g_iBombSiteEntity[ bsBombSiteA ] = find_ent_by_class( -1 , "func_bomb_target" );
-	g_iBombSiteEntity[ bsBombSiteB ] = find_ent_by_class( g_iBombSiteEntity[ bsBombSiteA ] , "func_bomb_target" );
+	g_iBombSiteEntity[ bsBombSiteA ] = find_ent_by_class( -1, "func_bomb_target" );
+	g_iBombSiteEntity[ bsBombSiteB ] = find_ent_by_class( g_iBombSiteEntity[ bsBombSiteA ], "func_bomb_target" );
 	
 	// Register Ham Module Forwards
 	RegisterHam( Ham_Killed, "player", "fw_HamKilled" );
@@ -108,8 +107,6 @@ public plugin_init( ) {
 	
 	// Register client commands
 	register_clcmd( "say", "fw_Say" );
-	register_clcmd( "say /team", "fw_ChangeTeam" );
-	register_clcmd( "say /myip", "MyIP" );
 	
 	// Register forwards
 	register_forward( FM_EmitSound, "fw_EmitSound" );
@@ -131,13 +128,6 @@ public plugin_init( ) {
 	// Bomb pick up
 	register_logevent( "fw_BombPickUp", 3, "2=Spawned_With_The_Bomb" );
 	register_logevent( "fw_BombPickUp", 3, "2=Got_The_Bomb" );
-}
-
-public MyIP( iPlayer ) {
-	new szIp[ 32 ];
-	get_user_ip( iPlayer, szIp, charsmax( szIp ) );
-	
-	client_print( iPlayer, print_chat, szIp );
 }
 
 // Check configuration
@@ -357,7 +347,7 @@ public fw_BombPlantingStoped( iPlayer ) {
 		
 		new JSON:Object = json_init_object( );
 		
-		json_object_set_string( Object, "event_name", "c4_planting_stoped" );
+		json_object_set_string( Object, "event_name", "c4_planting_stopped" );
 		json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlayer ] );
 		
 		SendToSocket( Object );
@@ -371,7 +361,7 @@ public fw_BombPlantingStoped( iPlayer ) {
 		
 		new JSON:Object = json_init_object( );
 		
-		json_object_set_string( Object, "event_name", "c4_defusing_stoped" );
+		json_object_set_string( Object, "event_name", "c4_defusing_stopped" );
 		json_object_set_string( Object, "defuse_invoker_id", szSteam[ iPlayer ] );
 		
 		SendToSocket( Object );
@@ -486,6 +476,7 @@ public fw_ScoreUpdate( ) {
 	g_iTeamScore[ ( szTeam[ 0 ] == 'C' ) ? 0 : 1 ] = get_msg_arg_int( 2 );
 }
 
+// Round end
 public fw_RoundEnd( iMessageId, iMessageDestination, iMessageEntity ) {
 	new szMessage[ 36 ];
 	get_msg_arg_string( 2, szMessage, charsmax( szMessage ) );
@@ -499,6 +490,7 @@ public fw_RoundEnd( iMessageId, iMessageDestination, iMessageEntity ) {
 	return PLUGIN_CONTINUE;
 }
 
+// Round won
 public RoundWon( iTeam ) {
 	new JSON:Object = json_init_object( );
 	
@@ -526,6 +518,7 @@ public grenade_throw( iPlayer, gid, wid ) {
 	SendToSocket( Object );
 }
 
+// Grenade land
 public fw_EmitSound( iEnt, iChannel, const szSample[], Float:fVol, Float:fAttn, iFlags, iPitch ) {
 	for( new i = 0; i < sizeof szNadeSounds; i++ ) {
 		if( equal( szSample, szNadeSounds[ i ] ) ) {
@@ -550,11 +543,10 @@ public fw_EmitSound( iEnt, iChannel, const szSample[], Float:fVol, Float:fAttn, 
 	return PLUGIN_CONTINUE;
 }
 
-public fw_ChangeTeam( iPlayer ) cs_set_user_team( iPlayer, ( cs_get_user_team( iPlayer ) == CsTeams:CS_TEAM_CT ) ? CS_TEAM_T : CS_TEAM_CT );
-
+// Send info to Game Socket
 stock SendToSocket( JSON:Object ) {
-	if( !g_iSocket /*|| !socket_is_writable( g_iSocket, 0 )*/ ) {
-		server_print( "HELP" );
+	if( !g_iSocket ) {
+		server_print( "Socket not created!" );
 		return;
 	}
 	
@@ -565,17 +557,18 @@ stock SendToSocket( JSON:Object ) {
 	socket_send( g_iSocket, szBuffer, charsmax( szBuffer ) );
 }
 
+// Get item price
 stock GetItemPrice( iPlayer, iItem ) {
 	if( !cs_is_valid_itemid( iItem ) ) return 0;
 	
 	if( cs_is_valid_itemid( iItem, true ) ) return cs_get_weapon_info( iItem, CS_WEAPONINFO_COST );
 	
 	switch( iItem ) {
-		case CSI_VEST:		return 650;	//CS_KEVLAR_PRICE
-		case CSI_VESTHELM:	return 1000;	//CS_KEVLAR_PRICE + CS_HELMET_PRICE
-		case CSI_DEFUSER:	return 200;	//CS_DEFUSEKIT_PRICE
-		case CSI_NVGS:		return 1250;	//CS_NVG_PRICE
-		case CSI_SHIELD:	return 2200;	//CS_SHIELDGUN_PRICE
+		case CSI_VEST:		return 650;	// CS_KEVLAR_PRICE
+		case CSI_VESTHELM:	return 1000;	// CS_KEVLAR_PRICE + CS_HELMET_PRICE
+		case CSI_DEFUSER:	return 200;	// CS_DEFUSEKIT_PRICE
+		case CSI_NVGS:		return 1250;	// CS_NVG_PRICE
+		case CSI_SHIELD:	return 2200;	// CS_SHIELDGUN_PRICE
 		case CSI_PRIAMMO: {
 			static iWeap;
 			iWeap = WeapType( iPlayer, 1 );
