@@ -29,6 +29,9 @@ import MatchesView from './components/matches/view/MatchesView';
 //const client = io.connect('localhost:8000');
 
 
+import Stream from './components/stream/Stream';
+
+
 import Screen from './components/screen/Example';
 
 
@@ -49,6 +52,7 @@ function App() {
           <Route path="/matches" component={Matches} />
           <Route path="/players" component={Players} /> 
           <Route path="/teams" component={Teams} />
+          <Route path="/stream/:id" component={Stream} />
           <Route path="/screen" component={Screen} />
           <Route path="/" component={Welcome} />
         </Switch>

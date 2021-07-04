@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Link, Redirect} from 'react-router-dom';
 import {Card, Container, Row, Col,Form,Button, ListGroup, Modal} from 'react-bootstrap';
 import {BsFillPlusCircleFill} from 'react-icons/bs';
 import {HiUserRemove, HiOutlineFolderRemove} from 'react-icons/hi'
@@ -525,9 +526,11 @@ export default function MatchView(props) {
                                         Save
                                     </Button>
 
-                                    <Button variant="success" type="submit" style={{marginLeft: 10}}>
-                                        Start match
-                                    </Button>
+                                    <a href={window.location.origin + '/stream/' + props.match.params.id}>
+                                        <Button variant="success"  style={{marginLeft: 10}}>
+                                            Start match
+                                        </Button>
+                                    </a>
                                 </Form>
                             </Card.Body>
                         </Card>                        

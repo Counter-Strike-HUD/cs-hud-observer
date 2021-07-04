@@ -400,6 +400,29 @@ const nadeland : NadeLandEvent = {
 
 
 
+/**
+  Auth event
+  Internal event for client
+*/
+
+interface AuthEvent{
+  event_name: 'auth';
+  authed: boolean
+  message: string
+}
+
+// Client successfully authed
+const auth : AuthEvent = {
+  event_name: 'auth',
+  authed: true,
+  message: '...'
+}
+
+
+
+
+
+
 
 
 

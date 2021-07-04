@@ -16,6 +16,11 @@ CS 1.6 game server doesnt have native event stream like CSGO, so everything need
 
 ![screen](https://i.imgur.com/OSqQjtq.png)
 
+## Documentation
+
+[Events list (typescript documentation)](https://github.com/kallefrombosnia/cs-hud-observer/blob/master/docs)
+[Scripting reference](https://github.com/kallefrombosnia/cs-hud-observer/blob/master/game)
+
 ## REST API
 
 Info provided below will be rewritten in future.
