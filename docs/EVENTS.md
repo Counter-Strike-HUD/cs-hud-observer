@@ -1,7 +1,7 @@
 # Server connection events
 
 
-### List of the events with descriptions
+### List of the events with examples
 
 - [Buy Equipment](#buy-equipment)
 - [Kill](#kill)
@@ -43,7 +43,7 @@ Example:
 
 ```
 
-Scripting reference documentation [link](https://github.com/kallefrombosnia/cs-hud-observer/blob/master/game/README.md#buy-equipment)
+Scripting reference documentation for this [event](https://github.com/kallefrombosnia/cs-hud-observer/blob/master/game/README.md#buy-equipment)
 
 ## Kill
 
