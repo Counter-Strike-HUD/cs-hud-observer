@@ -2,26 +2,9 @@
 
 import net from 'net';
 import {EventEmitter} from 'events';
-
-/*
-const client = new net.Socket();
-
-client.connect(28015, '54.36.236.240', () => {
-	console.log('Connected');
-	client.write('Bearer 80931dca799344575459ce56175a3a01');
-});
-
-client.on('data', (data) => {
-	console.log('Received: ' + data);
-	//cclient.destroy(); // kill client after server's response
-});
-
-client.on('close', () => {
-	console.log('Connection closed');
-});
-*/
-
-
+import { Server, Socket } from "socket.io";
+import { createServer} from "http";
+import config from '../../../config.json';
 
 interface ClientSocket{
 	state: State;
@@ -30,7 +13,8 @@ interface ClientSocket{
 		address: string;
 		port: number;
 		token: string;
-	}, 
+	}
+	io: Server | null;
 	lastError: string;
 }
 
@@ -60,6 +44,10 @@ class ClientSocket extends EventEmitter{
 			token
 		}
 
+
+		// Socket io instance
+		this.io = null;
+
 		// Local client socket connection
 		this.socket = new net.Socket();
 
@@ -73,7 +61,11 @@ class ClientSocket extends EventEmitter{
 
 		// Listen for successfull connection event
 		this.socket.on('connect', (info: any[]) =>{ 
-			console.log('Connected', info);
+
+			// Send auth key after connection
+			this.socket.write(`Bearer ${this.info.token}`);
+
+			console.log('Connected');
 		});
 
 
@@ -95,6 +87,9 @@ class ClientSocket extends EventEmitter{
 				this.emit('auth_failed');
 			}
 		});
+
+		// Call message parser function
+		this._messageParser();
 	}
 
 	/**
@@ -134,48 +129,90 @@ class ClientSocket extends EventEmitter{
 	 */
 	_auth(authed: Function){
 
-		// Check if we are connected?
-		if(this.state.connected){
+		// Listen for auth event
+		this.once('auth', status =>{ 
 
-			// Try to write auth token message to the remote socket
-			this.socket.write(`Bearer ${this.info.token}`);
-		}
+			// Set interal state
+			this.state.authed = status;
 
-		// Local state for fail case
-		let fail: boolean = false;
-
-		// Listen for close event
-		this.once('auth_failed', () =>{
-			
-			// Set fail var to true
-			fail = true;
-		})
-
-		// Check after 5 seconds if auth failed
-		setTimeout(() =>{
-
-			// If auth not failed
-			if(!fail){
-
-				// Resolve as success
-				authed(true);
-			}else{
-
-				// Resolve as failure
-				authed(false);
-			}
-		}, 5000)
-
+			// Callback auth
+			authed(status);
+		});
 	}
 
 
+	/**
+	 * _messageParser
+	 * 
+	 * Internal function used for parsing incoming socket messages
+	 */
 	_messageParser(){
+		
+		// Listen for socket data event
+		this.socket.on('data', (msg: Buffer) =>{
 
+			const m = msg.toString('utf8');
+
+			console.log(m);
+
+			// Try to JSON parse message
+			try {
+
+				// Try to parse as JSON object
+				const data = JSON.parse(m);
+
+				console.log(data)
+
+				// Check if this event is auth response
+				if(data.event_name === 'auth'){
+
+					// Check if message is successfull
+					if(data.authed){
+
+						// Emit success
+						this.emit('auth', true);
+					}else{
+
+						// Emit failed auth
+						this.emit('auth', false);
+					}
+				}
+
+				// If socket io instance is set send message
+				if(this.io) this.io.emit(data.event_name, data);
+				
+			} catch (error) {
+				//throw new Error(error)
+			}
+
+		});
+	}
+
+
+	/**
+	 * _setupSocketIO
+	 * 
+	 * Setups socket IO server after successfull connection to game socket
+	 */
+	_setupSocketIO(){
+
+		// Setup socketio
+		this.io = new Server(createServer(), {
+			cors: {
+				origin: config.hostname,
+				methods: ["GET", "POST"],
+				credentials: true
+			},
+		});
+
+		this.io.on('connection', (socket: Socket) =>{
+			console.log('New client connected');
+		});
 	}
 }
 
 
-const client = new ClientSocket('54.36.236.240', 28015, ' ');
+const client = new ClientSocket('54.36.236.240', 28015, '80931dca799344575459ce56175a3a01');
 
 
 client._connect((status: boolean | string) =>{
@@ -184,6 +221,8 @@ client._connect((status: boolean | string) =>{
 
 client._auth((authed: boolean) =>{
 	console.log('Auth ', authed);
+	
+	client._setupSocketIO();
 });
 
 

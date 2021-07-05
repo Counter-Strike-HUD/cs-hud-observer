@@ -342,6 +342,7 @@ const moeny : MoneyEvent = {
 interface RoundEndEvent{
   event_name: 'round_end';
   side_win: 'tt' | 'ct'; 
+  end_type: 'elimination' | 'c4_exploded' | 'c4_defused'; 
   tt_rounds: number;
   ct_rounds: number;
 }
@@ -350,6 +351,7 @@ interface RoundEndEvent{
 const round : RoundEndEvent = {
   event_name: 'round_end',
   side_win: 'ct',
+  end_type: 'elimination',
   tt_rounds: 11,
   ct_rounds: 14
 }
@@ -407,15 +409,15 @@ const nadeland : NadeLandEvent = {
 
 interface AuthEvent{
   event_name: 'auth';
-  authed: boolean
-  message: string
+  authed: boolean;
+  message: string;
 }
 
 // Client successfully authed
 const auth : AuthEvent = {
   event_name: 'auth',
   authed: true,
-  message: '...'
+  message: 'User succesfully authed.'
 }
 
 

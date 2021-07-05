@@ -120,14 +120,14 @@ class GameSocket extends Event {
                         if(this.token !== clienttoken) {
 
                             // Create friendly message for client
-                            const message = {
-                                event_name: 'auth',
-                                authed: false,
-                                message: 'Token missmatch happened.'
-                            }
+                            const message = `{
+                                "event_name": "auth",
+                                "authed": false,
+                                "message": "Token missmatch happened."
+                            }`;
 
-                            // Send message to the client
-                            socket.write(message.toString());
+                            // Send error message to the client
+                            socket.write(message);
 
 
                             // If failed destroy connection and drop user since token missmatch happened
@@ -142,14 +142,14 @@ class GameSocket extends Event {
                             this.sockets.remoteAddress = socket.remoteAddress;
 
                             // Create friendly message for client
-                            const message = {
-                                event_name: 'auth',
-                                authed: true,
-                                message: 'User succesfully authed.'
-                            }
+                            const message = `{
+                                "event_name": "auth",
+                                "authed": true,
+                                "message": "User succesfully authed."
+                            }`;
 
                             // Send message to the client
-                            socket.write(message.toString());
+                            socket.write(message);
 
                             console.log('⚡️[server]: Client authed');
                         }

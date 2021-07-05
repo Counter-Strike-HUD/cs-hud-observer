@@ -14,6 +14,15 @@
 - [Defused](#defused)
 - [Bomb Dropped](#bomb-dropped)
 - [Bomb Picked Up](#bomb-picked-up)
+- [Caster observe event](#caster-event)
+- [Switch current weapon](#switch-current-weapon)
+- [Pickup event](#pickup-event)
+- [Drop event](#drop-event)
+- [Money change](#money-change)
+- [Round end event](#round-end-event)
+- [Nade throw event](#nade-throw-event)
+- [Nade land event](#nade-land-event)
+- [Auth event](#auth-event)
 
 ## Buy Equipment
 
@@ -80,6 +89,7 @@ Example:
 }
 ```
 
+Scripting reference documentation for this [event](https://github.com/kallefrombosnia/cs-hud-observer/blob/master/game/README.md#buy-equipment)
 
 ## Say
 
@@ -143,19 +153,321 @@ Example:
 ```
 
 ## Planted
-Called when player planted c4
+
+```ts
+interface C4_Planted{
+    event_name: 'c4_planted';
+    plant_invoker_id: string; 
+    bombsite: 'A' | 'B';
+}
+```
+
+Example:  
+
+```ts
+// User kalle planted C4 on A site
+{
+    event_name: 'c4_planted',
+    plant_invoker_id: 'STEAM_0:1:115179770',
+    bombsite: 'A',
+}
+```
+
 
 ## Defusing
-Called when player defusing c4
+
+```ts
+interface C4_Defusing{
+    event_name: 'c4_defusing';
+    defuse_invoker_id: string; 
+}
+```
+
+Example:  
+
+```ts
+// User kalle started defusing
+{
+    event_name: 'c4_defusing',
+    defuse_invoker_id: 'STEAM_0:1:115179770',
+}
+```
 
 ## Defusing Stop
-Called when player stop defusing c4
+
+```ts
+interface C4_Defusing_Stop{
+    event_name: 'c4_defusing_stopped';
+    defuse_invoker_id: string; 
+}
+```
+
+Example:  
+
+```ts
+// User kalle stopped defusing
+{
+    event_name: 'c4_defusing_stopped',
+    defuse_invoker_id: 'STEAM_0:1:115179770',
+}
+```
 
 ## Defused
-Called when player defused c4
+
+```ts
+interface C4_Defused{
+    event_name: 'c4_defused';
+    defuse_invoker_id: string; 
+}
+```
+
+Example:  
+
+```ts
+// User kalle defused C4
+{
+    event_name: 'c4_defused',
+    defuse_invoker_id: 'STEAM_0:1:115179770',
+}
+```
 
 ## Bomb Dropped
-Called when player drop c4
+
+
+```ts
+interface C4_Drop{
+    event_name: 'c4_drop';
+    user_drop_id: string; 
+}
+```
+
+Example:  
+
+```ts
+// User kalle drop C4
+{
+    event_name: 'c4_drop',
+    user_drop_id: 'STEAM_0:1:115179770',
+}
+```
 
 ## Bomb Picked Up
-Called when player pick up c4
+
+```ts
+interface C4_Pickup{
+    event_name: 'c4_pick';
+    user_pick_id: string; 
+}
+```
+
+Example:  
+
+```ts
+// User kalle picked up C4
+{
+    event_name: 'c4_pick',
+    user_pick_id: 'STEAM_0:1:115179770',
+}
+```
+
+## Caster observe event
+
+```ts
+interface CasterObserveEvent{
+    event_name: 'caster_observed_player';
+    user_pick_id: string; 
+}
+```
+
+Example: 
+
+
+```ts
+// User kalle picked up C4
+{
+    event_name: 'caster_observed_player',
+    user_pick_id: 'STEAM_0:1:115179770',
+}
+```
+
+
+## Switch current weapon
+
+```ts
+interface SwitchCurrentWeapon{
+    event_name: 'weapon_switched';
+    user_id: string; 
+    weapon_id: number;
+}
+```
+
+Example:  
+
+```ts
+// User kalle changed weapon to deagle
+{
+    event_name: 'weapon_switched',
+    user_id: 'STEAM_0:1:115179770',
+    weapon_id: 27
+}
+```
+
+## Pickup event
+
+```ts
+interface PickupEvent{
+  event_name: 'pickup_item';
+  user_id: string; 
+  item_id: number;
+}
+```
+
+Example: 
+
+```ts
+// User kalle changed pickups weapon deagle
+{
+    event_name: 'pickup_item',
+    user_id: 'STEAM_0:1:115179770',
+    item_id: 27
+}
+```
+
+## Drop event
+
+```ts
+interface DropEvent{
+    event_name: 'drop_item';
+    user_id: string; 
+    item_id: number;
+}
+```
+Example:  
+
+```ts
+// User kalle have dropped weapon deagle
+{
+    event_name: 'drop_item',
+    user_id: 'STEAM_0:1:115179770',
+    item_id: 27
+}
+```
+
+
+## Money change
+
+```ts
+interface MoneyEvent{
+    event_name: 'money_change';
+    user_id: string; 
+    current_money: number;
+}
+```
+
+Example:
+
+```ts
+// User kalle have now has 3700$
+{
+    event_name: 'money_change',
+    user_id: 'STEAM_0:1:115179770',
+    current_money: 3700
+}
+```
+
+## Round end event
+
+```ts
+interface RoundEndEvent{
+    event_name: 'round_end';
+    side_win: 'tt' | 'ct';
+    end_type: 'elimination' | 'c4_exploded' | 'c4_defused'; 
+    tt_rounds: number;
+    ct_rounds: number;
+}
+```
+
+Example: 
+
+```ts
+// CT team wins by eliminating whole TT team
+{
+    event_name: 'round_end',
+    side_win: 'ct',
+    end_type: 'elimination',
+    tt_rounds: 11,
+    ct_rounds: 14
+}
+```
+
+## Nade throw event
+
+```ts
+interface NadeThrowEvent{
+    event_name: 'nade_throw';
+    invoker_id: string;
+    nade_type: string;
+}
+```
+
+Example:  
+
+```ts
+// User kalle has thrown an smoke
+{
+    event_name: 'nade_throw',
+    invoker_id: 'STEAM_0:1:115179770',
+    nade_type: 'smokegrenade',
+}
+```
+
+## Nade land event
+
+```ts
+interface NadeLandEvent{
+    event_name: 'nade_land';
+    invoker_id: string;
+    nade_type: string;
+    landing_x: number;
+    landing_y: number;
+    landing_z: number;
+}
+```
+
+Example: 
+
+```ts
+// Smoke grenade from user kalle has landed on specific cordinates
+{
+    event_name: 'nade_land',
+    invoker_id: 'STEAM_0:1:115179770',
+    nade_type: 'smokegrenade',
+    landing_x: 1,
+    landing_y: 1,
+    landing_z: 1
+}
+```
+
+## Auth event
+
+```ts
+interface AuthEvent{
+    event_name: 'auth';
+    authed: boolean;
+    message: string;
+}
+```
+
+Example:  
+
+```ts
+// Client successfully authed
+{
+    event_name: 'auth',
+    authed: true,
+    message: 'User succesfully authed.'
+}
+```
+
+
+
