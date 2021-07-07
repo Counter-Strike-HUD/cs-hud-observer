@@ -206,6 +206,22 @@ const c4defusedresponse : C4_Defused = {
   defuse_invoker_id: 'STEAM_0:1:115179770',
 }
 
+/*
+  C4 exploded
+*/
+
+interface C4_Exploded{
+  event_name: 'c4_exploded';
+  plant_invoker_id: string; 
+}
+
+// C4 with planter kalle exploded
+const exploded : C4_Exploded = {
+  event_name: 'c4_exploded',
+  plant_invoker_id: 'STEAM_0:1:115179770',
+}
+
+
 
 /*
   C4 drop

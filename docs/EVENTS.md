@@ -231,6 +231,25 @@ Example:
 }
 ```
 
+## Bomb exploded
+
+```ts
+interface C4_Exploded{
+    event_name: 'c4_exploded';
+    plant_invoker_id: string; 
+}
+```
+
+Example:
+
+```ts
+// C4 with planter kalle exploded
+{
+    event_name: 'c4_exploded',
+    plant_invoker_id: 'STEAM_0:1:115179770',
+}
+```
+
 ## Bomb Dropped
 
 
