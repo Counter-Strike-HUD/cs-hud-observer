@@ -22,7 +22,6 @@
 - [Round end event](#round-end-event)
 - [Nade throw event](#nade-throw-event)
 - [Nade land event](#nade-land-event)
-- [Auth event](#auth-event)
 
 ## Buy Equipment
 
@@ -335,9 +334,11 @@ Example:
 
 ```ts
 interface PickupEvent{
-  event_name: 'pickup_item';
-  user_id: string; 
-  item_id: number;
+    event_name: 'pickup_item';
+    user_id: string; 
+    item_id: number;
+    current_ammo: number;
+    ammo_reserve: number;
 }
 ```
 
@@ -348,7 +349,9 @@ Example:
 {
     event_name: 'pickup_item',
     user_id: 'STEAM_0:1:115179770',
-    item_id: 27
+    item_id: 27,
+    current_ammo: 4,
+    ammo_reserve: 27
 }
 ```
 
@@ -467,24 +470,51 @@ Example:
 }
 ```
 
-## Auth event
+
+## Bullet state change
+
+This event is periodically sended from server if there is any update on player bullets.
+Every 0.1s will be checking to prevent multiple packet send on weapon fire.
+This measurement is only to prevent server from lagging.
+Client will accept any interval.
 
 ```ts
-interface AuthEvent{
-    event_name: 'auth';
-    authed: boolean;
-    message: string;
+interface BulletChangeEvent{
+    event_name: 'ammo_update';
+    players: Array<{player_id: string; primary_weapon: { current_ammo: number; ammo_reserve: number;}; secondary_weapon: { current_ammo: number; ammo_reserve: number}}>
 }
 ```
 
-Example:  
+Example: 
 
 ```ts
-// Client successfully authed
-{
-    event_name: 'auth',
-    authed: true,
-    message: 'User succesfully authed.'
+// Ammo for every player contains primary and secondary weapon values
+const ammo_update: BulletChangeEvent = {
+    event_name: 'ammo_update',
+    players: [
+        {
+            player_id: 'STEAM_0:1:115179770',
+            primary_weapon: {
+                current_ammo: 30,
+                ammo_reserve: 90
+            },
+            secondary_weapon:{
+                current_ammo: 12,
+                ammo_reserve: 24
+            }
+        },
+        {
+        player_id: 'STEAM_0:1:115179770',
+            primary_weapon: {
+                current_ammo: 30,
+                ammo_reserve: 90
+            },
+            secondary_weapon:{
+                current_ammo: 12,
+                ammo_reserve: 24
+            }
+        },
+    ]
 }
 ```
 

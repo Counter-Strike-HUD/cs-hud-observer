@@ -301,13 +301,17 @@ interface PickupEvent{
   event_name: 'pickup_item';
   user_id: string; 
   item_id: number;
+  current_ammo: number;
+  ammo_reserve: number;
 }
 
 // User kalle changed pickups weapon deagle
 const pickup : PickupEvent = {
   event_name: 'pickup_item',
   user_id: 'STEAM_0:1:115179770',
-  item_id: 27
+  item_id: 27,
+  current_ammo: 4,
+  ammo_reserve: 27
 }
 
 
@@ -416,12 +420,52 @@ const nadeland : NadeLandEvent = {
   landing_z: 1
 }
 
+/**
+  Bullet change (fire)
+  Event when bullet is fired
+*/
+
+interface BulletChangeEvent{
+  event_name: 'ammo_update';
+  players: Array<{player_id: string; primary_weapon: { current_ammo: number; ammo_reserve: number;}; secondary_weapon: { current_ammo: number; ammo_reserve: number}}>
+}
+
+
+
+const ammo_update: BulletChangeEvent = {
+  event_name: 'ammo_update',
+  players: [
+    {
+      player_id: 'STEAM_0:1:115179770',
+      primary_weapon: {
+        current_ammo: 30,
+        ammo_reserve: 90
+      },
+      secondary_weapon:{
+        current_ammo: 12,
+        ammo_reserve: 24
+      }
+    },
+    {
+      player_id: 'STEAM_0:1:115179770',
+      primary_weapon: {
+        current_ammo: 30,
+        ammo_reserve: 90
+      },
+      secondary_weapon:{
+        current_ammo: 12,
+        ammo_reserve: 24
+      }
+    },
+  ]
+}
 
 
 /**
   Auth event
   Internal event for client
 */
+
 
 interface AuthEvent{
   event_name: 'auth';
@@ -436,6 +480,65 @@ const auth : AuthEvent = {
   message: 'User succesfully authed.'
 }
 
+
+/**
+  Game connected
+  Internal event for client when server connects to game socket
+*/
+
+interface GameConnectedEvent{
+    event_name: 'game_server_connected';
+}
+
+// Game server successfully connected to game socket
+const gameconnected : GameConnectedEvent = {
+    event_name: 'game_server_connected',
+}
+
+
+/**
+  Game disconnect event
+  Internal event for client when server disconnects from game socket
+*/
+interface GameDisconnectedEvent{
+    event_name: 'game_server_disconnected';
+}
+
+
+// Game server has disconnect from game socket
+const gamedisconnect: GameDisconnectedEvent = {
+    event_name: 'game_server_disconnected',
+}
+
+
+/**
+  Game socket connected event
+  Internal event for client when game socket is connected with client
+*/
+
+interface GameSocketConnectedEvent{
+  event_name: 'game_socket_connected';
+}
+
+
+// Game socket successfully connected with the client socket
+const gamesocketconnected: GameSocketConnectedEvent ={
+  event_name: 'game_socket_connected'
+}
+
+/**
+  Game socket disconnected event
+  Internal event for client when game socket disconnects from client
+*/
+
+interface GameSocketDisconnectedEvent{
+    event_name: 'game_socket_disconnected';
+}
+
+// Game socket has disconnect (/w client)
+const gamesocketdisconnected: GameSocketDisconnectedEvent ={
+    event_name: 'game_socket_disconnected',
+}
 
 
 

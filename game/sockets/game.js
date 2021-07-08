@@ -35,6 +35,9 @@ class GameSocket extends Event {
         // Should be user kicked?
         this.kick = false;
 
+        // Is server connected?
+        this.server_connected = false;
+
         // Listen for incoming requests
         this.listen();
         this.socket();
@@ -81,6 +84,16 @@ class GameSocket extends Event {
             // User disconnected unset client socket
             socket.on("close", () =>{
 
+                // Check if game server is connected and we have send connected message before
+                if(socket.remoteAddress === config.game_server_address && this.server_connected && this.sockets.client !== null){
+
+                    // Server has disconnected, remove state
+                    this.server_connected = false;
+
+                    // If yes send disconnected message to client
+                    this.sockets.client.write('{"event_name":"game_server_disconnected"}');
+                }
+
                 // Check if this connection is from a client and this is not a double connection
                 if(socket.remoteAddress === this.sockets.remoteAddress && this.kick === false) {
                    
@@ -106,6 +119,18 @@ class GameSocket extends Event {
 
             // Listen for incoming data
             socket.on('data', data => {
+
+                // Check is socket address is our game server and connection event has not yet been send
+                if(socket.remoteAddress === config.game_server_address && !this.server_connected && this.sockets.client !== null){
+
+                    // Set server connected state
+                    this.server_connected = true;
+
+                    
+                    // Send event to client
+                    this.sockets.client.write('{"event_name": "game_server_connected"}');
+                }
+
 
                 // Check if client is authed
                 if(!this.authed) {
