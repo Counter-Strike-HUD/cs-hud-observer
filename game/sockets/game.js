@@ -38,6 +38,9 @@ class GameSocket extends Event {
         // Is server connected?
         this.server_connected = false;
 
+        // Queue
+        this.queue = [];
+
         // Listen for incoming requests
         this.listen();
         this.socket();
@@ -91,7 +94,7 @@ class GameSocket extends Event {
                     this.server_connected = false;
 
                     // If yes send disconnected message to client
-                    this.sockets.client.write('{"event_name":"game_server_disconnected"}');
+                    this.write('{"event_name":"game_server_disconnected"}');
                 }
 
                 // Check if this connection is from a client and this is not a double connection
@@ -128,7 +131,7 @@ class GameSocket extends Event {
 
                     
                     // Send event to client
-                    this.sockets.client.write('{"event_name": "game_server_connected"}');
+                    this.write('{"event_name": "game_server_connected"}');
                 }
 
 
@@ -152,7 +155,7 @@ class GameSocket extends Event {
                             }`;
 
                             // Send error message to the client
-                            socket.write(message);
+                            this.write(message);
 
 
                             // If failed destroy connection and drop user since token missmatch happened
@@ -174,7 +177,7 @@ class GameSocket extends Event {
                             }`;
 
                             // Send message to the client
-                            socket.write(message);
+                            this.write(message);
 
                             console.log('⚡️[server]: Client authed');
                         }
@@ -202,11 +205,24 @@ class GameSocket extends Event {
                     } else if(this.sockets.client !== null) {
 
                         // Write data to the client socket
-                        this.sockets.client.write(data);
+                        this.write(data);
                     }
                 }
             })
         })
+    }
+
+    /**
+     * write
+     * 
+     * Class function used for sending custom messages to the client
+     */
+    write(data){
+
+        // Check if client socket exists
+        if(this.sockets.client !== null){
+            this.sockets.client.write(data);
+        }
     }
 
     /**
