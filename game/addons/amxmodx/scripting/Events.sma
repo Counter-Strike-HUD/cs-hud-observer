@@ -3,11 +3,13 @@
 #include < json >
 #include < cstrike >
 #include < engine >
+#include < fakemeta >
 #include < hamsandwich >
 #include < csx >
 #include < fakemeta_util >
 
-#define CONFIG_FILE	"addons/amxmodx/configs/HudObserverConfig.ini"
+#define CONFIG_FILE	"addons/amxmodx/configs/HudObserverConfig.json"
+#define MAX_REVERSED_MAPS	32
 
 const m_flFlashedUntil = 514;
 const m_flFlashedAt = 515;
@@ -64,6 +66,14 @@ new const szNadeTypes[ ][ ] = {
 };
 
 new iNadeInfo[ 256 ];
+new iPlantId, iC4Id;
+
+new g_iMaxPlayers;
+
+new iLastWeapon[ 33 ];
+new iFrame = 0, szWeaponsLastState[ 33 ][ 2 ][ 2 ];
+
+new iReversedMaps[ MAX_REVERSED_MAPS ][ 16 ];
 
 public plugin_init( ) {
 	register_plugin( "Events Test", "1.0.4b", "Damper" );
@@ -81,14 +91,24 @@ public plugin_init( ) {
 		}
 	}
 	
+	g_iMaxPlayers = get_maxplayers( );
+	
 	// Bomb Site
-	new szMap[ 11 ], BombSites:bsBombSiteA, BombSites:bsBombSiteB;
+	new szMap[ 16 ], BombSites:bsBombSiteA, BombSites:bsBombSiteB, bFound = false;
 	get_mapname( szMap , charsmax( szMap ) );
 	
-	if ( equal( szMap, "de_chateau" ) || equal( szMap, "de_dust2" ) || equal( szMap, "de_train" ) ) {
-		bsBombSiteA = BOMBSITE_B;
-		bsBombSiteB = BOMBSITE_A;
-	} else {
+	for( new i = 0; i < sizeof iReversedMaps; i++ ) {
+		if( equal( szMap, iReversedMaps[ i ] ) ) {
+			bsBombSiteA = BOMBSITE_B;
+			bsBombSiteB = BOMBSITE_A;
+			
+			bFound = true;
+			
+			break;
+		}
+	}
+	
+	if( !bFound ) {
 		bsBombSiteA = BOMBSITE_A;
 		bsBombSiteB = BOMBSITE_B;
 	}
@@ -133,39 +153,46 @@ public plugin_init( ) {
 // Check configuration
 public plugin_precache( ) {
 	if( !file_exists( CONFIG_FILE ) ) {
-		write_file( CONFIG_FILE, "; Here you can configure Hud Observer" );
-		write_file( CONFIG_FILE, ";" );
-		write_file( CONFIG_FILE, "SOCKET_IP = 127.0.0.1" );
-		write_file( CONFIG_FILE, "SOCKET_PORT = 31520" );
+		new JSON:Config = json_init_object( );
+		
+		json_object_set_string( Config, "socketIP", "127.0.0.1" );
+		json_object_set_number( Config, "socketPort", 28015 );
+		
+		new JSON:MapsWithDescBombOrder = json_init_array( );
+		
+		json_array_append_string( MapsWithDescBombOrder, "de_dust2" );
+		json_array_append_string( MapsWithDescBombOrder, "de_train" );
+		json_array_append_string( MapsWithDescBombOrder, "de_chateau" );
+		
+		json_object_set_value( Config, "mapsWithDescBombOrder", MapsWithDescBombOrder );
+		
+		json_serial_to_file( Config, CONFIG_FILE, true );
+		
+		json_free( MapsWithDescBombOrder );
+		json_free( Config );
 	}
 	
-	new iFile = fopen( CONFIG_FILE, "rt" );
-	new szData[ 128 ], szLeft[ 16 ], szRight[ 16 ];
+	new JSON:Config = json_parse( CONFIG_FILE, true );
 	
-	while( iFile && !feof( iFile ) ) {
-		fgets( iFile, szData, charsmax( szData ) );
-		replace( szData, charsmax( szData ), "^n", "" );
-		
-		if( szData[ 0 ] == EOS || ( szData[ 0 ] == ';' ) || ( szData[ 0 ] == '/' && szData[ 1 ] == '/' ) )
-			continue;
-		
-		trim( szData );
-		
-		strtok( szData, szLeft, charsmax( szLeft ), szRight, charsmax( szRight ), '=' );
-		
-		trim( szLeft );
-		trim( szRight );
-		
-		if( equal( szLeft, "SOCKET_IP" ) ) {
-			copy( szHost, charsmax( szHost ), szRight );
-			continue;
-		} else if( equal( szLeft, "SOCKET_PORT" ) ) {
-			iPort = str_to_num( szRight );
+	json_object_get_string( Config, "socketIP", szHost, charsmax( szHost ) );
+	iPort = json_object_get_number( Config, "socketPort" );
+	
+	new JSON:MapsWithDescBombOrder = json_object_get_value( Config, "mapsWithDescBombOrder" );
+	
+	new szMap[ 16 ];
+	for( new i = 0; i < json_array_get_count( MapsWithDescBombOrder ); i++ ) {
+		if( i >= MAX_REVERSED_MAPS ) {
+			server_print( "Maps reversed maps limit reached!" );
 			continue;
 		}
+		
+		json_array_get_string( MapsWithDescBombOrder, i, szMap, charsmax( szMap ) );
+		
+		copy( iReversedMaps[ i ], charsmax( iReversedMaps[ ] ), szMap );
 	}
 	
-	fclose( iFile );
+	json_free( MapsWithDescBombOrder );
+	json_free( Config );
 }
 
 // Close socket on plugin end
@@ -196,6 +223,8 @@ public CS_OnBuy( iPlayer, iItem ) {
 	json_object_set_string( Object, "weapon_altname", szAltName );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Killed ham
@@ -215,6 +244,8 @@ public fw_HamKilled( iVictim, iAttacker, shouldgib ) {
 		json_object_set_string( Object, "suicide_reason", "fall" );
 		
 		SendToSocket( Object );
+		
+		json_free( Object );
 	}
 }
 
@@ -244,6 +275,8 @@ public client_death( iAttacker, iVictim, iWeapon, iHitPlace ) {
 	json_object_set_string( Object, "suicide_reason", szSuicideReason );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Say command
@@ -298,6 +331,9 @@ public bomb_planted( iPlayer ) {
 	SendToSocket( Object );
 	
 	json_free( Object );
+	
+	iPlantId = iPlayer;
+	iC4Id = fm_find_ent_by_model( -1, "grenade", "models/w_c4.mdl" );
 	
 	return PLUGIN_CONTINUE;
 }
@@ -400,7 +436,7 @@ public fw_BombPickUp( iPlayer ) {
 
 // Switch current weapon
 public fw_CurWeapon( iPlayer ) {
-	if( !is_user_alive( iPlayer ) ) return PLUGIN_CONTINUE
+	if( !is_user_alive( iPlayer ) || read_data( 2 ) == iLastWeapon[ iPlayer ] ) return PLUGIN_CONTINUE
 	
 	new JSON:Object = json_init_object( );
 	
@@ -409,6 +445,10 @@ public fw_CurWeapon( iPlayer ) {
 	json_object_set_string( Object, "user_pick_id", szSteam[ iPlayer ] );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
+	
+	iLastWeapon[ iPlayer ] = read_data( 2 );
 	
 	return PLUGIN_CONTINUE;
 }
@@ -431,6 +471,8 @@ public fw_Damage( iVictim ) {
 	
 	SendToSocket( Object );
 	
+	json_free( Object );
+	
 	return PLUGIN_CONTINUE;
 }
 
@@ -444,6 +486,8 @@ public fw_WeaponPickedUp( iPlayer ) {
 	
 	SendToSocket( Object );
 	
+	json_free( Object );
+	
 	return PLUGIN_CONTINUE;
 }
 
@@ -456,6 +500,8 @@ public fw_OnItemDropPre( iEnt ) {
 	json_object_set_number( Object, "item_id", cs_get_weapon_id( iEnt ) );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Money update
@@ -467,6 +513,8 @@ public fw_Money( iPlayer ) {
 	json_object_set_number( Object, "current_money", cs_get_user_money( iPlayer ) );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Score update
@@ -481,25 +529,40 @@ public fw_RoundEnd( iMessageId, iMessageDestination, iMessageEntity ) {
 	new szMessage[ 36 ];
 	get_msg_arg_string( 2, szMessage, charsmax( szMessage ) );
 	
-	if( equal( szMessage, "#Terrorists_Win" ) ) {
-		RoundWon( 1 );
-	} else if( equal( szMessage, "#CTs_Win" ) || equal( szMessage, "#Target_Saved" ) ) {
-		RoundWon( 2 );
+	if( equal( szMessage, "#Target_Bombed" ) ) {
+		new JSON:Object = json_init_object( );
+		
+		json_object_set_string( Object, "event_name", "c4_exploded" );
+		json_object_set_string( Object, "plant_invoker_id", szSteam[ iPlantId ] );
+		
+		SendToSocket( Object );
+		
+		json_free( Object );
+		RoundWon( 1, 0 );
+	} else if( equal( szMessage, "#Bomb_Defused" ) ) {
+		RoundWon( 2, 0 );
+	} else if( equal( szMessage, "#Terrorists_Win" ) ) {
+		RoundWon( 1, 1 );
+	} else if( equal( szMessage, "#CTs_Win" ) ) {
+		RoundWon( 2, 1 );
 	}
 	
 	return PLUGIN_CONTINUE;
 }
 
 // Round won
-public RoundWon( iTeam ) {
+public RoundWon( iTeam, iType ) {
 	new JSON:Object = json_init_object( );
 	
 	json_object_set_string( Object, "event_name", "round_end" );
 	json_object_set_string( Object, "side_win", iTeam == 1 ? "TT" : "CT" );
+	json_object_set_string( Object, "end_type", iType == 1 ? "elimination" : iTeam == 1 ? "c4_exploded" : "c4_defused" );
 	json_object_set_number( Object, "tt_rounds", g_iTeamScore[ 1 ] );
 	json_object_set_number( Object, "ct_rounds", g_iTeamScore[ 0 ] );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Grenade throw
@@ -516,12 +579,14 @@ public grenade_throw( iPlayer, gid, wid ) {
 	json_object_set_string( Object, "nade_type", szName );
 	
 	SendToSocket( Object );
+	
+	json_free( Object );
 }
 
 // Grenade land
 public fw_EmitSound( iEnt, iChannel, const szSample[], Float:fVol, Float:fAttn, iFlags, iPitch ) {
 	for( new i = 0; i < sizeof szNadeSounds; i++ ) {
-		if( equal( szSample, szNadeSounds[ i ] ) ) {
+		if( equal( szSample, szNadeSounds[ i ] ) && iEnt != iC4Id ) {
 			new Float:vOrigin[ 3 ];
 			entity_get_vector( iEnt, EV_VEC_origin, vOrigin );
 			
@@ -536,11 +601,74 @@ public fw_EmitSound( iEnt, iChannel, const szSample[], Float:fVol, Float:fAttn, 
 			
 			SendToSocket( Object );
 			
+			json_free( Object );
+			
 			return PLUGIN_CONTINUE;
 		}
 	}
 	
 	return PLUGIN_CONTINUE;
+}
+
+public server_frame( ) {
+	iFrame++;
+	
+	if( iFrame > 30 ) iFrame = 0;
+	else return;
+	
+	new JSON:Object = json_init_object( );
+	
+	new JSON:Players = json_init_array( );
+	
+	new szWeapons[ 32 ], iWeaponsNumber, iIterator, iAmmo, iBpAmmo;
+	static iType;
+	new bool:bChange = false;
+	
+	for( new iPlayer = 1; iPlayer <= g_iMaxPlayers; iPlayer ++ ) {
+		if( !is_user_alive( iPlayer ) || is_user_bot( iPlayer ) )
+			continue;
+		
+		get_user_weapons( iPlayer, szWeapons, iWeaponsNumber );
+		
+		for( iIterator = 0; iIterator < iWeaponsNumber; iIterator ++ ) {
+			iType = CheckWeapType( szWeapons[ iIterator ] );
+			
+			if( iType ) {
+				get_user_ammo( iPlayer, szWeapons[ iIterator ], iAmmo, iBpAmmo );
+				
+				iType--;
+				
+				if( szWeaponsLastState[ iPlayer ][ iType ][ 0 ] != iAmmo || szWeaponsLastState[ iPlayer ][ iType ][ 1 ] != iBpAmmo ) {
+					szWeaponsLastState[ iPlayer ][ iType ][ 0 ] = iAmmo;
+					szWeaponsLastState[ iPlayer ][ iType ][ 1 ] = iBpAmmo;
+					
+					static JSON:Player;
+					Player = json_init_object( );
+					
+					json_object_set_string( Player, "player_id", szSteam[ iPlayer ] );
+					json_object_set_string( Player, "weapon_type", ( iType == 0 ) ? "primary" : "secondary" );
+					json_object_set_number( Player, "current_ammo",iAmmo );
+					json_object_set_number( Player, "ammo_reserve", iBpAmmo );
+					
+					json_array_append_value( Players, Player );
+					
+					json_free( Player );
+					
+					bChange = true;
+				}
+			}
+		}
+	}
+	
+	json_object_set_string( Object, "event_name", "ammo_update" );
+	json_object_set_value( Object, "players", Players );
+	
+	if( bChange ) SendToSocket( Object );
+	
+	json_free( Players );
+	json_free( Object );
+	
+	return;
 }
 
 // Send info to Game Socket
@@ -614,6 +742,13 @@ stock CheckPlayerSite( const iPlayer ) {
 		if( iEnt == g_iBombSiteEntity[ BOMBSITE_A ] ) return 1;
 		else if( iEnt == g_iBombSiteEntity[ BOMBSITE_B ] ) return 2;
 	}
+	
+	return 0;
+}
+
+stock CheckWeapType( iWeapon ) {
+	if( ( PRIMARY_WEAPONS_BIT_SUM & ( 1 << iWeapon ) ) ) return 1;
+	if( ( SECONDARY_WEAPONS_BIT_SUM & ( 1 << iWeapon ) ) ) return 2;
 	
 	return 0;
 }
