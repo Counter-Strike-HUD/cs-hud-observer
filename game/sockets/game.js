@@ -38,9 +38,7 @@ class GameSocket extends Event {
         // Is server connected?
         this.server_connected = false;
 
-        // Queue
-        this.queue = [];
-
+        
         // Listen for incoming requests
         this.listen();
         this.socket();
@@ -48,6 +46,7 @@ class GameSocket extends Event {
         // Helpers
         this._checkToken();
 
+        
     }
 
     /**
@@ -82,6 +81,12 @@ class GameSocket extends Event {
             // Happens when user force drops connection
             socket.on('error', (err) =>{
                 if(err.errno !== 'ECONNRESET') console.error('⚡️[server]: GameSocket ' + err);
+            });
+
+
+            // Socket has sended data to the remote, we can send data again
+            socket.on('drain', () =>{
+                this.emit('send_data');
             });
 
             // User disconnected unset client socket
@@ -219,10 +224,11 @@ class GameSocket extends Event {
      */
     write(data){
 
-        // Check if client socket exists
-        if(this.sockets.client !== null){
-            this.sockets.client.write(data);
-        }
+        
+            // Check if client socket exists
+            if(this.sockets.client !== null){
+                this.sockets.client.write(data);
+            }
     }
 
     /**

@@ -2,6 +2,7 @@ import express from 'express';
 import config from '../../../config.json';
 const router = express.Router();
 import * as apiModel from '../models/apiModel';
+import {ClientSocket} from '../handler/server';
 
 
 // Serve default api response 
@@ -176,6 +177,27 @@ router.post('/editmatch', (req , res) =>{
 
     return res.status(500).json({'status_code': 500, 'message': 'Match is not edited.'})   
 });
+
+
+// Edit match
+router.post('/socketconnect', (req , res) =>{
+
+    // Destruct object
+    const {address, port, token} = req.body;
+
+    const socket = new ClientSocket(address, port, token);
+
+    socket._connect((status: boolean | string) =>{
+        console.log('callback connected', status)
+    });
+
+    
+
+    return res.status(500).json({'status_code': 500, 'message': 'Match is not edited.'})   
+});
+
+
+
 
 
 

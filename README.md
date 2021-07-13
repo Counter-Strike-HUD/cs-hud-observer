@@ -40,7 +40,7 @@ Currently there is no Docker image or Vagrant support, but its on the way (TODO)
 
 **Nodejs** is required on local (game) or remote machine. Version recommended - **latest version**.  
 
-*If you have nodejs installed, skip this step*
+*If you have nodejs installed, skip this step*  
 For Debian and Ubuntu you can use following commands to install nodejs
 ```sh 
 # Update latest system packages

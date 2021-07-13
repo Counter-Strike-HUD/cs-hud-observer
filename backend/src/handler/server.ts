@@ -6,7 +6,7 @@ import { Server, Socket } from "socket.io";
 import { createServer} from "http";
 import config from '../../../config.json';
 
-interface ClientSocket{
+export interface ClientSocket{
 	state: State;
 	socket: net.Socket;
 	info: {
@@ -18,7 +18,7 @@ interface ClientSocket{
 	lastError: string;
 }
 
-interface State{
+export interface State{
 	connected: boolean;
 	authed: boolean;
 }
@@ -31,7 +31,7 @@ interface State{
  * Main handler for incoming server data 
  */
 
-class ClientSocket extends EventEmitter{
+export class ClientSocket extends EventEmitter{
 
 	constructor(address: string, port: number, token: string) {
 
@@ -179,10 +179,29 @@ class ClientSocket extends EventEmitter{
 				}
 
 				// If socket io instance is set send message
-				if(this.io) this.io.emit(data.event_name, data);
+				if(this.io) this.io.emit(data.event_name, JSON.stringify(data));
 				
 			} catch (error) {
-				//throw new Error(error)
+
+			
+				// On this point JSON parse failed and we need to manualy parse objects from string with regex
+				const parsed: Array<string> | null = m.match(/[^{\}]+(?=})/);
+
+				// Check if regex succeded
+				if(parsed !== null && parsed.length > 0){
+
+					// Parse trough array
+					parsed.forEach(match =>{
+
+						const event = JSON.parse(`{${match}}`);
+
+						// If socket io instance is set send message
+						if(this.io) this.io.emit(event.event_name, JSON.stringify(event));
+
+					});
+				}
+
+	
 			}
 
 		});
@@ -205,6 +224,10 @@ class ClientSocket extends EventEmitter{
 			},
 		});
 
+		// Start listening
+		this.io.listen(config.web.SOCKET_PORT);
+
+		// Log on connection
 		this.io.on('connection', (socket: Socket) =>{
 			console.log('New client connected');
 		});
