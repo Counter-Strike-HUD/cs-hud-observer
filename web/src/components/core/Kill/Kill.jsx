@@ -13,9 +13,9 @@ const Kill = (props) =>{
  
     useEffect(() =>{
 
-        socket.on('kill', event =>{
-            console.log('kill happened', event)
-            setKills(kills => [...kills, event])
+        socket.on('*', event =>{
+            console.log('event', event)
+            //setKills(kills => [...kills, event])
         })
 
     }, [])

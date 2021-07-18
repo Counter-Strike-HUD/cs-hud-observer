@@ -7,4 +7,9 @@ socket.on('test', test =>{
     console.log('test message', test);
 })
 
+
+socket.on('*', event =>{
+    console.log(event);
+})
+
 export const SocketContext = React.createContext();

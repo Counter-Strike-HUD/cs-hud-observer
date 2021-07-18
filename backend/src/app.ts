@@ -1,9 +1,28 @@
-import {HLDS_Log} from 'hlds-log';
 import config from '../../config.json';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import { Server, Socket } from "socket.io";
+import { createServer} from "http";
 
+// Setup socketio
+const io = new Server(createServer(), {
+    cors: {
+        origin: config.hostname,
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+});
+
+// Start listening
+io.listen(config.INTERNAL_SOCKET_PORT);
+
+// Log on connection
+io.on('connection', (socket: Socket) =>{
+    console.log('New client connected');
+});
+
+// Import API router
 import apiRouter from './routes/apiRouter';
 
 // Init app

@@ -64,8 +64,7 @@ export class ClientSocket extends EventEmitter{
 
 			// Send auth key after connection
 			this.socket.write(`Bearer ${this.info.token}`);
-
-			console.log('Connected');
+			
 		});
 
 
@@ -132,6 +131,8 @@ export class ClientSocket extends EventEmitter{
 		// Listen for auth event
 		this.once('auth', status =>{ 
 
+			console.log('socket called', status);
+
 			// Set interal state
 			this.state.authed = status;
 
@@ -147,6 +148,8 @@ export class ClientSocket extends EventEmitter{
 	 * Internal function used for parsing incoming socket messages
 	 */
 	_messageParser(){
+
+		console.log('message parser called')
 		
 		// Listen for socket data event
 		this.socket.on('data', (msg: Buffer) =>{
@@ -179,7 +182,10 @@ export class ClientSocket extends EventEmitter{
 				}
 
 				// If socket io instance is set send message
-				if(this.io) this.io.emit(data.event_name, JSON.stringify(data));
+				if(this.io) {
+					console.log('io exists')
+					this.io.emit(data.event_name, JSON.stringify(data));
+				}
 				
 			} catch (error) {
 
@@ -234,7 +240,7 @@ export class ClientSocket extends EventEmitter{
 	}
 }
 
-
+/*
 const client = new ClientSocket('54.36.236.240', 28015, '80931dca799344575459ce56175a3a01');
 
 
@@ -247,7 +253,7 @@ client._auth((authed: boolean) =>{
 	
 	client._setupSocketIO();
 });
-
+*/
 
 
 module.exports = {ClientSocket};

@@ -1,8 +1,10 @@
 import express from 'express';
+import net from 'net';
 import config from '../../../config.json';
 const router = express.Router();
 import * as apiModel from '../models/apiModel';
 import {ClientSocket} from '../handler/server';
+
 
 
 // Serve default api response 
@@ -185,15 +187,66 @@ router.post('/socketconnect', (req , res) =>{
     // Destruct object
     const {address, port, token} = req.body;
 
-    const socket = new ClientSocket(address, port, token);
 
+    // Check if address string is valid
+    if(net.isIP(address) === 0){
+        return res.status(400).json({'status_code': 400, "message": "IP address is invalid"});
+    }
+
+    const portint = parseInt(port);
+
+    if(portint === NaN){
+        return res.status(400).json({'status_code': 400, "message": "Port must be a number"});
+    }
+
+
+    console.log(portint)
+
+    // Check if port is in range
+    if(portint < 0 || portint > 65536){
+        return res.status(400).json({'status_code': 400, "message": "Port must be in a range of 0 - 65536"});
+    }
+
+    const socket = new ClientSocket(address, portint, token);
+
+    // Internal state holder
+    let state = {
+        connected: false,
+        authed: false,
+    }
+
+
+
+    // Try to connect to remote game socket
     socket._connect((status: boolean | string) =>{
+
         console.log('callback connected', status)
+
+        // Set connected state
+        state.connected = true;
     });
 
-    
 
-    return res.status(500).json({'status_code': 500, 'message': 'Match is not edited.'})   
+    // Try to connect to remote game socket
+    socket._auth((status: boolean ) =>{
+
+        console.log('callback auth', status)
+
+        console.log(status)
+
+        // Set connected state
+        state.authed = status;
+
+        // Setup socket.io
+        socket._setupSocketIO();
+       
+    });
+
+
+    // Respond after 5 s to request
+    setTimeout(() =>{
+        return res.status(200).json({'status_code': 200, 'connection': state.connected, 'auth': state.authed, 'message': 'Successfully connected to the remote game socket.'})
+    }, 5000); 
 });
 
 

@@ -26,7 +26,7 @@ class Routes extends React.Component{
                     <Navbar.Text>
                         <MatchesRoute />   
                     </Navbar.Text>
-                    <Navbar.Text className="ml-auto" style={{color: '#ffffff'}}>
+                    <Navbar.Text className="ml-auto nav-icon" style={{color: '#ffffff'}}>
                         <a href="https://github.com/kallefrombosnia/cs-hud-observer">View this project on <DiGithubBadge size={32}></DiGithubBadge></a>
                     </Navbar.Text>
                 </Navbar>
