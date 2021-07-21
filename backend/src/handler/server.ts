@@ -221,7 +221,7 @@ export class ClientSocket extends EventEmitter{
 	 */
 	_setupSocketIO(){
 
-		// Setup socketio
+		// Setup socketiof 
 		this.io = new Server(createServer(), {
 			cors: {
 				origin: config.hostname,

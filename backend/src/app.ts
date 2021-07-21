@@ -2,25 +2,25 @@ import config from '../../config.json';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import { Server, Socket } from "socket.io";
-import { createServer} from "http";
+import socket from './socket/socket';
 
-// Setup socketio
-const io = new Server(createServer(), {
-    cors: {
-        origin: config.hostname,
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-});
 
-// Start listening
-io.listen(config.INTERNAL_SOCKET_PORT);
+// Init app socket internal server
+// All handling is resolved in socket.ts
+socket.listen(config.INTERNAL_SOCKET_PORT);
 
-// Log on connection
-io.on('connection', (socket: Socket) =>{
-    console.log('New client connected');
-});
+socket.on('connection', soc =>{
+    console.log('New connection on server socket', soc.id)
+
+    soc.onAny((event: object, msg: string) =>{
+        console.log('New event: ' ,event, msg)
+
+        socket.emit(event.toString(), msg);
+    })
+
+    
+})
+
 
 // Import API router
 import apiRouter from './routes/apiRouter';

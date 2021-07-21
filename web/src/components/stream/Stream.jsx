@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Card, Container, Row, Col, Form, Button, ListGroup} from 'react-bootstrap';
+import {io} from 'socket.io-client';
 import {BsFillPlusCircleFill, BsFillInfoCircleFill} from 'react-icons/bs';
 
 function Stream() { 
@@ -12,6 +13,29 @@ function Stream() {
     const [connected, setConnected] = useState(false);
     const [authed, setAuthed] = useState(false);
     const [textarea, setTextarea] = useState(['Waiting for connection']);
+    //const [socket, setSocket] = useState({});
+
+
+    useEffect(() => {
+
+        const socket = io('http://localhost:4000');
+        setTextarea(textarea => ([...textarea, `Trying to connect to backend socket`])); 
+        socket.on('connect', (sock) =>{
+            console.log('Successfully connected to the backend');
+            setTextarea(textarea => ([...textarea, `Connected to the backend socket server. Listening for events`])); 
+        })
+
+        // Connected
+        socket.on('connected', (status) =>{
+            setConnected(status);
+        });
+
+        // Authed
+        socket.on('authed', (status) =>{
+            setAuthed(status);
+        });
+        
+    }, [0])
 
 
     /**

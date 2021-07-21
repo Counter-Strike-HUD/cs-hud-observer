@@ -1,9 +1,13 @@
 import express from 'express';
 import net from 'net';
+import {io} from 'socket.io-client';
 import config from '../../../config.json';
 const router = express.Router();
 import * as apiModel from '../models/apiModel';
 import {ClientSocket} from '../handler/server';
+
+
+const socket = io(`http://localhost:${config.INTERNAL_SOCKET_PORT}`);
 
 
 
@@ -207,7 +211,7 @@ router.post('/socketconnect', (req , res) =>{
         return res.status(400).json({'status_code': 400, "message": "Port must be in a range of 0 - 65536"});
     }
 
-    const socket = new ClientSocket(address, portint, token);
+    const gamesocket = new ClientSocket(address, portint, token);
 
     // Internal state holder
     let state = {
@@ -216,19 +220,17 @@ router.post('/socketconnect', (req , res) =>{
     }
 
 
-
     // Try to connect to remote game socket
-    socket._connect((status: boolean | string) =>{
+    gamesocket._connect((status: boolean | string) =>{
 
         console.log('callback connected', status)
 
-        // Set connected state
-        state.connected = true;
+        socket.emit('connected', true);
     });
 
 
     // Try to connect to remote game socket
-    socket._auth((status: boolean ) =>{
+    gamesocket._auth((status: boolean ) =>{
 
         console.log('callback auth', status)
 
@@ -237,9 +239,9 @@ router.post('/socketconnect', (req , res) =>{
         // Set connected state
         state.authed = status;
 
-        // Setup socket.io
-        socket._setupSocketIO();
-       
+        // Emit 
+        socket.emit('authed', status)
+
     });
 
 
