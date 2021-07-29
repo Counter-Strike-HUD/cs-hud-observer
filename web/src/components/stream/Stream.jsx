@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Card, Container, Row, Col, Form, Button, ListGroup} from 'react-bootstrap';
+import {Card, Container, Row, Col, Form, Button, Spinner} from 'react-bootstrap';
 import {io} from 'socket.io-client';
-import {BsFillPlusCircleFill, BsFillInfoCircleFill} from 'react-icons/bs';
+
 
 function Stream() { 
 
@@ -10,25 +10,59 @@ function Stream() {
     const [port, setPort] = useState('');
     const [token, setToken] = useState('');
     const [authSubmited, setAuthSubmited] = useState(false);
+    const [checkedBackend, setCheckedBackend] = useState(false)
     const [connected, setConnected] = useState(false);
     const [authed, setAuthed] = useState(false);
     const [textarea, setTextarea] = useState(['Waiting for connection']);
-    //const [socket, setSocket] = useState({});
 
 
     useEffect(() => {
 
-        const socket = io('http://localhost:4000');
+        // Connect to the app socket
+        const socket = io(`http://localhost:4000`);
+
         setTextarea(textarea => ([...textarea, `Trying to connect to backend socket`])); 
+        
         socket.on('connect', (sock) =>{
             console.log('Successfully connected to the backend');
             setTextarea(textarea => ([...textarea, `Connected to the backend socket server. Listening for events`])); 
         })
 
         // Connected
-        socket.on('connected', (status) =>{
+        socket.on('connect', (status) =>{
+
+            // Emit connected event
+            socket.emit('frontend_connect');
+
+            // Send get game status data
+            socket.emit('get_gamestatus');
+
+            // Update local state 
             setConnected(status);
+            
         });
+
+
+        socket.on('get_gamestatus', (game) =>{
+            console.log(game)
+
+            setCheckedBackend(true);
+
+            // Check have we authed before?
+            if(game && game.authed){
+                setConnected(true);
+                setAuthed(true);
+                setTextarea(textarea => ([...textarea, `We had previous socket connection, using it now.`]));
+            }
+        });
+
+        socket.on('game_connected', (game) =>{
+            setConnected(true);
+        })
+
+        socket.on('game_authed', (status) =>{
+            setAuthed(status);
+        })
 
         // Authed
         socket.on('authed', (status) =>{
@@ -101,8 +135,13 @@ function Stream() {
                                 <h2>
                                     Auth
                                 </h2>
+                                    { !checkedBackend && 
+                                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                                            <Spinner animation="border" />
+                                        </div>
+                                    }
 
-                                    {!authed &&
+                                    {!authed && checkedBackend &&
                                         <Form onSubmit={e => makeAuth(e)} >
                                             <Form.Row>
                                                 <Form.Group as={Col} md={4} controlId="formGridAddress">
@@ -158,7 +197,7 @@ function Stream() {
                         <Card className="card bg-light p-3 push-top">
                             <Card.Body>
                                 <h2>
-                                    Auth
+                                    Action center 
                                 </h2>
                             </Card.Body>
                         </Card>

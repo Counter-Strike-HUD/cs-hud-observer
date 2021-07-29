@@ -10,6 +10,9 @@ import {ClientSocket} from '../handler/server';
 const socket = io(`http://localhost:${config.INTERNAL_SOCKET_PORT}`);
 
 
+// Emit that backend is connected
+socket.emit('backend_connect');
+
 
 // Serve default api response 
 router.get('/', (req , res, next) =>{
@@ -225,7 +228,7 @@ router.post('/socketconnect', (req , res) =>{
 
         console.log('callback connected', status)
 
-        socket.emit('connected', true);
+        socket.emit('game_connected', true);
     });
 
 
@@ -240,7 +243,9 @@ router.post('/socketconnect', (req , res) =>{
         state.authed = status;
 
         // Emit 
-        socket.emit('authed', status)
+        socket.emit('game_authed', status)
+
+        return;
 
     });
 
@@ -254,9 +259,6 @@ router.post('/socketconnect', (req , res) =>{
 
 
 
-
-
-
 // 404 not found api route
 router.get('*', (req, res) =>{
     return res.status(404).json({
@@ -264,6 +266,7 @@ router.get('*', (req, res) =>{
         "message": "Unknown route.",
     });
 });
+
 
 
 export default router;

@@ -2,24 +2,13 @@ import config from '../../config.json';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import socket from './socket/socket';
+import socketio from './socket/socket';
 
 
 // Init app socket internal server
 // All handling is resolved in socket.ts
-socket.listen(config.INTERNAL_SOCKET_PORT);
+socketio.listen(config.INTERNAL_SOCKET_PORT);
 
-socket.on('connection', soc =>{
-    console.log('New connection on server socket', soc.id)
-
-    soc.onAny((event: object, msg: string) =>{
-        console.log('New event: ' ,event, msg)
-
-        socket.emit(event.toString(), msg);
-    })
-
-    
-})
 
 
 // Import API router
