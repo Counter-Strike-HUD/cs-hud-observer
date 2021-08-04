@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import * as api from '../../screen/api/api';
 
+
+/*
 import Ak47 from '../../screen/resources/images/ak47.png';
 import ArmorFull from '../../screen/resources/images/assaultsuit.png';
 import LightArmor from '../../screen/resources/images/kevlar.png';
@@ -10,6 +12,8 @@ import SmokeGrenade from '../../screen/resources/images/smoke_grenade.png';
 import C4 from '../../screen//resources/images/c4.png';
 import Defuser from '../../screen//resources/images/defuser.png';
 import User from '../../screen/resources/images/unknown-user.png';
+*/
+
 
 const PlayersRight = ({playersList}) =>{
 
@@ -55,8 +59,9 @@ const PlayersRight = ({playersList}) =>{
                                 {player.player_nickname}
                             </div>
                             <div className={`armor-right-${i}`}>
+                                {/*
                                 <img src={ArmorFull} alt="full"></img>
-                                <img src={LightArmor} alt="full"></img>
+                                <img src={LightArmor} alt="full"></img>*/}
                             </div>
                             <div className={`health-number-right-${i}`}>
                                 100
@@ -65,18 +70,19 @@ const PlayersRight = ({playersList}) =>{
 
                         <div className={`player-info-right-${i}`}>
                             <div className={`avatar-right-${i}`}>
-                                <img src={User} alt="user" />
+                                <img src="" alt="user" />
                             </div>
                             <div className={`equipment-right-${i}`}>
-                                <img src={C4} alt="full"></img>
+                                {/*<img src={C4} alt="full"></img>*/}
                             </div>
                             <div className={`utility-right-${i}`}>
+                                {/*
                                 <img src={FlashGrenade} alt="full"></img>
                                 <img src={SmokeGrenade} alt="full"></img>
-                                <img src={HeGrenade} alt="full"></img>
+                                <img src={HeGrenade} alt="full"></img>*/}
                             </div>
                             <div className={`weapon-right-${i}`}>
-                                <img src={Ak47} alt="full"></img>
+                                {/*<img src={Ak47} alt="full"></img>*/}
                             </div>
                         </div>
 

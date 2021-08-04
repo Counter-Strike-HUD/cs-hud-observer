@@ -1,4 +1,4 @@
-
+import {Socket} from 'socket.io-client';
 
 
 export interface AppState{
@@ -41,5 +41,6 @@ export class AppState{
             connected: false,
             authed: false,
         }
+
     }
 }

@@ -3,8 +3,8 @@ import socketio from "socket.io-client";
 
 export const socket = socketio.connect('localhost:4000', {withCredentials: true});
 
-socket.on('test', test =>{
-    console.log('test message', test);
+socket.on('connect', () =>{
+    socket.emit('hud_socket');
 })
 
 

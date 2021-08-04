@@ -1,5 +1,5 @@
 import React, { useEffect, useState }  from 'react';
-import Ak47 from '../../../screen/resources/images/ak47.png';
+
 
 
 /**
@@ -22,7 +22,7 @@ const KillItem = (props) =>{
         <React.Fragment>
             <div className="kill">
                 <span className={ `${killer.side}-style`}>{killer.name}</span>
-                    <img src={Ak47} alt="full"></img>
+                    {/*<img src={Ak47} alt="full"></img>*/}
                 <span className={ `${victim.side}-style`}>{victim.name}</span>
             </div> 
         </React.Fragment>

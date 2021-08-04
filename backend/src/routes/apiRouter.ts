@@ -214,7 +214,8 @@ router.post('/socketconnect', (req , res) =>{
         return res.status(400).json({'status_code': 400, "message": "Port must be in a range of 0 - 65536"});
     }
 
-    const gamesocket = new ClientSocket(address, portint, token);
+    const gamesocket = new ClientSocket(address, portint, token, socket);
+
 
     // Internal state holder
     let state = {

@@ -21,9 +21,20 @@ socketio.on('connection', socket =>{
 
     // For testing purposes only.
     socket.onAny((event: object, msg: string) =>{
+
         console.log('New event: ' ,event, msg)
-        //socketio.emit(event.toString(), msg);
+
+        // Emit event to hud socket
+        socketio.to('hud_socket').emit(event.toString(), msg);
     });
+
+
+    // Listen for backend handler connection event
+    socket.on('hud_socket', () =>{
+
+        // Join to room
+        socket.join('hud_socket');
+    })
 
 
     // Listen for backend handler connection event

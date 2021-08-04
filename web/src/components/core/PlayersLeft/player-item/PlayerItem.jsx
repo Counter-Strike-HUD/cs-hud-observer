@@ -33,7 +33,7 @@ export default function PlayerLeft (props) {
                     <img src={HeGrenade} alt="full"></img>
                 </div>
                 <div className="weapon-left-1">
-                    <img src={Ak47} alt="full"></img>
+                    {/*<img src={Ak47} alt="full"></img>*/}
                 </div>
             </div>
         </div>

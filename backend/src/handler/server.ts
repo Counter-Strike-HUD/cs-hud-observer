@@ -2,9 +2,7 @@
 
 import net from 'net';
 import {EventEmitter} from 'events';
-import { Server, Socket } from "socket.io";
-import { createServer} from "http";
-import config from '../../../config.json';
+import { Socket } from "socket.io-client";
 
 export interface ClientSocket{
 	state: State;
@@ -14,7 +12,7 @@ export interface ClientSocket{
 		port: number;
 		token: string;
 	}
-	io: Server | null;
+	io: Socket;
 	lastError: string;
 }
 
@@ -33,7 +31,7 @@ export interface State{
 
 export class ClientSocket extends EventEmitter{
 
-	constructor(address: string, port: number, token: string) {
+	constructor(address: string, port: number, token: string, socketio: Socket) {
 
 		super();
 
@@ -46,7 +44,7 @@ export class ClientSocket extends EventEmitter{
 
 
 		// Socket io instance
-		this.io = null;
+		this.io = socketio;
 
 		// Local client socket connection
 		this.socket = new net.Socket();
@@ -151,109 +149,106 @@ export class ClientSocket extends EventEmitter{
 
 		console.log('message parser called')
 		
+		// Init empty string variable
+		let message = '';
+
 		// Listen for socket data event
 		this.socket.on('data', (msg: Buffer) =>{
 
-			const m = msg.toString('utf8');
+			const m = msg.toString('utf-8');
 
-			console.log(m);
+			console.log(m, 'END');
 
-			// Try to JSON parse message
-			try {
+			// Check if string char is not closing bracket
+			if(m.slice(-1) !== '}'){
 
-				// Try to parse as JSON object
-				const data = JSON.parse(m);
+				// Append new string to the message variable
+				message += m;
 
-				console.log(data)
+			}else{
 
-				// Check if this event is auth response
-				if(data.event_name === 'auth'){
+				// Check do we have old chunks of message?
+				if(message !== ''){
 
-					// Check if message is successfull
-					if(data.authed){
+					// If yes append it to the old chunk and form 'good' string
+					// Later we need to unset this to empty string
+					message += m;
+				}
 
-						// Emit success
-						this.emit('auth', true);
-					}else{
+				// Try to JSON parse message
+				try {
 
-						// Emit failed auth
-						this.emit('auth', false);
+					// Try to parse as JSON object
+					const data = JSON.parse(m);
+
+					console.log(data)
+
+					// Check if this event is auth response
+					if(data.event_name === 'auth'){
+
+						// Check if message is successfull
+						if(data.authed){
+
+							// Emit success
+							this.emit('auth', true);
+						}else{
+
+							// Emit failed auth
+							this.emit('auth', false);
+						}
 					}
-				}
 
-				// If socket io instance is set send message
-				if(this.io) {
-					console.log('io exists')
-					this.io.emit(data.event_name, JSON.stringify(data));
-				}
+					// If socket io instance is set send message
+					if(this.io) {
+						console.log('io exists')
+						this.io.emit(data.event_name, JSON.stringify(data));
+					}
+
+
+					// Unset string
+					message = '';
+					
+				} catch (error) {
+
 				
-			} catch (error) {
+					// Remove all whitespaces and newlines from string
+					const cleanjsonstring = m.replace(/(\r\n|\n|\r)/gm, "");
 
-			
-				// On this point JSON parse failed and we need to manualy parse objects from string with regex
-				const parsed: Array<string> | null = m.match(/[^{\}]+(?=})/);
+					// Remove all sticked curly brackets with commas
+					const jsonstrings = cleanjsonstring.replace(/}{/gm, '},{')
 
-				// Check if regex succeded
-				if(parsed !== null && parsed.length > 0){
 
-					// Parse trough array
-					parsed.forEach(match =>{
+					const jsontrim = jsonstrings.split(' ').join('')
 
-						const event = JSON.parse(`{${match}}`);
 
-						// If socket io instance is set send message
-						if(this.io) this.io.emit(event.event_name, JSON.stringify(event));
+					// Parse string
+					const json = JSON.parse(`[${jsontrim}]`);
 
-					});
+
+					// Check if regex succeded
+					if(json !== null && json.length > 0){
+
+					
+						// Parse trough array
+						// Event is now just any, later gonna implement type checking
+						json.forEach((event: any) =>{
+
+							console.log(event)
+
+							// If socket io instance is set send message
+							if(this.io) this.io.emit(event.event_name, JSON.stringify(event));
+
+						});
+					}
+
+					// Unset message
+					message = '';
 				}
-
-	
 			}
-
-		});
-	}
-
-
-	/**
-	 * _setupSocketIO
-	 * 
-	 * Setups socket IO server after successfull connection to game socket
-	 */
-	_setupSocketIO(){
-
-		// Setup socketiof 
-		this.io = new Server(createServer(), {
-			cors: {
-				origin: config.hostname,
-				methods: ["GET", "POST"],
-				credentials: true
-			},
-		});
-
-		// Start listening
-		this.io.listen(config.web.SOCKET_PORT);
-
-		// Log on connection
-		this.io.on('connection', (socket: Socket) =>{
-			console.log('New client connected');
+	
 		});
 	}
 }
-
-/*
-const client = new ClientSocket('54.36.236.240', 28015, '80931dca799344575459ce56175a3a01');
-
-
-client._connect((status: boolean | string) =>{
-	console.log('callback connected', status)
-});
-
-client._auth((authed: boolean) =>{
-	console.log('Auth ', authed);
-	
-	client._setupSocketIO();
-});
-*/
 
 
 module.exports = {ClientSocket};
