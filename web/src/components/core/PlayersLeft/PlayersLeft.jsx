@@ -45,7 +45,8 @@ const PlayersLeft = ({playersList}) =>{
                     primary_weapon: null,
                     secondary_weapon: '17',
                     health: 100,
-                    equipment: []
+                    equipment: [],
+                    c4: false,
                 };
 
                 setPlayers(player => [...player, {...p.player_info, ...playerinfo}]);
@@ -58,31 +59,30 @@ const PlayersLeft = ({playersList}) =>{
 
     }, [playersList])
 
-    useEffect(() => {
 
-        console.log('called socket effect');
+
+    useEffect(() => {
 
         socket.on('weapon_switched', (event) =>{
 
             const object = JSON.parse(event);
 
-            console.log("STEAMID: ", object.user_pick_id);
-
-            console.log(players);
-
             if(players.length > 0){
 
                 const playerindex = players.findIndex(player => player.player_steamid === object.user_pick_id);
 
-                const newplayers = [...players];
-                
-                newplayers[playerindex].current_weapon = object.weapon_id;
-            
-                console.log(newplayers)
+                console.log(playerindex);
 
-                setPlayers(newplayers);
+                if(playerindex !== -1){
 
-                console.log(players)
+                    const newplayers = [...players];
+
+                    console.log(newplayers)
+                    
+                    newplayers[playerindex].current_weapon = object.weapon_id;
+
+                    setPlayers(newplayers);
+                }
 
             }
         });
@@ -90,6 +90,204 @@ const PlayersLeft = ({playersList}) =>{
         return () => socket.off('weapon_switched');
 
     }, [finishedLoading]);
+
+
+
+    useEffect(() => {
+
+        socket.on('c4_pick', (event) =>{
+
+            const object = JSON.parse(event);
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.user_pick_id);
+
+                if(playerindex !== -1){
+
+                    const newplayers = [...players];
+
+                    console.log(newplayers)
+                    
+                    newplayers[playerindex].c4 = true;
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('c4_pick');
+
+    }, [finishedLoading]);
+
+
+
+    useEffect(() => {
+
+        socket.on('c4_drop', (event) =>{
+
+            const object = JSON.parse(event);
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.user_drop_id);
+
+                if(playerindex !== -1){
+
+                    const newplayers = [...players];
+                    console.log(newplayers)
+                    newplayers[playerindex].c4 = false;
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('c4_drop');
+
+    }, [finishedLoading]);
+
+
+
+    useEffect(() => {
+
+        socket.on('c4_planted', (event) =>{
+
+            const object = JSON.parse(event);
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.plant_invoker_id);
+
+                if(playerindex !== -1){
+
+                    const newplayers = [...players];
+                    console.log(newplayers)
+                    newplayers[playerindex].c4 = false;
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('c4_planted');
+
+    }, [finishedLoading]);
+
+
+
+
+    useEffect(() => {
+
+        socket.on('pickup_item', (event) =>{
+
+            const object = JSON.parse(event);
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.user_id);
+
+                if(playerindex !== -1){
+
+                    const newplayers = [...players];
+
+                    console.log(newplayers)
+
+
+                    // HE HeGrenade
+                    if(object.item_id === 4){
+                        newplayers[playerindex].equipment.push(4);
+                    }
+
+
+                    // Smoke grenade
+                    if(object.item_id === 9){
+                        newplayers[playerindex].equipment.push(9);
+                    }
+
+
+                    // Flesh grenade
+                    if(object.item_id === 25){
+                        newplayers[playerindex].equipment.push(25);
+                    }
+
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('pickup_item');
+
+    }, [finishedLoading]);
+
+
+
+
+    useEffect(() => {
+
+        socket.on('nade_land', (event) =>{
+
+            const object = JSON.parse(event);
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.invoker_id);
+
+                if(playerindex !== -1){
+
+                    const newplayers = [...players];
+
+                    console.log(newplayers)
+
+
+                    // HE HeGrenade
+                    if(object.nade_type === 'weapon_hegrenade'){
+
+                        const filtered = newplayers[playerindex].equipment.filter(equip => equip !== 4);
+                        newplayers[playerindex].equipment  = [...filtered];
+                    }
+
+
+                    // Smoke grenade
+                    if(object.nade_type === 'weapon_smokegrenade'){
+
+                        const filtered = newplayers[playerindex].equipment.filter(equip => equip !== 9);
+                        newplayers[playerindex].equipment  = [...filtered];
+                    }
+
+
+                    // Flesh grenade
+                    if(object.nade_type === 'weapon_flashbang'){
+
+                        const exists = newplayers[playerindex].equipment.find(item => item === 25);
+
+                        if(exists){
+                            // User can have two flashbangs
+                            // Find first element of flashbang
+                            const id = newplayers[playerindex].equipment.findIndex(equip => equip === 25);
+
+                            // Remove first element
+                            newplayers[playerindex].equipment.splice(id,1); 
+                        }
+                    }
+
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('pickup_item');
+
+    }, [finishedLoading]);
+
+
 
     // Using ref to remember old state value
     function usePrevious(value) {
@@ -126,16 +324,20 @@ const PlayersLeft = ({playersList}) =>{
 
                         <div className={`player-info-left-${i}`}>
                             <div className={`avatar-left-${i}`}>
-                                <img src="" alt="user" />
+                                <img src={require(`../../screen/resources/images/unknown-user.png`)} alt="user" />
                             </div>
                             <div className={`equipment-left-${i}`}>
-                                <img src="" alt="full"></img>
+                                {player.c4 && 
+                                    <img src={require(`../../screen/resources/images/6.png`)} alt="c4"></img>}
                             </div>
                             <div className={`utility-left-${i}`}>
-                                {/*
-                                <img src={FlashGrenade} alt="full"></img>
-                                <img src={SmokeGrenade} alt="full"></img>
-                                <img src={HeGrenade} alt="full"></img>*/}
+
+                                {
+                                    player.equipment.map((item, index)=>{
+                                        return <img key={index} src={require(`../../screen/resources/images/${item}.png`)} alt="equipment"></img>
+                                    })
+                                }
+                                
                             </div>
                             <div className={`weapon-left-${i}`}>
                                 <img src={require(`../../screen/resources/images/${players[index].current_weapon}.png`)} alt="full"></img>
