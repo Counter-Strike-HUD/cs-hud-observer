@@ -259,7 +259,7 @@
 }
 
 .box-right .ct-style{
-  color: hsl(239, 98%, 63%);
+  color: #4447fd;
   font-weight: 800;
   font-size: 16px;
   opacity: 1;
@@ -311,7 +311,6 @@
   grid-template-columns: 20% 50% 15% 15%;
   grid-template-areas:
   ". nick-left-1 armor-left-1 health-number-left-1";
-  background-color: hsl(0, 82%, 57%);
 }
 
 .armor-left-1{

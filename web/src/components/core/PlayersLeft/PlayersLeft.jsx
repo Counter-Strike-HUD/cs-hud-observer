@@ -1,34 +1,14 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-
 import * as api from '../../screen/api/api';
-
-/*
-import Ak47 from '../../screen/resources/images/ak47.png';
-import ArmorFull from '../../screen/resources/images/assaultsuit.png';
-import LightArmor from '../../screen/resources/images/kevlar.png';
-import FlashGrenade from '../../screen/resources/images/flash_grenade.png';
-import HeGrenade from '../../screen/resources/images/explosive_grenade.png';
-import SmokeGrenade from '../../screen/resources/images/smoke_grenade.png';
-import C4 from '../../screen//resources/images/c4.png';
-//import Defuser from '../../screen//resources/images/defuser.png';
-import User from '../../screen/resources/images/unknown-user.png';
-*/
-
-
 import {SocketContext} from '../Socket/Socket';
 
-//const images = require.context('../../screen/resources/images', true, /.png$/);
 
-//console.log(images('/glock.png'))
 
 
 const PlayersLeft = ({playersList}) =>{
 
-    const [playersID, setPlayersID] = useState([...playersList]);
     const [players, setPlayers] = useState([]);
     const [finishedLoading, setFinishedLoading] = useState(false);
-
-    const previousProps = usePrevious(playersID);
 
 
     const socket = useContext(SocketContext);
@@ -179,6 +159,37 @@ const PlayersLeft = ({playersList}) =>{
 
 
 
+    useEffect(() => {
+
+        socket.on('damage', (event) =>{
+
+            const object = JSON.parse(event);
+
+            console.log('received damage')
+
+            if(players.length > 0){
+
+                const playerindex = players.findIndex(player => player.player_steamid === object.victim_id);
+
+                if(playerindex !== -1){
+
+                    console.log('found')
+
+                    const newplayers = [...players];
+                
+                    newplayers[playerindex].health = object.health;
+
+                    setPlayers(newplayers);
+                }
+
+            }
+        });
+
+        return () => socket.off('damage');
+
+    }, [finishedLoading]);
+
+
 
     useEffect(() => {
 
@@ -224,6 +235,11 @@ const PlayersLeft = ({playersList}) =>{
         return () => socket.off('pickup_item');
 
     }, [finishedLoading]);
+
+
+
+
+    
 
 
 
@@ -289,16 +305,6 @@ const PlayersLeft = ({playersList}) =>{
 
 
 
-    // Using ref to remember old state value
-    function usePrevious(value) {
-        const ref = useRef();
-        useEffect(() => {
-          ref.current = value;
-        });
-        return ref.current;
-    }
-
-
     return(
         <React.Fragment>
             {
@@ -308,7 +314,7 @@ const PlayersLeft = ({playersList}) =>{
                     
                   return  (
                     <div key={i} className={`left-player-${i}`}>
-                        <div className={`health-player-left-${i}`}>
+                        <div className={`health-player-left-${i}`} style={{backgroundImage: `linear-gradient(90deg, rgba(235,55,55,1) ${player.health}%, rgba(48,54,97,1) ${player.health}%, rgba(48,54,97,1) 100%)`, }}>
                             <div className={`nick-left-${i}`}>
                                 {player.player_nickname}
                             </div>
@@ -318,7 +324,7 @@ const PlayersLeft = ({playersList}) =>{
                                 <img src={LightArmor} alt="full"></img>*/}
                             </div>
                             <div className={`health-number-left-${i}`}>
-                                100
+                                {player.health}
                             </div>
                         </div>
 
@@ -332,7 +338,7 @@ const PlayersLeft = ({playersList}) =>{
                             </div>
                             <div className={`utility-left-${i}`}>
 
-                                {
+                                { 
                                     player.equipment.map((item, index)=>{
                                         return <img key={index} src={require(`../../screen/resources/images/${item}.png`)} alt="equipment"></img>
                                     })
