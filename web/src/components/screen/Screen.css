@@ -259,7 +259,7 @@
 }
 
 .box-right .ct-style{
-  color: #4447fd;
+  color: rgb(68, 71, 253);
   font-weight: 800;
   font-size: 16px;
   opacity: 1;
@@ -355,8 +355,8 @@
 .player-info-left-1{
   grid-area: player-info-left-1;
   display: grid;
-  background-color: #303661;
   opacity: .90;
+  background-color: #303661;
   grid-template-columns: 20% 15% 40% 25%;
   grid-template-areas:
   "avatar-left-1 equipment-left-1 utility-left-1 weapon-left-1";
@@ -469,7 +469,6 @@
   grid-template-columns: 20% 50% 15% 15%;
   grid-template-areas:
   ". nick-left-2 armor-left-2 health-number-left-2";
-  background-color: hsl(0, 82%, 57%);
 }
 
 
@@ -589,7 +588,6 @@
   grid-template-columns: 20% 50% 15% 15%;
   grid-template-areas:
   ". nick-left-3 armor-left-3 health-number-left-3";
-  background-color: hsl(0, 82%, 57%);
 }
 
 .player-info-left-3{
@@ -673,7 +671,6 @@
   grid-template-columns: 20% 50% 15% 15%;
   grid-template-areas:
   ". nick-left-4 armor-left-4 health-number-left-4";
-  background-color: hsl(0, 82%, 57%);
 }
 
 .armor-left-4{
@@ -792,7 +789,6 @@
   grid-template-columns: 20% 50% 15% 15%;
   grid-template-areas:
   ". nick-left-5 armor-left-5 health-number-left-5";
-  background-color: hsl(0, 82%, 57%);
 }
 
 .armor-left-5{
@@ -1090,7 +1086,6 @@
   grid-template-columns: 15% 15% 50% 20%;
   grid-template-areas:
   "health-number-right-2 armor-right-2 nick-right-2 .";
-  background-color: hsl(239, 98%, 63%);
 }
 
 
@@ -1215,7 +1210,6 @@
   grid-template-columns: 15% 15% 50% 20%;
   grid-template-areas:
   "health-number-right-3 armor-right-3 nick-right-3 .";
-  background-color: hsl(239, 98%, 63%);
 }
 
 .player-info-right-3{
@@ -1303,7 +1297,6 @@
   grid-template-columns: 15% 15% 50% 20%;
   grid-template-areas:
   "health-number-right-4 armor-right-4 nick-right-4 .";
-  background-color: hsl(239, 98%, 63%);
 }
 
 .armor-right-4{
@@ -1426,7 +1419,6 @@
   grid-template-columns: 15% 15% 50% 20%;
   grid-template-areas:
   "health-number-right-5 armor-right-5 nick-right-5 .";
-  background-color: hsl(239, 98%, 63%);
 }
 
 .armor-right-5{

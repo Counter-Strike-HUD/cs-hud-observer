@@ -18,7 +18,7 @@ import './Screen.css'
 
 function Example() { 
 
-    const [teams, setTeams] = useState(null);
+    const [allPlayers, setAllPlayers] = useState([]);
     const [matchID, setMatchID] = useState(null);
     const [team1Name, setTeam1Name] = useState('TEAM 1');
     const [team2Name, setTeam2Name] = useState('TEAM 2');
@@ -44,6 +44,7 @@ function Example() {
             setMatchID(res.id)
             setTeam1Players(res.match_info.team_one_players);
             setTeam2Players(res.match_info.team_two_players);
+            setAllPlayers([...res.match_info.team_one_players, ...res.match_info.team_two_players]);
             setType(res.match_info.match_type)
             setMapsPool(res.match_info.maps_selected)
             
@@ -106,7 +107,7 @@ function Example() {
 
                     <div className="player-info">
 
-                        <PlayerObserved />
+                        <PlayerObserved players={allPlayers} />
                       
                     </div>
                 </div>
