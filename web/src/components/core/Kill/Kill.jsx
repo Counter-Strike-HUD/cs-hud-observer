@@ -7,10 +7,11 @@ import {SocketContext} from '../Socket/Socket'
 
 const Kill = (props) =>{
 
-    const socket = useContext(SocketContext);
+ 
 
     const [kills, setKills] = useState([])
  
+    /*
     useEffect(() =>{
 
         socket.on('*', event =>{
@@ -19,6 +20,7 @@ const Kill = (props) =>{
         })
 
     }, [])
+    */
 
     return (
         <React.Fragment>

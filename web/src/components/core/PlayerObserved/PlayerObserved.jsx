@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import * as api from '../../screen/api/api';
-import {SocketContext} from '../Socket/Socket';
+
 
 const PlayerObserved = ({players}) =>{
 
@@ -8,9 +8,11 @@ const PlayerObserved = ({players}) =>{
     const [spectate, setSpectate] = useState(0);
     const [finishedLoading, setFinishedLoading] = useState(false);
 
-    const socket = useContext(SocketContext);
 
 
+    return null;
+
+/* 
     useEffect(() => {
 
         players.map((playerid, index) =>{
@@ -464,11 +466,11 @@ const PlayerObserved = ({players}) =>{
                             {/*
                             <img src={FlashGrenade} alt="full"></img>
                             <img src={SmokeGrenade} alt="full"></img>
-                            <img src={HeGrenade} alt="full"></img>*/}
+                            <img src={HeGrenade} alt="full"></img>
                         </div>
 
                         <div className="player-spectaded-avatar">
-                            {/*<img src={User} alt="user" />*/}
+                            {/*<img src={User} alt="user" />}
                         </div>
                     </div>
                 </React.Fragment>
@@ -502,11 +504,11 @@ const PlayerObserved = ({players}) =>{
                             {/*
                             <img src={FlashGrenade} alt="full"></img>
                             <img src={SmokeGrenade} alt="full"></img>
-                            <img src={HeGrenade} alt="full"></img>*/}
+                            <img src={HeGrenade} alt="full"></img>}
                         </div>
 
                         <div className="player-spectaded-avatar">
-                            {/*<img src={User} alt="user" />*/}
+                            {/*<img src={User} alt="user" />}
                         </div>
                     </div>
                 </React.Fragment>
@@ -514,6 +516,8 @@ const PlayerObserved = ({players}) =>{
 
         </React.Fragment>
     );
+
+    */
 }
 
 export default PlayerObserved;

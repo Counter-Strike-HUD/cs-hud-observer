@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
+import { SocketStoreComponent } from '../core/Socket/Socket';
 import TeamNames from '../core/TeamName/TeamNames';
 import Crosshair from '../core/Crosshair/Crosshair';
 import MapsPool from '../core/MapsPool/MapsPool';
@@ -10,8 +11,9 @@ import PlayersLeft from '../core/PlayersLeft/PlayersLeft';
 import PlayersRight from '../core/PlayersRight/PlayersRight';
 import PlayerObserved from '../core/PlayerObserved/PlayerObserved';
 
-import {SocketContext, socket} from '../core/Socket/Socket';
+
 import * as api from './api/api';
+import { useHudStore } from '../core/Socket/Socket';
 
 
 import './Screen.css'
@@ -47,6 +49,8 @@ function Example() {
             setAllPlayers([...res.match_info.team_one_players, ...res.match_info.team_two_players]);
             setType(res.match_info.match_type)
             setMapsPool(res.match_info.maps_selected)
+
+            //socketStore(res.match_info.team_one_players, res.match_info.team_two_players);
             
             return res
         })
@@ -73,10 +77,16 @@ function Example() {
 
     },[update])
 
+        // Hook left players state
+        const playersLeftGlobal = useHudStore(state => state.tt_players);
+        const playersRightGlobal = useHudStore(state => state.ct_players);
+
         return(
-            <SocketContext.Provider value={socket}> 
+     
 
                <div className="grid-container">
+                
+                    <SocketStoreComponent teamLeft={team1Players} teamRight={team2Players} />
                 
                     <Crosshair />
 
@@ -97,12 +107,12 @@ function Example() {
                     </div>
                     
                     <div className="team-box-left">
-                        <PlayersLeft playersList={team1Players} />
+                        <PlayersLeft players={playersLeftGlobal} />
                     </div>
                     
                     
                     <div className="team-box-right">
-                        <PlayersRight playersList={team2Players} />
+                        <PlayersRight players={playersRightGlobal} />
                     </div> 
 
                     <div className="player-info">
@@ -111,8 +121,6 @@ function Example() {
                       
                     </div>
                 </div>
-
-            </SocketContext.Provider>       
         );
     
 }

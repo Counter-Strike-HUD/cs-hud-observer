@@ -30,7 +30,8 @@
     "react-router-dom": "^5.2.0",
     "socket.io": "^4.0.0",
     "socket.io-client": "^4.0.0",
-    "steamapi": "^2.1.2"
+    "steamapi": "^2.1.2",
+    "zustand": "^3.5.10"
   },
   "devDependencies": {
     "@types/cors": "^2.8.10",
