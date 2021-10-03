@@ -337,6 +337,7 @@ interface PickupEvent{
     event_name: 'pickup_item';
     user_id: string; 
     item_id: number;
+    weapon_type: 'primary' | 'secondary' | 'other';
     current_ammo: number;
     ammo_reserve: number;
 }
@@ -350,6 +351,7 @@ Example:
     event_name: 'pickup_item',
     user_id: 'STEAM_0:1:115179770',
     item_id: 27,
+    weapon_type: 'secondary';
     current_ammo: 4,
     ammo_reserve: 27
 }
@@ -419,6 +421,46 @@ Example:
     end_type: 'elimination',
     tt_rounds: 11,
     ct_rounds: 14
+}
+```
+
+
+## Round start event (freeztime)
+
+```ts
+interface RoundStartFreezeEvent{
+    event_name: 'round_start_freeze';
+    freeze_time: number
+}
+```
+
+Example: 
+
+```ts
+// New round starts with freeztime of 10seconds
+{
+    event_name: 'round_start_freeze';
+    freeze_time: 10
+}
+```
+
+
+## Round start event (normal)
+
+```ts
+interface RoundStartFreezeEvent{
+    event_name: 'round_start_normal';
+    round_time: number
+}
+```
+
+Example: 
+
+```ts
+// New round starts with freeztime of 105 seconds (1:45)
+{
+    event_name: 'round_start_normal';
+    freeze_time: 105
 }
 ```
 
@@ -504,7 +546,7 @@ const ammo_update: BulletChangeEvent = {
             }
         },
         {
-        player_id: 'STEAM_0:1:115179770',
+            player_id: 'STEAM_0:1:115179770',
             primary_weapon: {
                 current_ammo: 30,
                 ammo_reserve: 90

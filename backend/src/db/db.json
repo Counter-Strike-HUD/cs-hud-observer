@@ -90,12 +90,12 @@
       "team_one_players": [
         "43bf7743ebd930d65a411e83465a7a04e30d09f7",
         "54ad612023639bb17657a905c7763b1060a09b87",
-        "7688237efd64e27d0a0f245e7dcd2f18937d706e"
+        "5bc098a26287e9ec4972acfddbf455fd2ce0a39c"
       ],
       "team_two_players": [
-        "5bc098a26287e9ec4972acfddbf455fd2ce0a39c",
         "e81a1843f0696d280415732af3c63f8176c3792f",
-        "6c30b0bce41d1c1a62a6b76a8a1c2ae665f4e8a9"
+        "6c30b0bce41d1c1a62a6b76a8a1c2ae665f4e8a9",
+        "7688237efd64e27d0a0f245e7dcd2f18937d706e"
       ]
     }
   ],

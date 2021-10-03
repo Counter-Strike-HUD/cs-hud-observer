@@ -1,0 +1,7 @@
+{
+    "hud_name": "Default HUD",
+    "version": "0.0.1",
+    "settings": {
+        "kill_displaytime": 5000
+    }
+}

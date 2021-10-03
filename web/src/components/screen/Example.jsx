@@ -14,6 +14,7 @@ import PlayerObserved from '../core/PlayerObserved/PlayerObserved';
 
 import * as api from './api/api';
 import { useHudStore } from '../core/Socket/Socket';
+import hudconfig from './hud.json';
 
 
 import './Screen.css'
@@ -107,7 +108,7 @@ function Example() {
                     </div>
 
                     <div className="box-right">
-                        <Kill kills={kills} />
+                        <Kill screentime={hudconfig.settings.kill_displaytime} kills={kills} />
                     </div>
                     
                     <div className="team-box-left">
