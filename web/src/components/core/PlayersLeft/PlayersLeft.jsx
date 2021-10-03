@@ -1,6 +1,7 @@
 import React from 'react';
 
 
+
 const PlayersLeft = React.memo(({players}) =>{
 
 

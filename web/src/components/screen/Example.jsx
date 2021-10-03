@@ -80,6 +80,10 @@ function Example() {
         // Hook left players state
         const playersLeftGlobal = useHudStore(state => state.tt_players);
         const playersRightGlobal = useHudStore(state => state.ct_players);
+        const kills = useHudStore(state => state.kills);
+        const team1Score = useHudStore(state => state.team1_score);
+        const team2Score = useHudStore(state => state.team2_score);
+
 
         return(
      
@@ -90,7 +94,7 @@ function Example() {
                 
                     <Crosshair />
 
-                    <Score logoLeft={logoLeft} logoRight={logoRight} />
+                    <Score team1score={team1Score} team2score={team2Score} logoLeft={logoLeft} logoRight={logoRight} />
 
                     <TeamNames teamleft={team1Name} teamright={team2Name} />
 
@@ -103,7 +107,7 @@ function Example() {
                     </div>
 
                     <div className="box-right">
-                        <Kill />
+                        <Kill kills={kills} />
                     </div>
                     
                     <div className="team-box-left">
@@ -117,7 +121,7 @@ function Example() {
 
                     <div className="player-info">
 
-                        <PlayerObserved players={allPlayers} />
+                        <PlayerObserved players={[...playersLeftGlobal, ...playersRightGlobal]} />
                       
                     </div>
                 </div>

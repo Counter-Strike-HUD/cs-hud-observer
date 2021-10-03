@@ -66,7 +66,7 @@ interface KillEvent{
     victim_flashed: boolean;
     suicide: boolean;
     wallbang: boolean;
-    suicide_reason: 'weapon_hegrenade' | 'fall' | 'weapon_c4' | '';
+    suicide_reason: 'weapon_hegrenade' | 'fall' | 'weapon_c4' | 'kill' | '';
 }
 ```
 

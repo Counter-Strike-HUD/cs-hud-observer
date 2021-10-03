@@ -1,38 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
 import KillItem from './kill-item/KillItem';
-
-import {SocketContext} from '../Socket/Socket'
-
+import {socket} from '../Socket/Socket';
 
 
-const Kill = (props) =>{
 
- 
-
-    const [kills, setKills] = useState([])
- 
-    /*
-    useEffect(() =>{
-
-        socket.on('*', event =>{
-            console.log('event', event)
-            //setKills(kills => [...kills, event])
-        })
-
-    }, [])
-    */
+const Kill = React.memo(({kills}) =>{
 
     return (
         <React.Fragment>
                 <div className="wrapper">
 
-                    {kills.map((kill) =>
-                        <KillItem key={kill.victim.name} victim={{side: kill.victim.side, name: kill.victim.name}} killer={{side: kill.killer.side, name: kill.killer.name}}  delay="5000" />
+                    {kills && kills.map((kill, index) =>
+                        <KillItem key={index} killinfo={kill} victim={{side: kill.victim.side, name: kill.victim.player_nickname}} killer={{side: kill.attacker.side, name: kill.attacker.player_nickname}}  delay="5000" />
                     )}
                        
                 </div>   
         </React.Fragment>
     );
-}
+});
 
 export default Kill;

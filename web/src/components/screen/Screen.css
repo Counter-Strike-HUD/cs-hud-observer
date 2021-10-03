@@ -3,11 +3,12 @@
 }
 
 #root{ 
-  background: url(https://imgur.com/Smj4nT6.png) no-repeat center center fixed; 
+  /*background: url(https://imgur.com/Smj4nT6.png) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  */
 }
 
 
@@ -245,6 +246,7 @@
   float: right;
   opacity: 0.9;
   margin-top: 5px;
+  clear: both;
 }
 
 .box-right span{
@@ -1608,5 +1610,11 @@
   height: 128px;
   position: absolute;
   z-index: 9;
+}
+
+.player-spectaded-amunition{
+  grid-area: player-spectaded-amunition;
+  font-weight: 800;
+  color: white;
 }
 

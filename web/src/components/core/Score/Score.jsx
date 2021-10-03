@@ -20,7 +20,7 @@ const Score = (props) =>{
 
             
             <div className="left-score">
-                <p>13</p>
+                <p>{props.team1score}</p>
             </div>
 
             <div className="middle">
@@ -30,7 +30,7 @@ const Score = (props) =>{
             </div>
 
             <div className="right-score">
-                <p>12</p>
+                <p>{props.team2score}</p>
             </div>
 
             <div className="logo-right-area">
