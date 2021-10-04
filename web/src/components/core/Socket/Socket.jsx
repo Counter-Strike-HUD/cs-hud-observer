@@ -31,7 +31,17 @@ export const useHudStore = create(set => ({
     tt_players: [],
     ct_players: [],
 
+    // Total kills
     kills: [],
+
+    // State holder
+    state: {
+        round_end: false,
+        round_freeze: false,
+        round_start: false,
+        freeze_time: 0,
+        round_time: 0
+    },
 
 
     initLeftTeam: (playerInfo) => set(state => ({tt_players: [...playerInfo]})),
@@ -76,9 +86,9 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
             api.players.getPlayer(playerid).then(p =>{
 
                 const playerinfo = {
-                    current_weapon: '17',
-                    primary_weapon: null,
-                    secondary_weapon: '17',
+                    current_weapon: 17,
+                    primary_weapon: 0,
+                    secondary_weapon: 17,
                     primary_ammo_current: 0,
                     secondary_ammo_current: 20,
                     primary_ammo_reserve: 0,
@@ -117,9 +127,9 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
             api.players.getPlayer(playerid).then(p =>{
 
                 const playerinfo = {
-                    current_weapon: '16',
-                    primary_weapon: null,
-                    secondary_weapon: '16',
+                    current_weapon: 16,
+                    primary_weapon: 0,
+                    secondary_weapon: 16,
                     primary_ammo_current: 0,
                     secondary_ammo_current: 12,
                     primary_ammo_reserve: 0,
@@ -284,7 +294,7 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
                 if(playerindex !== -1){
         
                     const newplayers = [...leftPlayers];
-    
+
                     switch (object.weapon_id) {
         
                         // small kevlar
@@ -406,7 +416,22 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
                     if(object.item_id === 25){
                         newplayers[playerindex].equipment.push(25);
                     }
-        
+
+
+                    // Check if pickup is main weapon
+                    if(object.weapon_type === 'primary'){
+                        newplayers[playerindex].primary_weapon = object.item_id;
+                        newplayers[playerindex].primary_ammo_current = object.current_ammo;
+                        newplayers[playerindex].primary_ammo_reserve = object.ammo_reserve;
+                    }
+
+                    // Check if pickup is secondary weapon
+                    if(object.weapon_type === 'secondary'){
+                        newplayers[playerindex].secondary_weapon = object.item_id;
+                        newplayers[playerindex].primary_ammo_current = object.current_ammo;
+                        newplayers[playerindex].primary_ammo_reserve = object.ammo_reserve;
+                    }
+
         
                     addTeamLeft(newplayers);
                 }
@@ -438,6 +463,22 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
                     if(object.item_id === 25){
                         newplayers[playerindex].equipment.push(25);
                     }
+
+
+                    // Check if pickup is main weapon
+                    if(object.weapon_type === 'primary'){
+                        newplayers[playerindex].primary_weapon = object.item_id;
+                        newplayers[playerindex].primary_ammo_current = object.current_ammo;
+                        newplayers[playerindex].primary_ammo_reserve = object.ammo_reserve;
+                    }
+
+                    // Check if pickup is secondary weapon
+                    if(object.weapon_type === 'secondary'){
+                        newplayers[playerindex].secondary_weapon = object.item_id;
+                        newplayers[playerindex].primary_ammo_current = object.current_ammo;
+                        newplayers[playerindex].primary_ammo_reserve = object.ammo_reserve;
+                    }
+                    
         
         
                     addTeamRight(newplayers);
@@ -495,7 +536,7 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
                     newplayers[playerindex].secondary_weapon = 0;
                     newplayers[playerindex].primary_ammo_current = 0;
                     newplayers[playerindex].secondary_ammo_current = 0;
-                    newplayers[playerindex].primary_ammo_reserv = 0;
+                    newplayers[playerindex].primary_ammo_reserve = 0;
                     newplayers[playerindex].secondary_ammo_reserve = 0;
                     newplayers[playerindex].equipment = [];
                     newplayers[playerindex].c4 = false;
@@ -522,7 +563,7 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
                     newplayers[playerindex].secondary_weapon = 0;
                     newplayers[playerindex].primary_ammo_current = 0;
                     newplayers[playerindex].secondary_ammo_current = 0;
-                    newplayers[playerindex].primary_ammo_reserv = 0;
+                    newplayers[playerindex].primary_ammo_reserve = 0;
                     newplayers[playerindex].secondary_ammo_reserve = 0;
                     newplayers[playerindex].equipment = [];
                     newplayers[playerindex].c4 = false;
@@ -778,6 +819,16 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
         if(object.side_win === 'CT') team2Score();
 
     });
+
+
+    socket.on('round_end', (event) =>{
+
+        const object = JSON.parse(event);
+
+        if(object.side_win === 'TT') team1Score();
+        if(object.side_win === 'CT') team2Score();
+
+    });
         
 
         return () => socket.removeAllListeners();
@@ -789,21 +840,3 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
     return null;
 
 }
-
-
-
-
-
-
-
-/*
-
-
-
-
-
-
-
-
-*/
-

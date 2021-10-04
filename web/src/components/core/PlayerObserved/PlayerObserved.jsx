@@ -44,7 +44,8 @@ const PlayerObserved =  React.memo(({players})=>{
                         </div>
 
                         <div className="player-spectaded-amunition">
-                            {player.secondary_ammo_current}/{player.secondary_ammo_reserve}
+                            {player.current_weapon === player.secondary_weapon ? <React.Fragment>{player.secondary_ammo_current} / {player.secondary_ammo_reserve}</React.Fragment> : ''}
+                            {player.current_weapon === player.primary_weapon ? <React.Fragment>{player.primary_ammo_current} / {player.primary_ammo_reserve}</React.Fragment> : ''}
                         </div>
                     </div>
                 </React.Fragment>

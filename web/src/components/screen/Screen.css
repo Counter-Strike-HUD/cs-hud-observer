@@ -1554,6 +1554,7 @@
   grid-template-columns: 15% 15% 40% 15% 15%;
   grid-template-areas: 
   ". player-spectaded-utility player-spectaded-avatar player-spectaded-amunition .";
+  height: 24px;
 }
 
 .player-spectaded-name{
@@ -1615,5 +1616,6 @@
   grid-area: player-spectaded-amunition;
   font-weight: 800;
   color: white;
+  max-height: min-content;
 }
 
