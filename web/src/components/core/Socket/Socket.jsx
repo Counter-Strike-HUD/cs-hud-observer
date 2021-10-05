@@ -53,6 +53,8 @@ export const useHudStore = create(set => ({
     updateTeam2Score: () => set(state => ({team2_score: state.team2_score + 1})), 
 
 
+    updateRoundState: (roundInfo) => set(state => ({state: {...roundInfo}})),
+
 }))
 
 let renderCount = 0
@@ -72,6 +74,9 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
 
     const leftPlayers = useHudStore(state => state.tt_players);
     const rightPlayers = useHudStore(state => state.ct_players);
+
+    const updateRoundStateInfo = useHudStore(state => state.updateRoundState);
+    const roundState = useHudStore(state => state.state);
 
 
     useEffect(() => {
@@ -818,15 +823,55 @@ export const SocketStoreComponent = ({teamLeft, teamRight}) =>{
         if(object.side_win === 'TT') team1Score();
         if(object.side_win === 'CT') team2Score();
 
+        // Spread object accross temp object
+        let roundinfo = {...roundState};
+
+        // Update state
+        roundinfo.round_end = true;
+        roundinfo.round_start = false;
+        roundinfo.round_time = 0;
+
+        // Set state
+        updateRoundStateInfo(roundinfo);
+
     });
 
 
-    socket.on('round_end', (event) =>{
+    socket.on('round_start_freeze', (event) =>{
 
         const object = JSON.parse(event);
 
-        if(object.side_win === 'TT') team1Score();
-        if(object.side_win === 'CT') team2Score();
+        // Spread object accross temp object
+        let roundinfo = {...roundState};
+
+        // Update state
+        roundinfo.round_freeze = true;
+        roundinfo.freeze_time = object.freeze_time - 1;
+        roundinfo.round_end = false;
+        roundinfo.round_start = false;
+        roundinfo.round_time = 0;
+
+        // Set state
+        updateRoundStateInfo(roundinfo);
+
+    });
+
+
+    socket.on('round_start_normal', (event) =>{
+
+        const object = JSON.parse(event);
+
+        // Spread object accross temp object
+        let roundinfo = {...roundState};
+
+        // Update state
+        roundinfo.round_freeze = false;
+        roundinfo.freeze_time = 0;
+        roundinfo.round_start = true;
+        roundinfo.round_time = object.round_time - 1;
+
+        // Set state
+        updateRoundStateInfo(roundinfo);
 
     });
         

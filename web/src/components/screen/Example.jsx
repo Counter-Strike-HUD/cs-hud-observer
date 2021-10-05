@@ -84,6 +84,7 @@ function Example() {
         const kills = useHudStore(state => state.kills);
         const team1Score = useHudStore(state => state.team1_score);
         const team2Score = useHudStore(state => state.team2_score);
+        const roundInfo = useHudStore(state => state.state);
 
 
         return(
@@ -95,7 +96,7 @@ function Example() {
                 
                     <Crosshair />
 
-                    <Score team1score={team1Score} team2score={team2Score} logoLeft={logoLeft} logoRight={logoRight} />
+                    <Score roundInfo={roundInfo} team1score={team1Score} team2score={team2Score} logoLeft={logoLeft} logoRight={logoRight} />
 
                     <TeamNames teamleft={team1Name} teamright={team2Name} />
 

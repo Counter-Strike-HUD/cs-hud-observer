@@ -1,8 +1,11 @@
 import React from 'react';
 
+
+import Timer from './timer/Timer';
+
 const Score = (props) =>{
 
-    const {logoLeft, logoRight } = props;
+    const {logoLeft, logoRight, roundInfo } = props;
 
     return(
         <div className="score">
@@ -25,7 +28,9 @@ const Score = (props) =>{
 
             <div className="middle">
                 <p>
-                    1:35
+                    {roundInfo.round_end && <Timer seconds={0}></Timer>}
+                    {roundInfo.round_freeze && <Timer seconds={roundInfo.freeze_time}></Timer>}
+                    {roundInfo.round_start && <Timer seconds={roundInfo.round_time}></Timer>}
                 </p>     
             </div>
 

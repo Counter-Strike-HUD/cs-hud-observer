@@ -111,6 +111,8 @@
 .score .middle{
   grid-area: middle;
   text-align: center;
+  font-size: 25px;
+  font-weight: 800;
 }
 
 .score .time p{
