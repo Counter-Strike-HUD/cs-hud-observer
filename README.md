@@ -6,7 +6,7 @@ Basic idea behind this stream overlay is to show currently non existing game sta
 
 ## WIP progress
 
-[![Video](https://i9.ytimg.com/vi/I5Kwj_tM0JM/mq1.jpg?sqp=CIz17YoG&rs=AOn4CLDUX7dFHoxDCU98bjN9Uogzp1J9ww)](https://youtu.be/I5Kwj_tM0JM)
+[![Video](https://i.imgur.com/YJxl6Aq.png)](https://youtu.be/I5Kwj_tM0JM)
 
 
 ## Idea
@@ -22,9 +22,6 @@ Using game server stream events over socket (TCP/ UDP) to local streamer who wil
 [Documentation](https://hud.izetmulalic.com)
 
 [Alternative link](https://cshud.netlify.app)
-
-
-## REST API
 
 
 
