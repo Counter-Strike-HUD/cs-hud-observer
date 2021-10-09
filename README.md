@@ -9,7 +9,7 @@ Basic idea behind this stream overlay is to show currently non existing game sta
 [![Video](https://i.imgur.com/YJxl6Aq.png)](https://youtu.be/I5Kwj_tM0JM)
 
 
-## Idea
+## Idea  
 
 Using game server stream events over socket (TCP/ UDP) to local streamer who will run this software which will display data to stream watchers.
 
@@ -24,8 +24,8 @@ Using game server stream events over socket (TCP/ UDP) to local streamer who wil
 [Alternative link](https://cshud.netlify.app)
 
 
-## Sponsor
-**Buy best quality game servers protected with Anti DDoS!**
+## Sponsor   
+**Buy best quality game servers protected with Anti DDoS!**   
 ![GBHost](https://gb-host.me/assets/images/gb-logo-300x150.png)
 
 
