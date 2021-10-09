@@ -24,6 +24,9 @@ Using game server stream events over socket (TCP/ UDP) to local streamer who wil
 [Alternative link](https://cshud.netlify.app)
 
 
+## Sponsor
+**Buy best quality game servers protected with Anti DDoS!**
+![GBHost](https://gb-host.me/assets/images/gb-logo-300x150.png)
 
 
 ## Contributing
