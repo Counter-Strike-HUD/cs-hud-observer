@@ -25,7 +25,7 @@ const Timer = ({seconds, mode}) =>{
     React.useEffect(() => {
       let timer;
       if (counter > 0) {
-        timer = setTimeout(() => setCounter(c => c - 1), 1000);
+        timer = setTimeout(() => setCounter(c => c - 1), 960);
       }
   
       return () => {
